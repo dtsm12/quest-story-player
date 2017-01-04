@@ -1,0 +1,51 @@
+package net.maitland.quest;
+
+import net.maitland.quest.model.Quest;
+import org.junit.Test;
+
+import java.io.InputStream;
+
+import static org.junit.Assert.*;
+
+/**
+ * Created by David on 18/12/2016.
+ */
+public class QuestParserTest {
+    @Test
+    public void parseQuest() throws Exception {
+
+        InputStream is = null;
+
+        try {
+            is = this.getClass().getClassLoader().getResourceAsStream("bargames-quest.xml");
+            QuestParser qp = new QuestParser();
+            Quest q = qp.parseQuest(is);
+
+            assertEquals("Quest title is incorrect", q.getAbout().getTitle(), "Bargames");
+            assertEquals("Incorrect number of stations", q.getStations().size(), 29);
+            assertNotNull("1st station doesn't have text", q.getStations().get(0).getText().getValue());
+            assertEquals("1st station doesn't have choice", q.getStations().get(0).getChoices().size(), 1);
+            assertNotNull("1st station's choice doesn't have text", q.getStations().get(0).getChoices().get(0).getText());
+            assertEquals("4th station doesn't have a number attribute", q.getStations().get(3).getNumberAttributes().size(), 1);
+            assertEquals("4th station's number attribute is incorrect", q.getStations().get(3).getNumberAttributes().get(0).getName(), "[gold]");
+            assertEquals("5th station doesn't have an if condition", q.getStations().get(4).getConditions().size(), 1);
+            assertEquals("5th station's if condition check is incorrect", q.getStations().get(4).getConditions().get(0).getCheck(), "[gold] greater 0");
+            assertEquals("5th station's if condition choice is incorrect", q.getStations().get(4).getConditions().get(0).getChoices().get(0).getStation().getId(), "bar");
+            assertNotNull("5th station doesn't have an else condition", q.getStations().get(4).getElseCondition());
+            assertEquals("4th station's if condition check is incorrect", q.getStations().get(4).getElseCondition().getNumberAttributes().get(0).getName(), "[gold]");
+            assertEquals("9th station doesn't have a number attribute", q.getStations().get(8).getStringAttributes().size(), 1);
+            assertEquals("9th station's string attribute is incorrect", q.getStations().get(8).getStringAttributes().get(0).getName(), "[introDisplay]");
+            assertEquals("16th station doesn't have a state", q.getStations().get(15).getStateAttributes().size(), 1);
+            assertEquals("16th station's state is incorrect", q.getStations().get(15).getStateAttributes().get(0).getName(), "[ate peanuts]");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+    }
+
+}
