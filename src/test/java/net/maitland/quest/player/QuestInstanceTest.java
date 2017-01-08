@@ -54,4 +54,71 @@ public class QuestInstanceTest {
 
     }
 
+    @Test
+    public void testWherePostAttributePrecludesOnlyChoice() throws Exception
+    {
+        QuestStation station2 = new QuestStation();
+        station2.setId("station2");
+        station2.setText(new Text("station2"));
+
+        QuestStation station3 = new QuestStation();
+        station3.setId("station3");
+        station3.setText(new Text("station3"));
+
+        QuestStation station4 = new QuestStation();
+        station4.setId("station4");
+        station4.setText(new Text("station4"));
+
+        IfSection is = new IfSection();
+        is.setCheck("not [testBoolean] ");
+        is.setText(new Text("If text"));
+
+        Choice choice1 = new Choice();
+        choice1.setStation(station3);
+        is.addChoice(choice1);
+
+        StateAttribute sa = new StateAttribute();
+        sa.setName("testBoolean");
+        sa.setValue("true");
+        is.addAttribute(sa);
+
+        station2.addCondition(is);
+
+        ElseSection es = new ElseSection();
+        es.setText(new Text("Else text"));
+        station2.setElseCondition(es);
+
+        Choice choice2 = new Choice();
+        choice2.setStation(station4);
+        es.addChoice(choice2);
+
+        QuestStation station1 = new QuestStation();
+        station1.setId("start");
+        station1.setText(new Text("start"));
+        Choice startChoice = new Choice();
+        startChoice.setStation(station2);
+        station1.addChoice(startChoice);
+
+        List<QuestStation> stations = new ArrayList<>();
+        stations.add(station1);
+        stations.add(station2);
+        stations.add(station3);
+        Quest quest = new Quest();
+        quest.setStations(stations);
+
+        QuestInstance sut = new QuestInstance(quest);
+
+        QuestStateStation station = sut.getNextStation(null);
+
+        station = sut.getNextStation("station2");
+
+        assertEquals("Correct number of choices is presented", 1, station.getChoices().size());
+        assertEquals("Correct choice is presented", "station3", station.getChoices().get(0).getStation().getId());
+
+        station = sut.getNextStation("station3");
+
+        assertEquals("Presented choice is no longer available",station3.getId(), station.getId());
+
+    }
+
 }

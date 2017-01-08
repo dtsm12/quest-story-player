@@ -45,31 +45,44 @@ public class QuestStation extends QuestSection  {
         return backStation;
     }
 
-    public QuestState visit(QuestState questState) throws QuestStateException
+    public QuestState preVisit(QuestState questState) throws QuestStateException
     {
-        Map<String, String> newAttributes = getUpdatedAttributes(questState);
+        return this.visit(questState, false);
+    }
+
+    public QuestState postVisit(QuestState questState) throws QuestStateException
+    {
+        return this.visit(questState, true);
+    }
+
+    protected QuestState visit(QuestState questState, boolean postVisit) throws QuestStateException
+    {
+        Map<String, String> newAttributes = getUpdatedAttributes(questState, postVisit);
 
         return new QuestState(newAttributes);
     }
 
-    protected Map<String, String> getUpdatedAttributes(QuestState questState) throws QuestStateException {
+    protected Map<String, String> getUpdatedAttributes(QuestState questState, boolean postVisit) throws QuestStateException {
 
         Map<String, String> newAttributes = new HashMap<>(questState.getAttributes());
 
         // process this Station's attributes
-        updateAttributesWithQuestSection(this, newAttributes);
+        updateAttributesWithQuestSection(this, newAttributes, postVisit);
 
         // if applicable section isn't the station itself
         QuestSection applicableQuestSection = getApplicableQuestSection(questState);
         if (this != applicableQuestSection) {
-            updateAttributesWithQuestSection(applicableQuestSection, newAttributes);
+            updateAttributesWithQuestSection(applicableQuestSection, newAttributes, postVisit);
         }
 
         return newAttributes;
     }
 
-    protected void updateAttributesWithQuestSection(QuestSection questSection, Map<String, String> attributes) throws QuestStateException {
-        for (Attribute a : questSection.getAttributes()) {
+    protected void updateAttributesWithQuestSection(QuestSection questSection, Map<String, String> attributes, boolean postVisit) throws QuestStateException {
+
+        List<Attribute> questAttributes = postVisit ? questSection.getPostVisitAttributes() : questSection.getPreVisitAttributes();
+
+        for (Attribute a : questAttributes) {
             //evaluate the attributes value
             String attrValue = expressionEvaluator.evaluateExpression(a, attributes);
 

@@ -1,6 +1,7 @@
 package net.maitland.quest.player;
 
-import net.maitland.quest.QuestParser;
+import net.maitland.quest.JacksonQuestParser;
+import net.maitland.quest.SaxQuestParser;
 import net.maitland.quest.model.*;
 
 import java.io.BufferedReader;
@@ -88,7 +89,7 @@ public class ConsolePlayer {
 
         try {
             is = ConsolePlayer.class.getClassLoader().getResourceAsStream("bargames-quest.xml");
-            QuestParser qp = new QuestParser();
+            SaxQuestParser qp = new SaxQuestParser();
             q = qp.parseQuest(is);
         } catch (Exception e) {
             e.printStackTrace();
