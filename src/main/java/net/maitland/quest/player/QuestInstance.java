@@ -13,6 +13,7 @@ import java.util.List;
 public class QuestInstance {
 
     private QuestState questState;
+    private QuestState previousQuestState;
     private Quest quest;
     private Deque<QuestStation> questPath = new ArrayDeque<>();
     private ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
@@ -24,7 +25,6 @@ public class QuestInstance {
     public QuestStateStation getNextStation(String choiceId) throws QuestStateException, ChoiceNotPossibleException {
 
         QuestStation questStation = null;
-        QuestState currentQuestState = getQuestState();
 
         if (choiceId == null) {
             choiceId = "start";
@@ -40,7 +40,7 @@ public class QuestInstance {
         } else {
             // Get choice
             QuestStation currentStation = this.questPath.peek();
-            Choice choice = currentStation.getChoice(currentQuestState, choiceId);
+            Choice choice = currentStation.getChoice(this.previousQuestState, choiceId);
 
             // check it was possible
             if (choice == null) {
@@ -67,14 +67,20 @@ public class QuestInstance {
             nextStation = questStation;
         }
 
-        // prepare next station data before updating state (visiting station)
+        // update quest state before visit
+        this.questState = nextStation.preVisit(this.getQuestState());
+
+        // visit: prepare next station data before updating state (visiting station)
         QuestStateStation retStation = new QuestStateStation();
         retStation.setId(nextStation.getId());
-        retStation.setText(nextStation.getText(currentQuestState).getValue());
-        retStation.setChoices(nextStation.getChoices(currentQuestState));
+        retStation.setText(nextStation.getText(this.getQuestState()).getValue());
+        retStation.setChoices(nextStation.getChoices(this.getQuestState()));
 
-        // update quest state
-        this.questState = nextStation.visit(currentQuestState);
+        // save current state to check the choice when selected
+        this.previousQuestState = this.getQuestState();
+
+        // update quest state after visit
+        this.questState = nextStation.postVisit(this.getQuestState());
 
         // add to quest path
         this.questPath.push(nextStation);

@@ -36,6 +36,11 @@ public final class Quest {
         this.stations = stations;
     }
 
+    public void addStation(QuestStation questStation)
+    {
+        this.stations.add(questStation);
+    }
+
     protected void collectAllAttributes(QuestSection questSection, Map<String, String> attributes) {
 
         if (questSection != null) {

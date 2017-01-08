@@ -11,15 +11,23 @@ import static org.junit.Assert.*;
  * Created by David on 18/12/2016.
  */
 public class QuestParserTest {
+
+    public void testJacksonParser() throws Exception {
+        testParser(new JacksonQuestParser());
+    }
+
     @Test
-    public void parseQuest() throws Exception {
+    public void testSaxParser() throws Exception {
+        testParser(new SaxQuestParser());
+    }
+
+    protected void testParser(QuestParser questParser) throws Exception{
 
         InputStream is = null;
 
         try {
             is = this.getClass().getClassLoader().getResourceAsStream("bargames-quest.xml");
-            QuestParser qp = new QuestParser();
-            Quest q = qp.parseQuest(is);
+            Quest q = questParser.parseQuest(is);
 
             assertEquals("Quest title is incorrect", q.getAbout().getTitle(), "Bargames");
             assertEquals("Incorrect number of stations", q.getStations().size(), 29);
@@ -35,6 +43,7 @@ public class QuestParserTest {
             assertEquals("4th station's if condition check is incorrect", q.getStations().get(4).getElseCondition().getNumberAttributes().get(0).getName(), "[gold]");
             assertEquals("9th station doesn't have a number attribute", q.getStations().get(8).getStringAttributes().size(), 1);
             assertEquals("9th station's string attribute is incorrect", q.getStations().get(8).getStringAttributes().get(0).getName(), "[introDisplay]");
+            assertEquals("12th station's 2nd choice is not back", q.getStations().get(11).getChoices().get(1).getStation().getId(), "back");
             assertEquals("16th station doesn't have a state", q.getStations().get(15).getStateAttributes().size(), 1);
             assertEquals("16th station's state is incorrect", q.getStations().get(15).getStateAttributes().get(0).getName(), "[ate peanuts]");
 
@@ -47,5 +56,4 @@ public class QuestParserTest {
             }
         }
     }
-
 }
