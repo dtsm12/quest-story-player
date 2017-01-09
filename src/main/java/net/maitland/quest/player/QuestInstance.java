@@ -55,15 +55,46 @@ public class QuestInstance {
             throw new QuestStateException(String.format("Station %s is not found.", choiceId));
         }
 
+        return processNextStation(questStation);
+    }
+
+    public QuestStateStation getNextStation(int choiceNumber) throws QuestStateException, ChoiceNotPossibleException {
+
+        QuestStateStation questStateStation = null;
+        QuestStation questStation = null;
+        String choiceId;
+
+        if (choiceNumber == 0) {
+            questStateStation = getNextStation("start");
+        } else {
+            // Get choice
+            QuestStation currentStation = this.questPath.peek();
+            Choice choice = currentStation.getChoice(this.previousQuestState, choiceNumber - 1);
+
+            // check it was possible
+            if (choice == null) {
+                throw new ChoiceNotPossibleException(String.format("The choice number %s is not possible.", choiceNumber));
+            }
+
+            questStation = choice.getStation();
+
+            if (questStation == null) {
+                throw new QuestStateException(String.format("Choice number %s is not found in station '%s'.", choiceNumber, currentStation.getId()));
+            }
+
+            questStateStation = processNextStation(questStation);
+        }
+
+        return questStateStation;
+    }
+
+    public QuestStateStation processNextStation(QuestStation questStation) throws QuestStateException, ChoiceNotPossibleException {
         // resolve back references
         QuestStation nextStation;
-        if(questStation.getId().equals(QuestStation.BACK_STATION_ID))
-        {
+        if (questStation.getId().equals(QuestStation.BACK_STATION_ID)) {
             this.questPath.pop();
             nextStation = this.questPath.peek();
-        }
-        else
-        {
+        } else {
             nextStation = questStation;
         }
 
@@ -91,8 +122,7 @@ public class QuestInstance {
 
     protected QuestState getQuestState() {
 
-        if(this.questState == null)
-        {
+        if (this.questState == null) {
             this.questState = new QuestState(this.quest.collectAllAttributes());
         }
 

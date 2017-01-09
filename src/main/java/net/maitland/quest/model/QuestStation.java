@@ -140,6 +140,15 @@ public class QuestStation extends QuestSection  {
         return choice;
     }
 
+    public Choice getChoice(QuestState questState, int choiceIndex) throws QuestStateException
+    {
+        Choice choice = null;
+
+        List<Choice> choices = getChoices(questState);
+
+        return choices.get(choiceIndex);
+    }
+
     protected QuestSection getApplicableQuestSection(QuestState questState) throws QuestStateException {
 
         QuestSection questSection = null;

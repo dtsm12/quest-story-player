@@ -13,6 +13,46 @@ import static org.junit.Assert.*;
  */
 public class QuestInstanceTest {
     @Test
+    public void getNextStationByChoiceNumber() throws Exception {
+
+        QuestStation start = new QuestStation();
+        start.setId("start");
+        start.setText(new Text("start"));
+
+        QuestStation one = new QuestStation();
+        one.setId("one");
+        one.setText(new Text("one"));
+
+        QuestStation two = new QuestStation();
+        two.setId("two");
+        two.setText(new Text("two"));
+
+        Choice choiceOne = new Choice();
+        choiceOne.setStation(one);
+
+        Choice choiceTwo = new Choice();
+        choiceTwo.setStation(two);
+
+        start.addChoice(choiceOne);
+        start.addChoice(choiceTwo);
+
+        Quest quest = new Quest();
+        quest.addStation(start);
+        quest.addStation(one);
+        quest.addStation(two);
+
+        QuestInstance sut = new QuestInstance(quest);
+
+        // get start
+        QuestStateStation beginning = sut.getNextStation(0);
+        assertEquals("Start station by number incorrect", start.getId(), beginning.getId());
+
+        // get choice
+        QuestStateStation choice = sut.getNextStation(1);
+        assertEquals("Chosen station by number incorrect", one.getId(), choice.getId());
+    }
+
+    @Test
     public void getNextStationBack() throws Exception {
 
         QuestState questState = new QuestState();
