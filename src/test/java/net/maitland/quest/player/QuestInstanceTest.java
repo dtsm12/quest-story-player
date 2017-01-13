@@ -153,7 +153,7 @@ public class QuestInstanceTest {
         station = sut.getNextStation("station2");
 
         assertEquals("Correct number of choices is presented", 1, station.getChoices().size());
-        assertEquals("Correct choice is presented", "station3", station.getChoices().get(0).getStation().getId());
+        assertEquals("Correct choice is presented", "station3", station.getChoices().get(0).getStationId());
 
         station = sut.getNextStation("station3");
 

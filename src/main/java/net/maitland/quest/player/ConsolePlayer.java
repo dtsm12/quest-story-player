@@ -1,6 +1,5 @@
 package net.maitland.quest.player;
 
-import net.maitland.quest.JacksonQuestParser;
 import net.maitland.quest.SaxQuestParser;
 import net.maitland.quest.model.*;
 
@@ -30,7 +29,7 @@ public class ConsolePlayer {
         BufferedReader user = getUsersInput();
 
         String choiceId = null;
-        List<Choice> choices = null;
+        List<QuestStateChoice> choices = null;
         QuestStateStation questStation;
 
         try {
@@ -56,14 +55,14 @@ public class ConsolePlayer {
                 System.out.println();
 
                 if (choices.size() == 1) {
-                    Choice c = choices.get(0);
+                    QuestStateChoice c = choices.get(0);
                     System.out.println(c.getText());
-                    choiceId = c.getStation().getId();
+                    choiceId = c.getStationId();
                 } else {
                     System.out.println("These are your choices:");
 
-                    for (Choice c : choices) {
-                        System.out.println(String.format("\t%s: %s", c.getStation().getId(), c.getText()));
+                    for (QuestStateChoice c : choices) {
+                        System.out.println(String.format("\t%s: %s", c.getStationId(), c.getText()));
                     }
 
                     System.out.println();
@@ -93,7 +92,6 @@ public class ConsolePlayer {
             q = qp.parseQuest(is);
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
         } finally {
             if (is != null) {
                 try {

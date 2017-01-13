@@ -2,6 +2,7 @@ package net.maitland.quest;
 
 import net.maitland.quest.model.*;
 import net.maitland.quest.player.QuestStateException;
+import net.maitland.quest.sax.ClasspathSystemEntityResolver;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -33,6 +34,7 @@ public class SaxQuestParser extends AbstractQuestParser {
             SAXParserFactory spf = SAXParserFactory.newInstance();
             SAXParser saxParser = spf.newSAXParser();
             XMLReader xmlReader = saxParser.getXMLReader();
+            xmlReader.setEntityResolver(new ClasspathSystemEntityResolver());
             xmlReader.setContentHandler(qch);
             xmlReader.parse(new InputSource(sr));
             return qch.getQuest();

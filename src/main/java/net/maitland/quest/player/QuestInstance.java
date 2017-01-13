@@ -3,8 +3,8 @@ package net.maitland.quest.player;
 import net.maitland.quest.model.*;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -105,7 +105,7 @@ public class QuestInstance {
         QuestStateStation retStation = new QuestStateStation();
         retStation.setId(nextStation.getId());
         retStation.setText(nextStation.getText(this.getQuestState()).getValue());
-        retStation.setChoices(nextStation.getChoices(this.getQuestState()));
+        retStation.setChoices(getQuestStateChoice(nextStation.getChoices(this.getQuestState())));
 
         // save current state to check the choice when selected
         this.previousQuestState = this.getQuestState();
@@ -118,6 +118,21 @@ public class QuestInstance {
 
         // return relevant data for choice
         return retStation;
+    }
+
+    protected List<QuestStateChoice> getQuestStateChoice(List<Choice> choices)
+    {
+        List<QuestStateChoice> questStateChoices = new ArrayList<>();
+
+        for(Choice c : choices)
+        {
+            QuestStateChoice stateChoice = new QuestStateChoice();
+            stateChoice.setStationId(c.getStation().getId());
+            stateChoice.setText(c.getText());
+            questStateChoices.add(stateChoice);
+        }
+
+        return questStateChoices;
     }
 
     protected QuestState getQuestState() {
