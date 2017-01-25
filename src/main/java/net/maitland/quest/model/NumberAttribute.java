@@ -5,6 +5,13 @@ package net.maitland.quest.model;
  */
 public class NumberAttribute extends Attribute {
 
+    public NumberAttribute() {
+    }
+
+    public NumberAttribute(String name, int value) {
+        super(name, String.valueOf(value));
+    }
+
     @Override
     public boolean isValidValue(String value) {
         boolean isValidValue = false;

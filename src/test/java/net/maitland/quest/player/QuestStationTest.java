@@ -65,9 +65,7 @@ public class QuestStationTest {
         es.setText(new Text("Else text"));
         sut.setElseCondition(es);
 
-        NumberAttribute na = new NumberAttribute();
-        na.setName("testCondition");
-        na.setValue("3");
+        NumberAttribute na = new NumberAttribute("testCondition", 3);
         List<NumberAttribute> attributes = new ArrayList<>();
         attributes.add(na);
         sut.setNumberAttributes(attributes);
@@ -77,9 +75,9 @@ public class QuestStationTest {
         Quest quest = new Quest();
         quest.setStations(stations);
 
-        QuestState questState = new QuestState(quest.collectAllAttributes());
+        GameInstance gameInstance = quest.newGameInstance();
 
-        String text = sut.getText(questState).getValue();
+        String text = sut.getText(gameInstance.getCurrentState()).getValue();
         assertEquals("Text from else condition not returned", "Else text", text);
 
     }
@@ -110,9 +108,7 @@ public class QuestStationTest {
         es.setChoices(elseChoices);
         sut.setElseCondition(es);
 
-        NumberAttribute na = new NumberAttribute();
-        na.setName("testCondition");
-        na.setValue("3");
+        NumberAttribute na = new NumberAttribute("testCondition", 3);
         List<NumberAttribute> elseAttributes = new ArrayList<>();
         elseAttributes.add(na);
         es.setNumberAttributes(elseAttributes);
@@ -122,9 +118,9 @@ public class QuestStationTest {
         Quest quest = new Quest();
         quest.setStations(stations);
 
-        QuestState questState = new QuestState(quest.collectAllAttributes());
+        GameInstance gameInstance = quest.newGameInstance();
 
-        List<Choice> choices = sut.getChoices(questState);
+        List<Choice> choices = sut.getChoices(gameInstance.getCurrentState());
         Choice choice = choices.get(0);
         assertEquals("Text from else choice not returned", "elseChoice", choice.getText());
 

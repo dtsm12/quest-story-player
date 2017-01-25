@@ -12,8 +12,6 @@ import java.util.List;
  */
 public class QuestInstance {
 
-    private QuestState questState;
-    private QuestState previousQuestState;
     private Quest quest;
     private Deque<QuestStation> questPath = new ArrayDeque<>();
     private ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
@@ -22,7 +20,12 @@ public class QuestInstance {
         this.quest = quest;
     }
 
-    public QuestStateStation getNextStation(String choiceId) throws QuestStateException, ChoiceNotPossibleException {
+    public GameInstance newGameInstance() throws QuestStateException
+    {
+        return this.getQuest().newGameInstance();
+    }
+
+    public QuestStateStation getNextStation(GameInstance gameInstance, String choiceId) throws QuestStateException, ChoiceNotPossibleException {
 
         QuestStation questStation = null;
 
@@ -40,7 +43,7 @@ public class QuestInstance {
         } else {
             // Get choice
             QuestStation currentStation = this.questPath.peek();
-            Choice choice = currentStation.getChoice(this.previousQuestState, choiceId);
+            Choice choice = currentStation.getChoice(gameInstance.getPreviousState(), choiceId);
 
             // check it was possible
             if (choice == null) {
@@ -55,21 +58,21 @@ public class QuestInstance {
             throw new QuestStateException(String.format("Station %s is not found.", choiceId));
         }
 
-        return processNextStation(questStation);
+        return processNextStation(gameInstance, questStation);
     }
 
-    public QuestStateStation getNextStation(int choiceNumber) throws QuestStateException, ChoiceNotPossibleException {
+    public QuestStateStation getNextStation(GameInstance gameInstance, int choiceNumber) throws QuestStateException, ChoiceNotPossibleException {
 
         QuestStateStation questStateStation = null;
         QuestStation questStation = null;
         String choiceId;
 
         if (choiceNumber == 0) {
-            questStateStation = getNextStation("start");
+            questStateStation = getNextStation(gameInstance, "start");
         } else {
             // Get choice
             QuestStation currentStation = this.questPath.peek();
-            Choice choice = currentStation.getChoice(this.previousQuestState, choiceNumber - 1);
+            Choice choice = currentStation.getChoice(gameInstance.getPreviousState(), choiceNumber - 1);
 
             // check it was possible
             if (choice == null) {
@@ -82,13 +85,14 @@ public class QuestInstance {
                 throw new QuestStateException(String.format("Choice number %s is not found in station '%s'.", choiceNumber, currentStation.getId()));
             }
 
-            questStateStation = processNextStation(questStation);
+            questStateStation = processNextStation(gameInstance, questStation);
         }
 
         return questStateStation;
     }
 
-    public QuestStateStation processNextStation(QuestStation questStation) throws QuestStateException, ChoiceNotPossibleException {
+    public QuestStateStation processNextStation(GameInstance gameInstance, QuestStation questStation) throws QuestStateException, ChoiceNotPossibleException {
+
         // resolve back references
         QuestStation nextStation;
         if (questStation.getId().equals(QuestStation.BACK_STATION_ID)) {
@@ -99,19 +103,16 @@ public class QuestInstance {
         }
 
         // update quest state before visit
-        this.questState = nextStation.preVisit(this.getQuestState());
+        nextStation.preVisit(gameInstance);
 
         // visit: prepare next station data before updating state (visiting station)
         QuestStateStation retStation = new QuestStateStation();
         retStation.setId(nextStation.getId());
-        retStation.setText(nextStation.getText(this.getQuestState()).getValue());
-        retStation.setChoices(getQuestStateChoice(nextStation.getChoices(this.getQuestState())));
-
-        // save current state to check the choice when selected
-        this.previousQuestState = this.getQuestState();
+        retStation.setText(nextStation.getText(gameInstance.getCurrentState()).getValue());
+        retStation.setChoices(getQuestStateChoice(nextStation.getChoices(gameInstance.getCurrentState())));
 
         // update quest state after visit
-        this.questState = nextStation.postVisit(this.getQuestState());
+        nextStation.postVisit(gameInstance);
 
         // add to quest path
         this.questPath.push(nextStation);
@@ -133,15 +134,6 @@ public class QuestInstance {
         }
 
         return questStateChoices;
-    }
-
-    protected QuestState getQuestState() {
-
-        if (this.questState == null) {
-            this.questState = new QuestState(this.quest.collectAllAttributes());
-        }
-
-        return this.questState;
     }
 
     public Quest getQuest() {

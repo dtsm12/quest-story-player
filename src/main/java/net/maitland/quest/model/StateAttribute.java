@@ -5,6 +5,13 @@ package net.maitland.quest.model;
  */
 public class StateAttribute extends Attribute {
 
+    public StateAttribute() {
+    }
+
+    public StateAttribute(String name, boolean value) {
+        super(name, String.valueOf(value));
+    }
+
     @Override
     public String getValue() {
         return super.getValue() == null ? Boolean.TRUE.toString() : super.getValue();

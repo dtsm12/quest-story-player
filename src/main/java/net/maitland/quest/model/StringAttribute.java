@@ -5,6 +5,13 @@ package net.maitland.quest.model;
  */
 public class StringAttribute extends Attribute {
 
+    public StringAttribute() {
+    }
+
+    public StringAttribute(String name, String value) {
+        super(name, value);
+    }
+
     @Override
     public boolean isValidValue(String value) {
         return true;

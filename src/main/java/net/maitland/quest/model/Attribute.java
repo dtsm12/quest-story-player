@@ -7,6 +7,14 @@ public abstract class Attribute {
     private String name;
     private String value;
 
+    public Attribute() {
+    }
+
+    public Attribute(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
     public abstract boolean isValidValue(String value);
 
     public String getName() {

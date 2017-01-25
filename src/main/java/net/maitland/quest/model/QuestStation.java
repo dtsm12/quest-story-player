@@ -45,55 +45,28 @@ public class QuestStation extends QuestSection  {
         return backStation;
     }
 
-    public QuestState preVisit(QuestState questState) throws QuestStateException
+    public void preVisit(GameInstance gameInstance) throws QuestStateException
     {
-        return this.visit(questState, false);
+        this.visit(gameInstance, false);
     }
 
-    public QuestState postVisit(QuestState questState) throws QuestStateException
+    public void postVisit(GameInstance gameInstance) throws QuestStateException
     {
-        return this.visit(questState, true);
+        this.visit(gameInstance, true);
     }
 
-    protected QuestState visit(QuestState questState, boolean postVisit) throws QuestStateException
+    protected void visit(GameInstance gameInstance, boolean postVisit) throws QuestStateException
     {
-        Map<String, String> newAttributes = getUpdatedAttributes(questState, postVisit);
+        // Get this Station's attributes
+        List<Attribute> questAttributes = postVisit ? this.getPostVisitAttributes() : this.getPreVisitAttributes();
 
-        return new QuestState(newAttributes);
-    }
-
-    protected Map<String, String> getUpdatedAttributes(QuestState questState, boolean postVisit) throws QuestStateException {
-
-        Map<String, String> newAttributes = new HashMap<>(questState.getAttributes());
-
-        // process this Station's attributes
-        updateAttributesWithQuestSection(this, newAttributes, postVisit);
-
-        // if applicable section isn't the station itself
-        QuestSection applicableQuestSection = getApplicableQuestSection(questState);
+        // if applicable section isn't the station itself add in that section's attributes
+        QuestSection applicableQuestSection = getApplicableQuestSection(gameInstance.getCurrentState());
         if (this != applicableQuestSection) {
-            updateAttributesWithQuestSection(applicableQuestSection, newAttributes, postVisit);
+            questAttributes.addAll(postVisit ? applicableQuestSection.getPostVisitAttributes() : applicableQuestSection.getPreVisitAttributes());
         }
 
-        return newAttributes;
-    }
-
-    protected void updateAttributesWithQuestSection(QuestSection questSection, Map<String, String> attributes, boolean postVisit) throws QuestStateException {
-
-        List<Attribute> questAttributes = postVisit ? questSection.getPostVisitAttributes() : questSection.getPreVisitAttributes();
-
-        for (Attribute a : questAttributes) {
-            //evaluate the attributes value
-            String attrValue = expressionEvaluator.evaluateExpression(a, attributes);
-
-            // check it's the right type of value
-            if (a.isValidValue(attrValue) == false) {
-                throw new QuestStateException(String.format("Attribute '%s' expression '%s' evaluates to incorrect type", a.getName(), a.getValue()));
-            }
-
-            // update the Quest's state
-            attributes.put(a.getName(), attrValue);
-        }
+        gameInstance.updateState(questAttributes);
     }
 
     public Text getText(QuestState questState) throws QuestStateException {
@@ -104,7 +77,7 @@ public class QuestStation extends QuestSection  {
         List<String> attributeNames = this.expressionEvaluator.extractAttributeNames(text);
 
         for (String a : attributeNames) {
-            text = text.replace(a, questState.getAttributes().get(a));
+            text = text.replace(a, questState.getAttributeValue(a));
         }
 
         return new Text(text);
@@ -116,7 +89,7 @@ public class QuestStation extends QuestSection  {
         List<Choice> filteredChoices = new ArrayList<>();
 
         for (Choice c : questSection.getChoices()) {
-            if (expressionEvaluator.check(c, questState.getAttributes())) {
+            if (expressionEvaluator.check(c, questState.copyAttributes())) {
                 filteredChoices.add(c);
             }
         }
@@ -156,7 +129,7 @@ public class QuestStation extends QuestSection  {
         if (this.getConditions().size() > 0) {
 
             for (IfSection i : this.getConditions()) {
-                if (expressionEvaluator.check(i, questState.getAttributes())) {
+                if (expressionEvaluator.check(i, questState.copyAttributes())) {
                     questSection = i;
                     break;
                 }

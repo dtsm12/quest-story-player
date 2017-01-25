@@ -11,19 +11,15 @@ public class QuestState {
     public static final String MATH_FLOOR_MATH_RANDOM_100_1_TO_STRING = "(Math.floor(Math.random() * 100) + 1).toString()";
     private Map<String, String> attributes = new HashMap<>();
 
-    public QuestState()
-    {
+    public QuestState() {
         this(null);
     }
 
     public QuestState(Map<String, String> attributes) {
 
-        if(attributes != null)
-        {
+        if (attributes != null) {
             this.attributes = new HashMap<>(attributes);
-        }
-        else
-        {
+        } else {
             this.attributes = new HashMap<>();
         }
 
@@ -38,8 +34,8 @@ public class QuestState {
         this.attributes.put("{random 0, 100}", MATH_FLOOR_MATH_RANDOM_100_1_TO_STRING);
     }
 
-    public Map<String, String> getAttributes() {
-        return Collections.unmodifiableMap(this.attributes);
+    public Map<String, String> copyAttributes() {
+        return new HashMap(this.attributes);
     }
 
     public String getAttributeValue(String name) {

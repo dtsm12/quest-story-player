@@ -33,10 +33,12 @@ public class ConsolePlayer {
         QuestStateStation questStation;
 
         try {
+            GameInstance gameInstance = quest.newGameInstance();
+
             while (choiceId == null || choices != null) {
 
                 try {
-                    questStation = game.getNextStation(choiceId);
+                    questStation = game.getNextStation(gameInstance, choiceId);
                     System.out.println(questStation.getText());
                     choices = questStation.getChoices();
                 } catch (ChoiceNotPossibleException e) {

@@ -253,9 +253,7 @@ public class SaxQuestParser extends AbstractQuestParser {
         protected void startNumber(Attributes attributes) throws SAXException {
             String name = attributes.getValue("name");
             String value = attributes.getValue("value");
-            NumberAttribute attribute = new NumberAttribute();
-            attribute.setName(name);
-            attribute.setValue(value);
+            NumberAttribute attribute = new NumberAttribute(name, Integer.valueOf(value));
             this.questSection.addAttribute(attribute);
         }
 
@@ -266,9 +264,7 @@ public class SaxQuestParser extends AbstractQuestParser {
         protected void startString(Attributes attributes) throws SAXException {
             String name = attributes.getValue("name");
             String value = attributes.getValue("value");
-            StringAttribute attribute = new StringAttribute();
-            attribute.setName(name);
-            attribute.setValue(value);
+            StringAttribute attribute = new StringAttribute(name, value);
             this.questSection.addAttribute(attribute);
         }
 
@@ -279,9 +275,7 @@ public class SaxQuestParser extends AbstractQuestParser {
         protected void startState(Attributes attributes) throws SAXException {
             String name = attributes.getValue("name");
             String value = attributes.getValue("value");
-            StateAttribute attribute = new StateAttribute();
-            attribute.setName(name);
-            attribute.setValue(String.valueOf(Boolean.parseBoolean(value)));
+            StateAttribute attribute = new StateAttribute(name, Boolean.parseBoolean(value));
             this.questSection.addAttribute(attribute);
 
         }

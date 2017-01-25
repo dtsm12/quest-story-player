@@ -6,6 +6,7 @@ package net.maitland.quest.model;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import net.maitland.quest.player.QuestStateException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,13 @@ public final class Quest {
     @JacksonXmlProperty(localName = "station")
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<QuestStation> stations = new ArrayList<>();
+
+    public GameInstance newGameInstance() throws QuestStateException
+    {
+        GameInstance gameInstance = new GameInstance();
+        gameInstance.updateState(this.collectAllAttributes());
+        return gameInstance;
+    }
 
     public About getAbout() {
         return about;
@@ -36,25 +44,24 @@ public final class Quest {
         this.stations = stations;
     }
 
-    public void addStation(QuestStation questStation)
-    {
+    public void addStation(QuestStation questStation) {
         this.stations.add(questStation);
     }
 
-    protected void collectAllAttributes(QuestSection questSection, Map<String, String> attributes) {
+    protected void collectAllAttributes(QuestSection questSection, List<Attribute> attributes) {
 
         if (questSection != null) {
             for (NumberAttribute n : questSection.getNumberAttributes()) {
-                attributes.put(n.getName(), "0");
+                attributes.add(new NumberAttribute(n.getName(), 0));
             }
 
             for (StateAttribute st : questSection.getStateAttributes()) {
-                attributes.put(st.getName(), "false");
+                attributes.add(new StateAttribute(st.getName(), false));
             }
         }
     }
 
-    protected void collectAllAttributes(QuestStation s, Map<String, String> attributes) {
+    protected void collectAllAttributes(QuestStation s, List<Attribute> attributes) {
         collectAllAttributes((QuestSection) s, attributes);
         for (IfSection is : s.getConditions()) {
             collectAllAttributes(is, attributes);
@@ -62,12 +69,11 @@ public final class Quest {
         collectAllAttributes(s.getElseCondition(), attributes);
     }
 
-    public Map<String, String> collectAllAttributes() {
+    public List<Attribute> collectAllAttributes() {
 
-        Map<String, String> attributes = new HashMap<>();
+        List<Attribute> attributes = new ArrayList<>();
 
-        for(QuestStation qs : this.stations)
-        {
+        for (QuestStation qs : this.stations) {
             collectAllAttributes(qs, attributes);
         }
 
