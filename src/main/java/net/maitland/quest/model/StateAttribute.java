@@ -8,8 +8,12 @@ public class StateAttribute extends Attribute {
     public StateAttribute() {
     }
 
-    public StateAttribute(String name, boolean value) {
-        super(name, String.valueOf(value));
+    public StateAttribute(String name) {
+        super(name, "false");
+    }
+
+    public StateAttribute(String name, String value) {
+        super(name, value);
     }
 
     @Override

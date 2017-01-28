@@ -65,7 +65,7 @@ public class QuestStationTest {
         es.setText(new Text("Else text"));
         sut.setElseCondition(es);
 
-        NumberAttribute na = new NumberAttribute("testCondition", 3);
+        NumberAttribute na = new NumberAttribute("testCondition", "3");
         List<NumberAttribute> attributes = new ArrayList<>();
         attributes.add(na);
         sut.setNumberAttributes(attributes);
@@ -108,7 +108,7 @@ public class QuestStationTest {
         es.setChoices(elseChoices);
         sut.setElseCondition(es);
 
-        NumberAttribute na = new NumberAttribute("testCondition", 3);
+        NumberAttribute na = new NumberAttribute("testCondition", "3");
         List<NumberAttribute> elseAttributes = new ArrayList<>();
         elseAttributes.add(na);
         es.setNumberAttributes(elseAttributes);

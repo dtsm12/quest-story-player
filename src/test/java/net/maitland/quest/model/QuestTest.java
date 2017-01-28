@@ -1,6 +1,7 @@
-package net.maitland.quest.player;
+package net.maitland.quest.model;
 
 import net.maitland.quest.model.*;
+import net.maitland.quest.player.QuestStateStation;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import static org.junit.Assert.*;
 /**
  * Created by David on 29/12/2016.
  */
-public class QuestInstanceTest {
+public class QuestTest {
     @Test
     public void getNextStationByChoiceNumber() throws Exception {
 
@@ -36,13 +37,12 @@ public class QuestInstanceTest {
         start.addChoice(choiceOne);
         start.addChoice(choiceTwo);
 
-        Quest quest = new Quest();
-        quest.addStation(start);
-        quest.addStation(one);
-        quest.addStation(two);
+        Quest sut = new Quest();
+        sut.addStation(start);
+        sut.addStation(one);
+        sut.addStation(two);
 
-        QuestInstance sut = new QuestInstance(quest);
-        GameInstance gameInstance = quest.newGameInstance();
+        GameInstance gameInstance = sut.newGameInstance();
 
         // get start
         QuestStateStation beginning = sut.getNextStation(gameInstance, 0);
@@ -57,7 +57,7 @@ public class QuestInstanceTest {
     public void getNextStationBack() throws Exception {
 
         QuestState questState = new QuestState();
-        Quest quest = new Quest();
+        Quest sut = new Quest();
 
         QuestStation first = new QuestStation();
         first.setId("first");
@@ -83,9 +83,8 @@ public class QuestInstanceTest {
         stations.add(first);
         stations.add(second);
 
-        quest.setStations(stations);
+        sut.setStations(stations);
 
-        QuestInstance sut = new QuestInstance(quest);
         GameInstance gameInstance = sut.newGameInstance();
 
         sut.getNextStation(gameInstance, "first");
@@ -119,7 +118,7 @@ public class QuestInstanceTest {
         choice1.setStation(station3);
         is.addChoice(choice1);
 
-        StateAttribute sa = new StateAttribute("testBoolean", true);
+        StateAttribute sa = new StateAttribute("testBoolean", "true");
         is.addAttribute(sa);
 
         station2.addCondition(is);
@@ -143,10 +142,9 @@ public class QuestInstanceTest {
         stations.add(station1);
         stations.add(station2);
         stations.add(station3);
-        Quest quest = new Quest();
-        quest.setStations(stations);
+        Quest sut = new Quest();
+        sut.setStations(stations);
 
-        QuestInstance sut = new QuestInstance(quest);
         GameInstance gameInstance = sut.newGameInstance();
 
         QuestStateStation station = sut.getNextStation(gameInstance, null);

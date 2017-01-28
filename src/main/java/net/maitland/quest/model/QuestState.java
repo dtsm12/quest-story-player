@@ -38,7 +38,15 @@ public class QuestState {
         return new HashMap(this.attributes);
     }
 
+    public Map<String, String> getAttributes() {
+        return Collections.unmodifiableMap(this.attributes);
+    }
+
     public String getAttributeValue(String name) {
         return this.attributes.get(name);
+    }
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
     }
 }

@@ -8,8 +8,12 @@ public class NumberAttribute extends Attribute {
     public NumberAttribute() {
     }
 
-    public NumberAttribute(String name, int value) {
-        super(name, String.valueOf(value));
+    public NumberAttribute(String name) {
+        super(name, "0");
+    }
+
+    public NumberAttribute(String name, String value) {
+        super(name, value);
     }
 
     @Override

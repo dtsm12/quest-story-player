@@ -3,6 +3,8 @@ package net.maitland.quest.model;
 import net.maitland.quest.player.ExpressionEvaluator;
 import net.maitland.quest.player.QuestStateException;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 
@@ -13,11 +15,11 @@ public class GameInstance {
 
     private QuestState questState = new QuestState();
     private QuestState previousQuestState = new QuestState();
-    private boolean isInitialised;
+    private Deque<String> questPath =  new ArrayDeque<>();
 
     private ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
 
-    /* Use default/package access modifier - should be obtained from QuestInstance */
+    /* Use default/package access modifier - should be obtained from Quest */
     GameInstance() {
     }
 
@@ -50,5 +52,21 @@ public class GameInstance {
 
         this.previousQuestState = this.questState;
         this.questState = new QuestState(newState);
+    }
+
+    public Deque<String> getQuestPath() {
+        return questPath;
+    }
+
+    public void setQuestState(QuestState questState) {
+        this.questState = questState;
+    }
+
+    public void setPreviousQuestState(QuestState previousQuestState) {
+        this.previousQuestState = previousQuestState;
+    }
+
+    public void setQuestPath(Deque<String> questPath) {
+        this.questPath = questPath;
     }
 }

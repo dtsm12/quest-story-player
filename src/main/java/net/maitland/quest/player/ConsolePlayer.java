@@ -25,7 +25,6 @@ public class ConsolePlayer {
 
     public void play() {
         Quest quest = getQuest();
-        QuestInstance game = new QuestInstance(quest);
         BufferedReader user = getUsersInput();
 
         String choiceId = null;
@@ -38,7 +37,7 @@ public class ConsolePlayer {
             while (choiceId == null || choices != null) {
 
                 try {
-                    questStation = game.getNextStation(gameInstance, choiceId);
+                    questStation = quest.getNextStation(gameInstance, choiceId);
                     System.out.println(questStation.getText());
                     choices = questStation.getChoices();
                 } catch (ChoiceNotPossibleException e) {
