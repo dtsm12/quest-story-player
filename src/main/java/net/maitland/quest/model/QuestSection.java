@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class QuestSection {
 
-    private Text text;
+    private Text text = null;
 
     @JacksonXmlProperty(localName = "choice")
     @JacksonXmlElementWrapper(useWrapping = false)

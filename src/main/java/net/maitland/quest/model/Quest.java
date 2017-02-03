@@ -60,6 +60,7 @@ public final class Quest {
             /* create attributes with default values */
             questSection.getNumberAttributes().stream().forEach(n -> attributes.add(new NumberAttribute(n.getName())));
             questSection.getStateAttributes().stream().forEach(st -> attributes.add(new StateAttribute(st.getName())));
+            questSection.getStringAttributes().stream().forEach(st -> attributes.add(new StringAttribute(st.getName())));
         }
     }
 

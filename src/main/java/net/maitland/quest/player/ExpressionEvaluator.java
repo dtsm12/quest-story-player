@@ -67,7 +67,7 @@ public class ExpressionEvaluator {
     }
 
     public List<String> extractAttributeNames(String value) {
-        Pattern attrPattern = Pattern.compile("(\\[[a-zA-z0-9\\s]+\\])");
+        Pattern attrPattern = Pattern.compile("(\\[[a-zA-z0-9\\s]+?\\])");
         List<String> attributeNames = new ArrayList<>();
         Matcher matcher = attrPattern.matcher(value);
 

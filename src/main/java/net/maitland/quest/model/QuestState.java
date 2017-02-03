@@ -9,6 +9,8 @@ public class QuestState {
 
     public static final String MATH_FLOOR_MATH_RANDOM_6_1_TO_STRING = "(Math.floor(Math.random() * 6) + 1).toString()";
     public static final String MATH_FLOOR_MATH_RANDOM_100_1_TO_STRING = "(Math.floor(Math.random() * 100) + 1).toString()";
+    public static final String MATH_FLOOR_MATH_RANDOM_1000_1_TO_STRING = "(Math.floor(Math.random() * 1000) + 1).toString()";
+    public static final String MATH_FLOOR_MATH_RANDOM_13_1_TO_STRING = "(Math.floor(Math.random() * 13) + 1).toString()";
     private Map<String, String> attributes = new HashMap<>();
 
     public QuestState() {
@@ -32,6 +34,8 @@ public class QuestState {
         this.attributes.put(" = ", " == ");
         this.attributes.put("{random 1, 6}", MATH_FLOOR_MATH_RANDOM_6_1_TO_STRING);
         this.attributes.put("{random 0, 100}", MATH_FLOOR_MATH_RANDOM_100_1_TO_STRING);
+        this.attributes.put("{random 1, 1000}", MATH_FLOOR_MATH_RANDOM_1000_1_TO_STRING);
+        this.attributes.put("{random 1, 13}", MATH_FLOOR_MATH_RANDOM_13_1_TO_STRING);
     }
 
     public Map<String, String> copyAttributes() {
