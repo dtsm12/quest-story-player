@@ -6,22 +6,20 @@
         <title>Chance Quest</title>
         <author>David Maitland</author>
         <intro>You are a bold adventurer who, in his journeys across the new world,
-        have heard of uncharted caves or dungeons that many have been into but
-        not returned from. You have taken the challenge to map them and have
-        stocked up supplies.</intro>
+        have heard of uncharted caves or dungeons that many have been into but not returned from.
+            You have taken the challenge to map them and have stocked up supplies.</intro>
     </about>
 
     <station id="start">
         <text class="title"><strong>Chance Quest</strong><break/>
         </text>
-        <text class="intro">You have with you a backpack containing
-        6 torches, a tinder box to light them, and 4 meals.</text>
+        <text class="intro">You have with you a backpack containing 6 torches, a tinder box to light them, and 4 meals.</text>
         <number name="cards" value="0"/>
         <number name="gold pieces" value="0"/>
         <number name="torches" value="6"/>
         <number name="meals" value="4"/>
         <number name="meal card counter" value="0"/>
-        <number name="light cards left counter" value="15"/>
+        <number name="light cards left counter" value="10"/>
         <number name="open paths" value="1"/>
         <state name="has tinderbox" value="true"/>
         <state name="has backpack" value="true"/>
@@ -37,39 +35,44 @@
 
         <text></text>
 
-        <if check="[meal card counter] = 10 and [meals] greater 0">
+        <if check="[meal card counter] greater 9 and [meals] greater 0">
             <text>You feel hungry so stop and east a meal.</text>
             <number name="meals" value="[meals]-1"/>
             <number name="meal card counter" value="0"/>
             <choice station="take movement card"></choice>
         </if>
 
-        <if check="[meal card counter] = 10 and [meals] = 0">
+        <if check="[meal card counter] greater 9 and [meals] lower 1">
             <text>You're famished but have run out of meals.
             You decide to head back to town and come back another day.</text>
             <choice station="end"></choice>
         </if>
 
-        <if check="[light card left counter] = 0 and [has lantern] and [has oil] and [has tinderbox]">
+        <if check="[light card left counter] lower 1 and [has lantern] and [has oil] and [has tinderbox]">
             <text>Your light burns out. Filling the lantern with oil you re-light your way.</text>
             <state name="have oil" value="false"/>
             <number name="light card left counter" value="20"/>
             <choice station="take movement card"></choice>
         </if>
 
-        <if check="[light card left counter] = 0 and torches greater 0 and [has tinderbox]">
+        <if check="[light card left counter] lower 1 and torches greater 0 and [has tinderbox]">
             <text>Your light burns out. You light another torch.</text>
             <number name="torches" value="[torches]-1"/>
             <number name="light card left counter" value="10"/>
             <choice station="take movement card"></choice>
         </if>
 
-        <if check="[light card left counter] = 0 and [torches] = 0 and not [has lantern]">
+        <if check="[light card left counter] lower 1 and not [has tinderbox]">
+            <text>Your light burns out but you don't have a tinderbox to re-light it.</text>
+            <choice station="end">You wander in the dark for hours but finally discover the way out.</choice>
+        </if>
+
+        <if check="[light card left counter] lower 1 and [torches] lower 1 and not [has lantern]">
             <text>Your light burns out but you have run out of light sources.</text>
             <choice station="end">You wander in the dark for hours but finally discover the way out.</choice>
         </if>
 
-        <if check="[light card left counter] = 0 and [torches] = 0 and [has lantern] and not [has oil]">
+        <if check="[light card left counter] lower 1 and [torches] lower 1 and [has lantern] and not [has oil]">
             <text>Your light burns out but you have run out of torches and lantern oil.</text>
             <choice station="end">You wander in the dark for hours but finally discover the way out.</choice>
         </if>
@@ -212,15 +215,15 @@
         </if>
 
         <if check="[cardNumber] = 3">
-            <text>A strong wind whistles down the path blowing out your flame. Relighting it you realise you have
-            lost a piece of equipment; or was it taken!</text>
+            <text>A strong wind whistles down the path blowing out your flame.
+                Relighting it you realise you have lost a piece of equipment; or was it taken!</text>
             <choice station="wind trap">You check what you have lost.</choice>
         </if>
 
         <if check="[cardNumber] = 4">
             <text>Unknowlingly you step on a button which releases a dart tipped with a powerful poison.
-            The second it enter your blood steam your fate was sealed. Minutes later you fall
-            unconcious and never come round!</text>
+            The second it enter your blood steam your fate was sealed.
+                Minutes later you fall unconcious and never come round!</text>
             <choice station="end"></choice>
         </if>
 
@@ -230,10 +233,9 @@
         </if>
 
         <if check="[cardNumber] = 6">
-            <text>A piece of the roof becomes lose and falls on your head, knocking you unconcious.
-            When you come round you have lost your backpack</text>
-            <state name="has backpack" value="false"/>
-            <choice station="take movement card">You rub your head and continue.</choice>
+            <text>A piece of the roof becomes lose and falls on your head, knocking you unconscious.
+            When you come round you discover you have lost some treasure.</text>
+            <choice station="lose treasure">You check your pockets.</choice>
         </if>
 
         <if check="[cardNumber] = 7">
@@ -246,20 +248,19 @@
         <if check="[cardNumber] = 8">
             <text>Some poor soul has fallen foul of a trap and lays dead before you.
             Looking through his belongings you find a piece of equipment.</text>
-            <choice station="take equipment">You pick up the eqipment.</choice>
+            <choice station="take equipment">You pick up the equipment.</choice>
         </if>
 
         <if check="[cardNumber] = 9">
             <text>As you turn a corner to the west, you are met by a large fist.
-            Falling back you feel another blow to the head. when you regain conciousness
-            you have lost some treasure.</text>
+            Falling back you feel another blow to the head. when you regain consciousness you have lost some treasure.</text>
             <choice station="lose treasure">You see what you lost.</choice>
         </if>
 
         <if check="[cardNumber] = 10">
             <text>From the blackness you hear a strange noise which gets louder.
-            Unexpectedly some coins roll out of the darkness towards you. They fall over
-            and cautiously congratulate yourself on your luck</text>
+            Unexpectedly some coins roll out of the darkness towards you.
+                They fall over and cautiously congratulate yourself on your luck.</text>
             <choice station="take treasure">You count the treasure.</choice>
         </if>
 
@@ -269,8 +270,8 @@
         </if>
 
         <if check="[cardNumber] = 12">
-            <text>Walking along you suddenly see the walls spin and get faster and faster. After a few
-                seconds of just a blur they stop. You find yourself in a an unfamiliar room with an exit to the west.
+            <text>Walking along you suddenly see the walls spin and get faster and faster.
+                After a few seconds of just a blur they stop. You find yourself in a an unfamiliar room with an exit to the west.
                 You feel slightly disorientated.</text>
             <string name="came from" value="east"/>
             <choice station="take movement card">You find out what's beyond the door.</choice>
@@ -365,7 +366,7 @@
         </if>
         <else>
             <!--text>The battle continues.</text-->
-            <text>The battle continues. You have [hitpoints] hitpoints. It has [monster hitpoints] hitpoints.</text>
+            <text>You have [hitpoints] hitpoints left.</text>
             <choice station="hit monster"/>
         </else>
     </station>
@@ -465,7 +466,7 @@
     <station id="portcullis trap">
         <text></text>
         <if check="[has pole]">
-            <text>Thinking quickly you jam your 10 foot pole into the gap in the wall jamming the portculli open.
+            <text>Thinking quickly you jam your 10 foot pole into the gap in the wall jamming the portcullis open.
             You'll have to leave the pole there but the way ahead is clear.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
@@ -597,7 +598,7 @@
         </if>
 
         <if check="[adjustment] = 'lost' and [gold pieces] greater [change]">
-            <text>You lost [chaange] gold pieces.</text>
+            <text>You lost [change] gold pieces.</text>
             <number name="gold pieces" value="[gold pieces]-[change]"/>
             <choice station="take movement crd"></choice>
         </if>
