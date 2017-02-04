@@ -7,6 +7,7 @@ public class About {
 
     private String title;
     private String author;
+    private String intro;
 
     public String getTitle() {
         return title;
@@ -22,5 +23,13 @@ public class About {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
     }
 }

@@ -31,6 +31,9 @@ public class ConsolePlayer {
         List<QuestStateChoice> choices = null;
         QuestStateStation questStation;
 
+        System.out.println(quest.getAbout().getTitle());
+        System.out.println(quest.getAbout().getIntro());
+
         try {
             GameInstance gameInstance = quest.newGameInstance();
 

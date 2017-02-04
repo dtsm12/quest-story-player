@@ -120,6 +120,10 @@ public class SaxQuestParser extends AbstractQuestParser {
                 startTitle(attributes);
             }
 
+            if (qName.equals("intro")) {
+                startIntro(attributes);
+            }
+
             if (qName.equals("station")) {
                 startStation(attributes);
             }
@@ -162,6 +166,10 @@ public class SaxQuestParser extends AbstractQuestParser {
 
             if (qName.equals("title")) {
                 endTitle();
+            }
+
+            if (qName.equals("intro")) {
+                endIntro();
             }
 
             if (qName.equals("station")) {
@@ -209,7 +217,14 @@ public class SaxQuestParser extends AbstractQuestParser {
         }
 
         protected void endTitle() throws SAXException {
-            this.about.setTitle(this.currentCharacters.toString());
+            this.about.setTitle(getCharacters());
+        }
+
+        protected void startIntro(Attributes attributes) throws SAXException {
+        }
+
+        protected void endIntro() throws SAXException {
+            this.about.setIntro(getCharacters());
         }
 
         protected void startStation(Attributes attributes) throws SAXException {
@@ -231,7 +246,7 @@ public class SaxQuestParser extends AbstractQuestParser {
         }
 
         protected void endText() throws SAXException {
-            this.text.setValue(this.currentCharacters.toString());
+            this.text.setValue(getCharacters());
             this.questSection.setText(this.text);
             this.text = null;
         }
@@ -245,7 +260,7 @@ public class SaxQuestParser extends AbstractQuestParser {
         }
 
         protected void endChoice() throws SAXException {
-            this.choice.setText(this.currentCharacters.toString());
+            this.choice.setText(getCharacters());
             this.questSection.addChoice(this.choice);
             this.choice = null;
         }
@@ -304,6 +319,10 @@ public class SaxQuestParser extends AbstractQuestParser {
         protected void endElse() throws SAXException {
             this.station.setElseCondition((ElseSection) this.questSection);
             this.questSection = null;
+        }
+
+        protected String getCharacters() {
+            return this.currentCharacters.toString().replace(".", ". ");
         }
     }
 }

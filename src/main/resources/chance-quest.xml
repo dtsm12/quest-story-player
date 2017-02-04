@@ -153,7 +153,7 @@
         </if>
 
         <if check="[cardNumber] = 12">
-            <text>You see some any attractive glittering from a dark corner.</text>
+            <text>You see something glittering from a dark corner.</text>
             <choice station="take treasure">You see what you've found.</choice>
         </if>
 
@@ -334,7 +334,7 @@
 
         <if check="[cardNumber] = 6 or [cardNumber] = 9">
             <text>Your sword pierces the beast chest stopping it in its tracks.
-            It drops to the floor dead.</text>
+            It drops to the floor.</text>
             <number name="monster hitpoints" value="0"/>
             <choice station="check fight status"/>
         </if>
