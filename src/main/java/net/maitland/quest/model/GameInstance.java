@@ -69,4 +69,8 @@ public class GameInstance {
     public void setQuestPath(Deque<String> questPath) {
         this.questPath = questPath;
     }
+
+    public void setExpressionEvaluator(ExpressionEvaluator expressionEvaluator) {
+        this.expressionEvaluator = expressionEvaluator;
+    }
 }

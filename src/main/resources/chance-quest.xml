@@ -35,33 +35,33 @@
         <number name="light card left counter" value="[light card left counter]-1"/>
         <number name="cardNumber" value="{random 1, 13}"/>
 
-        <text>.</text>
+        <text></text>
 
         <if check="[meal card counter] = 10 and [meals] greater 0">
             <text>You feel hungry so stop and east a meal.</text>
             <number name="meals" value="[meals]-1"/>
             <number name="meal card counter" value="0"/>
-            <choice station="take movement card">.</choice>
+            <choice station="take movement card"></choice>
         </if>
 
         <if check="[meal card counter] = 10 and [meals] = 0">
             <text>You're famished but have run out of meals.
             You decide to head back to town and come back another day.</text>
-            <choice station="end">.</choice>
+            <choice station="end"></choice>
         </if>
 
         <if check="[light card left counter] = 0 and [has lantern] and [has oil] and [has tinderbox]">
             <text>Your light burns out. Filling the lantern with oil you re-light your way.</text>
             <state name="have oil" value="false"/>
             <number name="light card left counter" value="20"/>
-            <choice station="take movement card">.</choice>
+            <choice station="take movement card"></choice>
         </if>
 
         <if check="[light card left counter] = 0 and torches greater 0 and [has tinderbox]">
             <text>Your light burns out. You light another torch.</text>
             <number name="torches" value="[torches]-1"/>
             <number name="light card left counter" value="10"/>
-            <choice station="take movement card">.</choice>
+            <choice station="take movement card"></choice>
         </if>
 
         <if check="[light card left counter] = 0 and [torches] = 0 and not [has lantern]">
@@ -80,23 +80,23 @@
         </if>
 
         <if check="[cardNumber] = 2">
-            <text>.</text>
-            <choice station="go north">.</choice>
+            <text></text>
+            <choice station="go north"></choice>
         </if>
 
         <if check="[cardNumber] = 3">
-            <text>.</text>
-            <choice station="go east">.</choice>
+            <text></text>
+            <choice station="go east"></choice>
         </if>
 
         <if check="[cardNumber] = 4">
-            <text>.</text>
-            <choice station="go south">.</choice>
+            <text></text>
+            <choice station="go south"></choice>
         </if>
 
         <if check="[cardNumber] = 5">
-            <text>.</text>
-            <choice station="go west">.</choice>
+            <text></text>
+            <choice station="go west"></choice>
         </if>
 
         <if check="[cardNumber] = 6">
@@ -171,25 +171,25 @@
     </station>
 
     <station id="go north">
-        <text>.</text>
+        <text></text>
         <string name="came from" value="south"/>
         <choice station="take movement card">You follow the path north.</choice>
     </station>
 
     <station id="go east">
-        <text>.</text>
+        <text></text>
         <string name="came from" value="west"/>
         <choice station="take movement card">You follow the path east.</choice>
     </station>
 
     <station id="go south">
-        <text>.</text>
+        <text></text>
         <string name="came from" value="north"/>
         <choice station="take movement card">You follow the path south.</choice>
     </station>
 
     <station id="go west">
-        <text>.</text>
+        <text></text>
         <string name="came from" value="east"/>
         <choice station="take movement card">You follow the path west.</choice>
     </station>
@@ -197,7 +197,7 @@
     <station id="trap">
         <number name="cardNumber" value="{random 1, 13}"/>
 
-        <text>.</text>
+        <text></text>
 
         <if check="[cardNumber] = 1">
             <text>You step on a piece of ground which gives way.
@@ -221,7 +221,7 @@
             <text>Unknowlingly you step on a button which releases a dart tipped with a powerful poison.
             The second it enter your blood steam your fate was sealed. Minutes later you fall
             unconcious and never come round!</text>
-            <choice station="end">.</choice>
+            <choice station="end"></choice>
         </if>
 
         <if check="[cardNumber] = 5">
@@ -240,7 +240,7 @@
             <text>Moving cautiously through the dungeon you trip on a piece of twine.
             A large cage comes crashing down around you. You're trapped.
             All you can do is wait for someone to come and help you, or not ?</text>
-            <choice station="end">.</choice>
+            <choice station="end"></choice>
         </if>
 
         <if check="[cardNumber] = 8">
@@ -293,90 +293,91 @@
     <station id="fight monster">
         <number name="hitpoints" value="7"/>
         <number name="monster hitpoints" value="7"/>
-        <text>.</text>
+        <text></text>
         <choice station="hit monster">You attack the monster.</choice>
     </station>
 
     <station id="hit monster">
         <number name="cardNumber" value="{random 1, 13}"/>
-        <text>.</text>
+        <text></text>
 
         <if check="[cardNumber] = 1">
-            <number name="hitpoints" value="0"/>
             <text>The monster lands a deadly blow knocking you to the floor.
             You feel your life flowing out of you as the monster tears your belongings from your bag.</text>
+            <number name="hitpoints" value="0"/>
             <choice station="check fight status"/>
         </if>
 
         <if check="[cardNumber] = 2 or [cardNumber] = 10">
-            <number name="hitpoints" value="[hitpoints] - 2"/>
             <text>You are hit; a nasty gash opens up on your skin.</text>
+            <number name="hitpoints" value="[hitpoints] - 2"/>
             <choice station="check fight status"/>
         </if>
 
         <if check="[cardNumber] = 3 or [cardNumber] = 7 or [cardNumber] = 13">
-            <number name="hitpoints" value="[hitpoints] - 1"/>
             <text>You are hit.</text>
+            <number name="hitpoints" value="[hitpoints] - 1"/>
             <choice station="check fight status"/>
         </if>
 
         <if check="[cardNumber] = 4 or [cardNumber] = 8">
-            <number name="monster hitpoints" value="[monster hitpoints] - 1"/>
             <text>You hit the fiend.</text>
+            <number name="monster hitpoints" value="[monster hitpoints] - 1"/>
             <choice station="check fight status"/>
         </if>
 
         <if check="[cardNumber] = 5">
-            <number name="monster hitpoints" value="[monster hitpoints] - 2"/>
             <text>You blow to the monster causes it to stagger.</text>
+            <number name="monster hitpoints" value="[monster hitpoints] - 2"/>
             <choice station="check fight status"/>
         </if>
 
         <if check="[cardNumber] = 6 or [cardNumber] = 9">
-            <number name="monster hitpoints" value="0"/>
             <text>Your sword pierces the beast chest stopping it in its tracks.
             It drops to the floor dead.</text>
+            <number name="monster hitpoints" value="0"/>
             <choice station="check fight status"/>
         </if>
 
         <if check="[cardNumber] = 11">
-            <number name="monster hitpoints" value="[monster hitpoints] - 3"/>
             <text>Swiping your sword you relieve the beast of one of its limbs.</text>
+            <number name="monster hitpoints" value="[monster hitpoints] - 3"/>
             <choice station="check fight status"/>
         </if>
 
         <if check="[cardNumber] = 12">
-            <number name="hitpoints" value="[hitpoints] - 3"/>
             <text>A crushing blow brings you to your knees.</text>
+            <number name="hitpoints" value="[hitpoints] - 3"/>
             <choice station="check fight status"/>
         </if>
 
     </station>
 
     <station id="check fight status">
-        <text>.</text>
-        <if check="[monster hitpoints] = 0">
+        <text></text>
+        <if check="[monster hitpoints] lower 1">
             <text>The monster is dead, you have survived.</text>
             <choice station="take equipment"/>
         </if>
-        <if check="[hitpoints] = 0">
+        <if check="[hitpoints] lower 1">
             <text>You have been defeated. Your corpse will remain here as a warning to others.</text>
-            <choice station="end">.</choice>
+            <choice station="end"></choice>
         </if>
         <else>
-            <text>The battle continues.</text>
+            <!--text>The battle continues.</text-->
+            <text>The battle continues. You have [hitpoints] hitpoints. It has [monster hitpoints] hitpoints.</text>
             <choice station="hit monster"/>
         </else>
     </station>
 
     <station id="take treasure">
-        <text>.</text>
+        <text></text>
         <string name="adjustment" value="found"/>
         <choice station="adjust treasure"/>
     </station>
 
     <station id="spiked pit trap">
-        <text>.</text>
+        <text></text>
         <if check="[has pole]">
             <text>As luck would have it the 10 foot pole you found gets jammed in the sides of the pit.
             Thanking your lucky stars you climb out.
@@ -385,12 +386,12 @@
         </if>
         <else>
             <text>You plummet to your doom landing on the rusty points.</text>
-            <choice station="end">.</choice>
+            <choice station="end"></choice>
         </else>
     </station>
 
     <station id="water trap">
-        <text>.</text>
+        <text></text>
         <if check="[has rope]">
             <text>Fortunately the rope you wrapped around your backup held everything in.</text>
             <choice station="take movement card">You keep walking, drying off as you go.</choice>
@@ -403,7 +404,7 @@
 
     <station id="wind trap">
 
-        <text>.</text>
+        <text></text>
 
         <if check="[meals] greater 0">
             <number name="meals" value="[meals] - 1"/>
@@ -462,7 +463,7 @@
     </station>
 
     <station id="portcullis trap">
-        <text>.</text>
+        <text></text>
         <if check="[has pole]">
             <text>Thinking quickly you jam your 10 foot pole into the gap in the wall jamming the portculli open.
             You'll have to leave the pole there but the way ahead is clear.</text>
@@ -482,7 +483,7 @@
     <station id="take equipment">
         <number name="cardNumber" value="{random 1, 13}"/>
 
-        <text>.</text>
+        <text></text>
 
         <if check="[cardNumber] = 1">
             <number name="meals" value="[meals] + 1"/>
@@ -566,13 +567,13 @@
     </station>
 
     <station id="lose treasure">
-        <text>.</text>
+        <text></text>
         <string name="adjustment" value="lost"/>
         <choice station="adjust treasure"/>
     </station>
 
     <station id="pit trap">
-        <text>.</text>
+        <text></text>
         <if check="[has rope]">
             <text>Using the rope manage to climb out of the wet pit.</text>
             <choice station="take movement card">You keep walking, drying off as you go.</choice>
@@ -580,36 +581,36 @@
         <else>
             <text>The pit is too deep, steep and slimy to climb or jump out.
             You wait for help or death!</text>
-            <choice station="end">.</choice>
+            <choice station="end"></choice>
         </else>
     </station>
 
     <station id="adjust treasure">
         <number name="change" value="{random 1, 1000}"/>
 
-        <text>.</text>
+        <text></text>
 
         <if check="[adjustment] = 'found'">
             <text>You found [change] gold pieces.</text>
             <number name="gold pieces" value="[gold pieces]+[change]"/>
-            <choice station="take movement card">.</choice>
+            <choice station="take movement card"></choice>
         </if>
 
         <if check="[adjustment] = 'lost' and [gold pieces] greater [change]">
             <text>You lost [chaange] gold pieces.</text>
             <number name="gold pieces" value="[gold pieces]-[change]"/>
-            <choice station="take movement crd">.</choice>
+            <choice station="take movement crd"></choice>
         </if>
 
         <if check="[adjustment] = 'lost' and [gold pieces] = 0">
             <text>Luckily you had no gold pieces to lose.</text>
-            <choice station="take movement card">.</choice>
+            <choice station="take movement card"></choice>
         </if>
 
         <else>
             <text>You lost all your gold pieces.</text>
             <number name="gold pieces" value="0"/>
-            <choice station="take movement card">.</choice>
+            <choice station="take movement card"></choice>
         </else>
     </station>
 

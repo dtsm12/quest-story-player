@@ -15,15 +15,6 @@ public class QuestState {
 
     public QuestState() {
         this(null);
-    }
-
-    public QuestState(Map<String, String> attributes) {
-
-        if (attributes != null) {
-            this.attributes = new HashMap<>(attributes);
-        } else {
-            this.attributes = new HashMap<>();
-        }
 
         // add keyword attributes
         this.attributes.put(" greater ", "  >");
@@ -36,6 +27,15 @@ public class QuestState {
         this.attributes.put("{random 0, 100}", MATH_FLOOR_MATH_RANDOM_100_1_TO_STRING);
         this.attributes.put("{random 1, 1000}", MATH_FLOOR_MATH_RANDOM_1000_1_TO_STRING);
         this.attributes.put("{random 1, 13}", MATH_FLOOR_MATH_RANDOM_13_1_TO_STRING);
+    }
+
+    public QuestState(Map<String, String> attributes) {
+
+        if (attributes != null) {
+            this.attributes = new HashMap<>(attributes);
+        } else {
+            this.attributes = new HashMap<>();
+        }
     }
 
     public Map<String, String> copyAttributes() {
