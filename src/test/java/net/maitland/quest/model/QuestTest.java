@@ -67,10 +67,19 @@ public class QuestTest {
         second.setId("second");
         second.setText(new Text("second text"));
 
+        QuestStation third = new QuestStation();
+        third.setId("third");
+        third.setText(new Text("third text"));
+
         Choice secondChoice = new Choice();
         secondChoice.setStation(second);
+
+        Choice thirdChoice = new Choice();
+        thirdChoice.setStation(third);
+
         List<Choice> firstChoices = new ArrayList<>();
         firstChoices.add(secondChoice);
+        firstChoices.add(thirdChoice);
         first.setChoices(firstChoices);
 
         Choice backChoice = new Choice();

@@ -17,6 +17,7 @@ import java.util.List;
                     resolver = BackStationAwareObjectIdResolver.class)
 public class QuestStation extends QuestSection  {
 
+    public static final String START_STATION_ID = "start";
     public static final String BACK_STATION_ID = "back";
     private ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
     private static QuestStation backStation;

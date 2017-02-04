@@ -124,7 +124,7 @@ public final class Quest {
         String choiceId;
 
         if (choiceNumber == 0) {
-            questStateStation = getNextStation(gameInstance, "start");
+            questStateStation = getNextStation(gameInstance, QuestStation.START_STATION_ID);
         } else {
             // Get choice
             String currentStationId = gameInstance.getQuestPath().peek();
@@ -151,15 +151,37 @@ public final class Quest {
     protected QuestStateStation processNextStation(GameInstance gameInstance, QuestStation questStation) throws QuestStateException, ChoiceNotPossibleException {
 
         // resolve back references
-        QuestStation nextStation;
+        QuestStation nextStation = null;
         Deque<String> questPath = gameInstance.getQuestPath();
+        List<Choice> choices = null;
 
         if (questStation.getId().equals(QuestStation.BACK_STATION_ID)) {
+
+            //remove last station
             questPath.pop();
-            String nextStationId = questPath.peek();
-            nextStation = this.getStation(nextStationId);
+
+            // remove stations back to last one with multiple choices
+            while(nextStation == null) {
+                String nextStationId = questPath.peek();
+                nextStation = this.getStation(nextStationId);
+                choices = nextStation.getChoices(gameInstance.getCurrentState());
+
+                if(choices.size() < 2)
+                {
+                    nextStation = null;
+                    questPath.pop();
+                }
+            }
+
+            // no station to go back to - start again
+            if(nextStation == null)
+            {
+                nextStation = getStation(QuestStation.START_STATION_ID);
+            }
+
         } else {
             nextStation = questStation;
+            choices = nextStation.getChoices(gameInstance.getCurrentState());
         }
 
         // update quest state before visit
@@ -169,7 +191,7 @@ public final class Quest {
         QuestStateStation retStation = new QuestStateStation();
         retStation.setId(nextStation.getId());
         retStation.setText(nextStation.getText(gameInstance.getCurrentState()).getValue());
-        retStation.setChoices(getQuestStateChoice(nextStation.getChoices(gameInstance.getCurrentState())));
+        retStation.setChoices(getQuestStateChoice(choices));
 
         // update quest state after visit
         nextStation.postVisit(gameInstance);

@@ -18,7 +18,7 @@
         <number name="gold pieces" value="0"/>
         <number name="torches" value="6"/>
         <number name="meals" value="4"/>
-        <number name="meal card counter" value="0"/>
+        <number name="hunger cards counter" value="0"/>
         <number name="light cards left counter" value="10"/>
         <number name="open paths" value="1"/>
         <state name="has tinderbox" value="true"/>
@@ -29,50 +29,50 @@
 
     <station id="take movement card">
         <number name="cards" value="[cards]+1"/>
-        <number name="meal card counter" value="[meal card counter]+1"/>
-        <number name="light card left counter" value="[light card left counter]-1"/>
+        <number name="hunger cards counter" value="[hunger cards counter]+1"/>
+        <number name="light cards left counter" value="[light cards left counter]-1"/>
         <number name="cardNumber" value="{random 1, 13}"/>
 
         <text></text>
 
-        <if check="[meal card counter] greater 9 and [meals] greater 0">
+        <if check="[hunger cards counter] greater 9 and [meals] greater 0">
             <text>You feel hungry so stop and east a meal.</text>
             <number name="meals" value="[meals]-1"/>
-            <number name="meal card counter" value="0"/>
+            <number name="hunger cards counter" value="0"/>
             <choice station="take movement card"></choice>
         </if>
 
-        <if check="[meal card counter] greater 9 and [meals] lower 1">
+        <if check="[hunger cards counter] greater 9 and [meals] lower 1">
             <text>You're famished but have run out of meals.
             You decide to head back to town and come back another day.</text>
             <choice station="end"></choice>
         </if>
 
-        <if check="[light card left counter] lower 1 and [has lantern] and [has oil] and [has tinderbox]">
+        <if check="[light cards left counter] lower 1 and [has lantern] and [has oil] and [has tinderbox]">
             <text>Your light burns out. Filling the lantern with oil you re-light your way.</text>
             <state name="have oil" value="false"/>
-            <number name="light card left counter" value="20"/>
+            <number name="light cards left counter" value="20"/>
             <choice station="take movement card"></choice>
         </if>
 
-        <if check="[light card left counter] lower 1 and torches greater 0 and [has tinderbox]">
+        <if check="[light cards left counter] lower 1 and torches greater 0 and [has tinderbox]">
             <text>Your light burns out. You light another torch.</text>
             <number name="torches" value="[torches]-1"/>
-            <number name="light card left counter" value="10"/>
+            <number name="light cards left counter" value="10"/>
             <choice station="take movement card"></choice>
         </if>
 
-        <if check="[light card left counter] lower 1 and not [has tinderbox]">
+        <if check="[light cards left counter] lower 1 and not [has tinderbox]">
             <text>Your light burns out but you don't have a tinderbox to re-light it.</text>
             <choice station="end">You wander in the dark for hours but finally discover the way out.</choice>
         </if>
 
-        <if check="[light card left counter] lower 1 and [torches] lower 1 and not [has lantern]">
+        <if check="[light cards left counter] lower 1 and [torches] lower 1 and not [has lantern]">
             <text>Your light burns out but you have run out of light sources.</text>
             <choice station="end">You wander in the dark for hours but finally discover the way out.</choice>
         </if>
 
-        <if check="[light card left counter] lower 1 and [torches] lower 1 and [has lantern] and not [has oil]">
+        <if check="[light cards left counter] lower 1 and [torches] lower 1 and [has lantern] and not [has oil]">
             <text>Your light burns out but you have run out of torches and lantern oil.</text>
             <choice station="end">You wander in the dark for hours but finally discover the way out.</choice>
         </if>
