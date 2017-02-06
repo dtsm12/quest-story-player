@@ -1,7 +1,5 @@
 package net.maitland.quest.model;
 
-import net.maitland.quest.player.QuestStateException;
-
 import java.util.List;
 
 /**

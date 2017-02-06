@@ -1,17 +1,12 @@
-package net.maitland.quest;
+package net.maitland.quest.parser.jackson;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import net.maitland.quest.jackson.TextDeserializer;
 import net.maitland.quest.model.Quest;
-import net.maitland.quest.model.Text;
+import net.maitland.quest.parser.AbstractQuestParser;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-import java.util.regex.MatchResult;
 
 /**
  * Created by David on 10/12/2016.

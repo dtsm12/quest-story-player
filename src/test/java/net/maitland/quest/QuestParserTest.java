@@ -1,6 +1,9 @@
 package net.maitland.quest;
 
 import net.maitland.quest.model.Quest;
+import net.maitland.quest.parser.jackson.JacksonQuestParser;
+import net.maitland.quest.parser.QuestParser;
+import net.maitland.quest.parser.sax.SaxQuestParser;
 import org.junit.Test;
 
 import java.io.InputStream;

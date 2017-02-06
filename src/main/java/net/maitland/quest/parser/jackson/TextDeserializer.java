@@ -1,4 +1,4 @@
-package net.maitland.quest.jackson;
+package net.maitland.quest.parser.jackson;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;

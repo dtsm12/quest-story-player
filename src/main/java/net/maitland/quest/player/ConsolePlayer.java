@@ -1,17 +1,14 @@
 package net.maitland.quest.player;
 
-import net.maitland.quest.SaxQuestParser;
+import net.maitland.quest.model.Quest;
 import net.maitland.quest.model.*;
+import net.maitland.quest.parser.sax.SaxQuestParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 /**
  * Created by David on 19/12/2016.
@@ -27,20 +24,23 @@ public class ConsolePlayer {
         Quest quest = getQuest();
         BufferedReader user = getUsersInput();
 
-        String choiceId = null;
-        List<QuestStateChoice> choices = null;
-        QuestStateStation questStation;
+        String choiceId = QuestStation.START_STATION_ID;
+        List<GameChoice> choices = null;
+        GameStation questStation;
 
         System.out.println(quest.getAbout().getTitle());
+        System.out.print(" by ");
+        System.out.println(quest.getAbout().getAuthor());
         System.out.println(quest.getAbout().getIntro());
 
         try {
-            GameInstance gameInstance = quest.newGameInstance();
+            Game game = quest.newGameInstance();
 
-            while (choiceId == null || choices != null) {
+            while (QuestStation.START_STATION_ID.equals(choiceId) || choices != null) {
 
                 try {
-                    questStation = quest.getNextStation(gameInstance, choiceId);
+                    game.setChoiceId(choiceId);
+                    questStation = quest.getNextStation(game);
                     System.out.println(questStation.getText());
                     choices = questStation.getChoices();
                 } catch (ChoiceNotPossibleException e) {
@@ -59,13 +59,13 @@ public class ConsolePlayer {
                 System.out.println();
 
                 if (choices.size() == 1) {
-                    QuestStateChoice c = choices.get(0);
+                    GameChoice c = choices.get(0);
                     System.out.println(c.getText());
                     choiceId = c.getStationId();
                 } else {
                     System.out.println("These are your choices:");
 
-                    for (QuestStateChoice c : choices) {
+                    for (GameChoice c : choices) {
                         System.out.println(String.format("\t%s: %s", c.getStationId(), c.getText()));
                     }
 

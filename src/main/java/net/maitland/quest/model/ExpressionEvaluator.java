@@ -1,6 +1,4 @@
-package net.maitland.quest.player;
-
-import net.maitland.quest.model.*;
+package net.maitland.quest.model;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -8,7 +6,6 @@ import javax.script.ScriptException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,7 +52,8 @@ public class ExpressionEvaluator {
     public String evaluateExpression(String expression, Map<String, String> attributes) throws QuestStateException {
         String result = expression;
         for (String s : attributes.keySet()) {
-            expression = expression.replace(s, attributes.getOrDefault(s, s));
+            String value = attributes.getOrDefault(s, s);
+            expression = expression.replace(s, value);
         }
 
         try {

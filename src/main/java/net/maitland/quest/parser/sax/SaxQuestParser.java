@@ -1,15 +1,14 @@
-package net.maitland.quest;
+package net.maitland.quest.parser.sax;
 
 import net.maitland.quest.model.*;
-import net.maitland.quest.player.QuestStateException;
-import net.maitland.quest.sax.ClasspathSystemEntityResolver;
+import net.maitland.quest.parser.AbstractQuestParser;
+import net.maitland.quest.parser.sax.ClasspathSystemEntityResolver;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
@@ -120,6 +119,10 @@ public class SaxQuestParser extends AbstractQuestParser {
                 startTitle(attributes);
             }
 
+            if (qName.equals("author")) {
+                startAuthor(attributes);
+            }
+
             if (qName.equals("intro")) {
                 startIntro(attributes);
             }
@@ -166,6 +169,10 @@ public class SaxQuestParser extends AbstractQuestParser {
 
             if (qName.equals("title")) {
                 endTitle();
+            }
+
+            if (qName.equals("author")) {
+                endAuthor();
             }
 
             if (qName.equals("intro")) {
@@ -218,6 +225,13 @@ public class SaxQuestParser extends AbstractQuestParser {
 
         protected void endTitle() throws SAXException {
             this.about.setTitle(getCharacters());
+        }
+
+        protected void startAuthor(Attributes attributes) throws SAXException {
+        }
+
+        protected void endAuthor() throws SAXException {
+            this.about.setAuthor(getCharacters());
         }
 
         protected void startIntro(Attributes attributes) throws SAXException {

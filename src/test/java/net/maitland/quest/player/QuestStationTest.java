@@ -75,9 +75,9 @@ public class QuestStationTest {
         Quest quest = new Quest();
         quest.setStations(stations);
 
-        GameInstance gameInstance = quest.newGameInstance();
+        Game game = quest.newGameInstance();
 
-        String text = sut.getText(gameInstance.getCurrentState()).getValue();
+        String text = sut.getText(game.getCurrentState()).getValue();
         assertEquals("Text from else condition not returned", "Else text", text);
 
     }
@@ -118,9 +118,9 @@ public class QuestStationTest {
         Quest quest = new Quest();
         quest.setStations(stations);
 
-        GameInstance gameInstance = quest.newGameInstance();
+        Game game = quest.newGameInstance();
 
-        List<Choice> choices = sut.getChoices(gameInstance.getCurrentState());
+        List<Choice> choices = sut.getChoices(game.getCurrentState());
         Choice choice = choices.get(0);
         assertEquals("Text from else choice not returned", "elseChoice", choice.getText());
 

@@ -1,4 +1,4 @@
-package net.maitland.quest;
+package net.maitland.quest.parser;
 
 import java.io.IOException;
 import java.io.InputStream;

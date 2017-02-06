@@ -2,10 +2,9 @@ package net.maitland.quest.model;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
-import net.maitland.quest.player.QuestStateException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,7 +53,7 @@ public class QuestSection {
     }
 
     public List<Choice> getChoices() {
-        return choices;
+        return Collections.unmodifiableList(choices);
     }
 
     public void setChoices(List<Choice> choices) {
@@ -66,7 +65,7 @@ public class QuestSection {
     }
 
     public List<NumberAttribute> getNumberAttributes() {
-        return numberAttributes;
+        return Collections.unmodifiableList(numberAttributes);
     }
 
     public void setNumberAttributes(List<NumberAttribute> numberAttributes) {
@@ -75,7 +74,7 @@ public class QuestSection {
     }
 
     public List<StringAttribute> getStringAttributes() {
-        return stringAttributes;
+        return Collections.unmodifiableList(stringAttributes);
     }
 
     public void setStringAttributes(List<StringAttribute> stringAttributes) {
@@ -84,7 +83,7 @@ public class QuestSection {
     }
 
     public List<StateAttribute> getStateAttributes() {
-        return stateAttributes;
+        return Collections.unmodifiableList(stateAttributes);
     }
 
     public void setStateAttributes(List<StateAttribute> stateAttributes) {
@@ -101,15 +100,15 @@ public class QuestSection {
             this.postVisitAttributes.add(attribute);
         }
 
-        if(attribute instanceof NumberAttribute && this.numberAttributes.contains(attribute) == false){
+        if (attribute instanceof NumberAttribute && this.numberAttributes.contains(attribute) == false) {
             this.numberAttributes.add((NumberAttribute) attribute);
         }
 
-        if(attribute instanceof StringAttribute && this.stringAttributes.contains(attribute) == false){
+        if (attribute instanceof StringAttribute && this.stringAttributes.contains(attribute) == false) {
             this.stringAttributes.add((StringAttribute) attribute);
         }
 
-        if(attribute instanceof StateAttribute && this.stateAttributes.contains(attribute) == false){
+        if (attribute instanceof StateAttribute && this.stateAttributes.contains(attribute) == false) {
             this.stateAttributes.add((StateAttribute) attribute);
         }
     }
@@ -122,15 +121,15 @@ public class QuestSection {
     }
 
     public List<Attribute> getPreVisitAttributes() {
-        return this.preVisitAttributes;
+        return Collections.unmodifiableList(this.preVisitAttributes);
     }
 
     public List<Attribute> getPostVisitAttributes() {
-        return this.postVisitAttributes;
+        return Collections.unmodifiableList(this.postVisitAttributes);
     }
 
     public List<IfSection> getConditions() {
-        return conditions;
+        return Collections.unmodifiableList(conditions);
     }
 
     public void setConditions(List<IfSection> conditions) {

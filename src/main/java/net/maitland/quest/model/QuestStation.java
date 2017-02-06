@@ -2,9 +2,9 @@ package net.maitland.quest.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import net.maitland.quest.jackson.BackStationAwareObjectIdResolver;
-import net.maitland.quest.player.ExpressionEvaluator;
-import net.maitland.quest.player.QuestStateException;
+import net.maitland.quest.parser.jackson.BackStationAwareObjectIdResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,9 @@ public class QuestStation extends QuestSection  {
 
     public static final String START_STATION_ID = "start";
     public static final String BACK_STATION_ID = "back";
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     private ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
     private static QuestStation backStation;
     private String id;
@@ -43,28 +46,28 @@ public class QuestStation extends QuestSection  {
         return backStation;
     }
 
-    public void preVisit(GameInstance gameInstance) throws QuestStateException
+    public void preVisit(Game game) throws QuestStateException
     {
-        this.visit(gameInstance, false);
+        this.visit(game, false);
     }
 
-    public void postVisit(GameInstance gameInstance) throws QuestStateException
+    public void postVisit(Game game) throws QuestStateException
     {
-        this.visit(gameInstance, true);
+        this.visit(game, true);
     }
 
-    protected void visit(GameInstance gameInstance, boolean postVisit) throws QuestStateException
+    protected void visit(Game game, boolean postVisit) throws QuestStateException
     {
         // Get this Station's attributes
-        List<Attribute> questAttributes = postVisit ? this.getPostVisitAttributes() : this.getPreVisitAttributes();
+        List<Attribute> questAttributes = new ArrayList(postVisit ? this.getPostVisitAttributes() : this.getPreVisitAttributes());
 
         // if applicable section isn't the station itself add in that section's attributes
-        QuestSection applicableQuestSection = getApplicableQuestSection(gameInstance.getCurrentState());
+        QuestSection applicableQuestSection = getApplicableQuestSection(game.getCurrentState());
         if (this != applicableQuestSection) {
             questAttributes.addAll(postVisit ? applicableQuestSection.getPostVisitAttributes() : applicableQuestSection.getPreVisitAttributes());
         }
 
-        gameInstance.updateState(questAttributes);
+        game.updateState(questAttributes);
     }
 
     public Text getText(QuestState questState) throws QuestStateException {
@@ -141,6 +144,8 @@ public class QuestStation extends QuestSection  {
         if (questSection == null) {
             questSection = this;
         }
+
+        this.log.debug("Applicable section for stationId '{}' is {}", this.getId(), questSection.getClass().getName());
 
         return questSection;
     }

@@ -1,4 +1,4 @@
-package net.maitland.quest.player;
+package net.maitland.quest.model;
 
 /**
  * Created by David on 19/12/2016.

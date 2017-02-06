@@ -1,7 +1,5 @@
 package net.maitland.quest.model;
 
-import net.maitland.quest.model.*;
-import net.maitland.quest.player.QuestStateStation;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -42,14 +40,14 @@ public class QuestTest {
         sut.addStation(one);
         sut.addStation(two);
 
-        GameInstance gameInstance = sut.newGameInstance();
+        Game game = sut.newGameInstance();
 
         // get start
-        QuestStateStation beginning = sut.getNextStation(gameInstance, 0);
+        GameStation beginning = sut.getNextStation(game, 0);
         assertEquals("Start station by number incorrect", start.getId(), beginning.getId());
 
         // get choice
-        QuestStateStation choice = sut.getNextStation(gameInstance, 1);
+        GameStation choice = sut.getNextStation(game, 1);
         assertEquals("Chosen station by number incorrect", one.getId(), choice.getId());
     }
 
@@ -94,11 +92,11 @@ public class QuestTest {
 
         sut.setStations(stations);
 
-        GameInstance gameInstance = sut.newGameInstance();
+        Game game = sut.newGameInstance();
 
-        sut.getNextStation(gameInstance, "first");
-        sut.getNextStation(gameInstance, "second");
-        QuestStateStation finalStation = sut.getNextStation(gameInstance, QuestStation.BACK_STATION_ID);
+        sut.getNextStation(game, "first");
+        sut.getNextStation(game, "second");
+        GameStation finalStation = sut.getNextStation(game, QuestStation.BACK_STATION_ID);
 
         assertEquals("Back station is incorrect", first.getId(), finalStation.getId());
 
@@ -154,16 +152,16 @@ public class QuestTest {
         Quest sut = new Quest();
         sut.setStations(stations);
 
-        GameInstance gameInstance = sut.newGameInstance();
+        Game game = sut.newGameInstance();
 
-        QuestStateStation station = sut.getNextStation(gameInstance, null);
+        GameStation station = sut.getNextStation(game, null);
 
-        station = sut.getNextStation(gameInstance, "station2");
+        station = sut.getNextStation(game, "station2");
 
         assertEquals("Correct number of choices is presented", 1, station.getChoices().size());
         assertEquals("Correct choice is presented", "station3", station.getChoices().get(0).getStationId());
 
-        station = sut.getNextStation(gameInstance, "station3");
+        station = sut.getNextStation(game, "station3");
 
         assertEquals("Presented choice is no longer available",station3.getId(), station.getId());
 

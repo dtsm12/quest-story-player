@@ -1,17 +1,16 @@
-package net.maitland.quest.player;
+package net.maitland.quest.model;
 
-import net.maitland.quest.model.Choice;
-
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by David on 03/01/2017.
  */
-public class QuestStateStation {
+public class GameStation {
 
     private String id;
     private String text;
-    private List<QuestStateChoice> choices;
+    private List<GameChoice> choices;
 
     public String getId() {
         return id;
@@ -29,11 +28,11 @@ public class QuestStateStation {
         this.text = text;
     }
 
-    public List<QuestStateChoice> getChoices() {
+    public List<GameChoice> getChoices() {
         return choices;
     }
 
-    public void setChoices(List<QuestStateChoice> choices) {
-        this.choices = choices;
+    public void setChoices(List<GameChoice> choices) {
+        this.choices = Collections.unmodifiableList(choices);
     }
 }

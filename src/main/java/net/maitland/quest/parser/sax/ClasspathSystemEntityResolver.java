@@ -1,7 +1,5 @@
-package net.maitland.quest.sax;
+package net.maitland.quest.parser.sax;
 
-import net.maitland.quest.SaxQuestParser;
-import net.maitland.quest.player.ConsolePlayer;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
