@@ -80,8 +80,8 @@
         </if>
 
         <if check="[cardNumber] = 1">
-            <text>You've got a bad feeling about this.</text>
-            <choice station="trap">You find out your fate.</choice>
+            <text>You get a bad feeling.</text>
+            <choice station="trap">It's a trap!</choice>
         </if>
 
         <if check="[cardNumber] = 2 and [came from] != 'north'">
@@ -131,7 +131,7 @@
             <choice station="end" check="[open paths] lower 2">There's nowhere left to explore.</choice>
         </if>
 
-        <if check="[cardNumber] = 9 and [cards] lower 6 and [came from] != 'east'">
+        <if check="[cardNumber] = 9 and [cards] lower 6 and [came from] != 'east' and [came from] != 'west'">
             <text>You see a door in the east wall.</text>
             <number name="open paths" value="[open paths] + 1"/>
             <string name="came from" value="west"/>
@@ -139,11 +139,27 @@
             <choice station="take movement card" check="[open paths] greater 1">Go back and continue a different path.</choice>
         </if>
 
-        <if check="[cardNumber] = 10 and [came from] != 'west'">
+        <if check="[cardNumber] = 9 and [cards] lower 6 and [came from] != 'north' and [came from] != 'south'">
+            <text>You see a door in the north wall.</text>
+            <number name="open paths" value="[open paths] + 1"/>
+            <string name="came from" value="south"/>
+            <choice station="go north">You open the door.</choice>
+            <choice station="take movement card" check="[open paths] greater 1">Go back and continue a different path.</choice>
+        </if>
+
+        <if check="[cardNumber] = 10 and [came from] != 'east' and [came from] != 'west'">
             <text>You see a door in the west wall.</text>
             <number name="open paths" value="[open paths] + 1"/>
             <string name="came from" value="east"/>
             <choice station="go west">You open the door.</choice>
+            <choice station="take movement card" check="[open paths] greater 1">Go back and continue a different path.</choice>
+        </if>
+
+        <if check="[cardNumber] = 10 and [came from] != 'north' and [came from] != 'south'">
+            <text>You see a door in the south wall.</text>
+            <number name="open paths" value="[open paths] + 1"/>
+            <string name="came from" value="north"/>
+            <choice station="go south">You open the door.</choice>
             <choice station="take movement card" check="[open paths] greater 1">Go back and continue a different path.</choice>
         </if>
 
@@ -294,10 +310,39 @@
     </station>
 
     <station id="fight monster">
-        <number name="hitpoints" value="7"/>
-        <number name="monster hitpoints" value="7"/>
+        <number name="monster hitpoints" value="{random 1, 13}"/>
         <text></text>
-        <choice station="hit monster">You attack the monster.</choice>
+        <if check="[monster hitpoints] greater 10">
+            <text>You face a grey skinned ogre. He towers over you wielding a large axe.</text>
+            <choice station="player fights">You ready your waepon.</choice>
+        </if>
+        <if check="[monster hitpoints] greater 7">
+            <text>The green orc bears his crooked teeth at you. It draws its sword.</text>
+            <choice station="player fights"></choice>
+        </if>
+        <if check="[monster hitpoints] greater 4">
+            <text>The goblin screams and charges at you with a knife.</text>
+            <choice station="player fights"></choice>
+        </if>
+        <else>
+            <text>A wolf snarls, barks and lunges.</text>
+            <choice station="player fights"></choice>
+        </else>
+    </station>
+
+    <station id="player fights">
+        <number name="monster hitpoints" value="{random 1, 13}"/>
+        <text></text>
+        <if check="[cards] lower 8">
+            <text></text>
+            <number name="hitpoints" value="7"/>
+            <choice station="hit monster">You attack the monster.</choice>
+        </if>
+        <else>
+            <text></text>
+            <number name="hitpoints" value="[cards]"/>
+            <choice station="hit monster">You attack the monster.</choice>
+        </else>
     </station>
 
     <station id="hit monster">
@@ -314,24 +359,28 @@
         <if check="[cardNumber] = 2 or [cardNumber] = 10">
             <text>You are hit; a nasty gash opens up on your skin.</text>
             <number name="hitpoints" value="[hitpoints] - 2"/>
+            <string name="was hit" value="player"/>
             <choice station="check fight status"/>
         </if>
 
         <if check="[cardNumber] = 3 or [cardNumber] = 7 or [cardNumber] = 13">
             <text>You are hit.</text>
             <number name="hitpoints" value="[hitpoints] - 1"/>
+            <string name="was hit" value="player"/>
             <choice station="check fight status"/>
         </if>
 
         <if check="[cardNumber] = 4 or [cardNumber] = 8">
             <text>You hit the fiend.</text>
             <number name="monster hitpoints" value="[monster hitpoints] - 1"/>
+            <string name="was hit" value="monster"/>
             <choice station="check fight status"/>
         </if>
 
         <if check="[cardNumber] = 5">
             <text>You blow to the monster causes it to stagger.</text>
             <number name="monster hitpoints" value="[monster hitpoints] - 2"/>
+            <string name="was hit" value="monster"/>
             <choice station="check fight status"/>
         </if>
 
@@ -345,12 +394,14 @@
         <if check="[cardNumber] = 11">
             <text>Swiping your sword you relieve the beast of one of its limbs.</text>
             <number name="monster hitpoints" value="[monster hitpoints] - 3"/>
+            <string name="was hit" value="monster"/>
             <choice station="check fight status"/>
         </if>
 
         <if check="[cardNumber] = 12">
             <text>A crushing blow brings you to your knees.</text>
             <number name="hitpoints" value="[hitpoints] - 3"/>
+            <string name="was hit" value="player"/>
             <choice station="check fight status"/>
         </if>
 
@@ -366,8 +417,23 @@
             <text>You have been defeated. Your corpse will remain here as a warning to others.</text>
             <choice station="end"></choice>
         </if>
+        <if check="[was hit] = 'player' ">
+            <text>You have [hitpoints] hitpoints left.</text>
+            <choice station="hit monster"></choice>
+        </if>
+        <if check="[was hit] = 'monster' and [monster hitpoints] greater 4">
+            <text>Your attack has angered the monster he lunges at you.</text>
+            <choice station="hit monster"></choice>
+        </if>
+        <if check="[was hit] = 'monster' and [monster hitpoints] greater 2">
+            <text>Reeling from your blow the monster counterattacks.</text>
+            <choice station="hit monster"></choice>
+        </if>
+        <if check="[was hit] = 'monster' and [monster hitpoints] lower 3">
+            <text>The monster looks on his last legs but lashes out.</text>
+            <choice station="hit monster"></choice>
+        </if>
         <else>
-            <!--text>The battle continues.</text-->
             <text>You have [hitpoints] hitpoints left.</text>
             <choice station="hit monster"/>
         </else>

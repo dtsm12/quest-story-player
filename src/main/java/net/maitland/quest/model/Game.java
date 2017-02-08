@@ -1,5 +1,6 @@
 package net.maitland.quest.model;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,7 @@ import java.util.Map;
  */
 public class Game {
 
+
     public static Game fromCollectionStructure(Map gameData) throws Exception {
         Game game = null;
 
@@ -24,9 +26,13 @@ public class Game {
             Map<String, String> about = (Map<String, String>) gameData.get("gameQuest");
 
             game = new Game(new About(about.get("title"), about.get("author")));
+            game.getGameQuest().setIntro(about.get("intro"));
+            game.setChoiceIndex((Integer)gameData.get("choiceIndex"));
+            game.setChoiceId((String)gameData.get("choiceId"));
             game.setQuestPath(new ArrayDeque<String>(questPath));
             game.setQuestState(new QuestState(currentState.get("attributes")));
             game.setPreviousQuestState(new QuestState((previousState).get("attributes")));
+
         }
 
         return game;
