@@ -17,12 +17,13 @@ public class Game {
         Game game = null;
 
         if (gameData != null) {
+
             List<String> questPath = (List<String>) gameData.get("questPath");
             Map<String, Map<String, String>> currentState = (Map<String, Map<String, String>>) gameData.get("currentState");
             Map<String, Map<String, String>> previousState = (Map<String, Map<String, String>>) gameData.get("previousState");
             Map<String, String> about = (Map<String, String>) gameData.get("gameQuest");
 
-            game.setGameQuest(new About(about.get("title"), about.get("author")));
+            game = new Game(new About(about.get("title"), about.get("author")));
             game.setQuestPath(new ArrayDeque<String>(questPath));
             game.setQuestState(new QuestState(currentState.get("attributes")));
             game.setPreviousQuestState(new QuestState((previousState).get("attributes")));
