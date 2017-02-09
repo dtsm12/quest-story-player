@@ -314,7 +314,7 @@
         <text></text>
         <if check="[monster hitpoints] greater 10">
             <text>You face a grey skinned ogre. He towers over you wielding a large axe.</text>
-            <choice station="player fights">You ready your waepon.</choice>
+            <choice station="player fights"></choice>
         </if>
         <if check="[monster hitpoints] greater 7">
             <text>The green orc bears his crooked teeth at you. It draws its sword.</text>
