@@ -61,6 +61,9 @@ public class ChanceQuestTest {
             // hear growl
             station = sut.getNextStation(game, 1);
 
+            // monster chosen
+            station = sut.getNextStation(game, 1);
+
             // start fight
             station = sut.getNextStation(game, 1);
 
