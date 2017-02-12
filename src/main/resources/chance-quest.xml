@@ -5,14 +5,11 @@
     <about>
         <title>Chance Dungeon</title>
         <author>David Maitland</author>
-        <intro>You are a bold adventurer who in his journeys across the new world have heard of uncharted caves or dungeons that many have been into but not returned from.
+        <intro>You are a brave adventurer who in his journeys across the new world have heard of uncharted caves or dungeons that many have been into but not returned from.
             You have taken the challenge to map them and have stocked up supplies.</intro>
     </about>
 
     <station id="start">
-        <text class="title"><strong>Chance Quest</strong><break/>
-        </text>
-        <text class="intro">You have with you a sword and backpack containing 6 torches, a tinder box to light them, and 4 meals.</text>
         <number name="cards" value="0"/>
         <number name="gold pieces" value="0"/>
         <number name="torches" value="6"/>
@@ -26,6 +23,9 @@
         <state name="has tinderbox" value="true"/>
         <state name="has backpack" value="true"/>
         <string name="came from" value="south"/>
+        <text class="title"><strong>Chance Quest</strong><break/>
+        </text>
+        <text class="intro">You have with you a sword and backpack containing 6 torches, a tinder box to light them, and 4 meals.</text>
         <choice station="take movement card">Lighting your torch you head north into the dark.</choice>
     </station>
 
@@ -40,7 +40,8 @@
         <if check="[hunger cards counter] greater [hunger threshold] and [meals] greater 0">
             <number name="meals" value="[meals]-1"/>
             <number name="hunger cards counter" value="0"/>
-            <text>You feel hungry so stop and eat a meal.</text>
+            <text>You feel hungry so stop and eat a meal.
+            You have [meals] meals left.</text>
             <choice station="take movement card"></choice>
         </if>
 
@@ -53,14 +54,16 @@
         <if check="[light cards left counter] lower 1 and [has lantern] and [has oil] and [has tinderbox]">
             <state name="has oil" value="false"/>
             <number name="light cards left counter" value="[lantern duration]"/>
-            <text>Your light burns out. Filling the lantern with oil you re-light your way.</text>
+            <text>Your light burns out. Filling the lantern with oil you re-light your way.
+            You also have [torches] torches left.</text>
             <choice station="take movement card"></choice>
         </if>
 
         <if check="[light cards left counter] lower 1 and [torches] greater 0 and [has tinderbox]">
             <number name="torches" value="[torches]-1"/>
             <number name="light cards left counter" value="[torch duration]"/>
-            <text>Your light burns out. You light another torch.</text>
+            <text>Your light burns out. You light another torch.
+                You have [torches] torches left.</text>
             <choice station="take movement card"></choice>
         </if>
 
@@ -136,6 +139,8 @@
             <number name="open paths" value="[open paths] + 1"/>
             <string name="came from" value="west"/>
             <choice station="go east">You open the door.</choice>
+            <choice station="go north" check="[came from] = 'south'">Continue past the door.</choice>
+            <choice station="go south" check="[came from] = 'north'">Continue past the door.</choice>
             <choice station="take movement card" check="[open paths] greater 1">Go back and continue a different path.</choice>
         </if>
 
@@ -144,6 +149,8 @@
             <number name="open paths" value="[open paths] + 1"/>
             <string name="came from" value="south"/>
             <choice station="go north">You open the door.</choice>
+            <choice station="go east" check="[came from] = 'west'">Continue past the door.</choice>
+            <choice station="go west" check="[came from] = 'east'">Continue past the door.</choice>
             <choice station="take movement card" check="[open paths] greater 1">Go back and continue a different path.</choice>
         </if>
 
@@ -152,6 +159,8 @@
             <number name="open paths" value="[open paths] + 1"/>
             <string name="came from" value="east"/>
             <choice station="go west">You open the door.</choice>
+            <choice station="go north" check="[came from] = 'south'">Continue past the door.</choice>
+            <choice station="go south" check="[came from] = 'north'">Continue past the door.</choice>
             <choice station="take movement card" check="[open paths] greater 1">Go back and continue a different path.</choice>
         </if>
 
@@ -160,6 +169,8 @@
             <number name="open paths" value="[open paths] + 1"/>
             <string name="came from" value="north"/>
             <choice station="go south">You open the door.</choice>
+            <choice station="go east" check="[came from] = 'west'">Continue past the door.</choice>
+            <choice station="go west" check="[came from] = 'east'">Continue past the door.</choice>
             <choice station="take movement card" check="[open paths] greater 1">Go back and continue a different path.</choice>
         </if>
 
