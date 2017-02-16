@@ -7,7 +7,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
  */
 public class Choice {
 
-    private String stationAlias;
+    private String stationId;
 
     private QuestStation station;
 
@@ -16,20 +16,12 @@ public class Choice {
 
     private String check;
 
-    public String getStationAlias() {
-        return stationAlias;
+    public String getStationId() {
+        return stationId;
     }
 
-    public void setStationAlias(String stationAlias) {
-        this.stationAlias = stationAlias;
-    }
-
-    public QuestStation getStation() {
-        return station;
-    }
-
-    public void setStation(QuestStation station) {
-        this.station = station;
+    public void setStationId(String stationId) {
+        this.stationId = stationId;
     }
 
     public String getCheck() {

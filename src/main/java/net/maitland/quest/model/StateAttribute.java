@@ -17,6 +17,16 @@ public class StateAttribute extends Attribute {
     }
 
     @Override
+    public Attribute updateValue(String newValue) {
+        return new StateAttribute(this.getName(), newValue);
+    }
+
+    @Override
+    public String getExpressionValue() {
+        return getValue();
+    }
+
+    @Override
     public String getValue() {
         return super.getValue() == null ? Boolean.TRUE.toString() : super.getValue();
     }

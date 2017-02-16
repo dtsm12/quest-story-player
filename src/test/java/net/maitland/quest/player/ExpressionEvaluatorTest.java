@@ -1,8 +1,6 @@
 package net.maitland.quest.player;
 
-import net.maitland.quest.model.ExpressionEvaluator;
-import net.maitland.quest.model.NumberAttribute;
-import net.maitland.quest.model.QuestState;
+import net.maitland.quest.model.*;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -21,9 +19,20 @@ public class ExpressionEvaluatorTest {
         ExpressionEvaluator sut = new ExpressionEvaluator();
         NumberAttribute number = new NumberAttribute();
 
-        String result = sut.evaluateExpression(QuestState.MATH_FLOOR_MATH_RANDOM_6_1_TO_STRING, new HashMap<String, String>());
+        String result = sut.evaluateExpression(QuestState.MATH_FLOOR_MATH_RANDOM_6_1_TO_STRING, new QuestState());
 
         assertTrue(String.format("Random number '%s' is not accepted as NumberAttribute", result), number.isValidValue(result));
+
+    }
+
+    @Test
+    public void evaluateExpression() throws Exception {
+
+        ExpressionEvaluator sut = new ExpressionEvaluator();
+
+        String result = sut.evaluateExpression("'0' > '6' && '4' > '0'", new QuestState());
+
+        assertEquals("Result not evaluated", "false", result);
 
     }
 
@@ -31,12 +40,12 @@ public class ExpressionEvaluatorTest {
     public void evaluateNegativeStringEqualityExpression() throws Exception {
 
         ExpressionEvaluator sut = new ExpressionEvaluator();
-        Map<String, String> attributes = new HashMap<String, String>();
-        attributes.put("[cardNumber]", "2");
-        attributes.put("=", "==");
-        attributes.put("not", "!");
-        attributes.put("and", "&&");
-        attributes.put("[came from]", "'south'");
+        QuestState attributes = new QuestState();
+        attributes.put(new NumberAttribute("[cardNumber]", "2"));
+        attributes.put(new OperatorAttribute(" = ", " == "));
+        attributes.put(new OperatorAttribute(" not ", " ! "));
+        attributes.put(new OperatorAttribute(" and ", " && "));
+        attributes.put(new OperatorAttribute("[came from]", "'south'"));
 
         String result = sut.evaluateExpression("[cardNumber] = 2 and [came from] != 'north'", attributes);
 

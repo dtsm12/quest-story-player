@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.io.InputStream;
 import java.util.Map;
 
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
 
@@ -15,6 +16,29 @@ import static junit.framework.TestCase.fail;
  */
 public class ChanceQuestTest {
 
+    public void testFindDoor() {
+
+        try {
+            Quest sut = getQuest();
+            Game game = sut.newGameInstance();
+
+            QuestState attributes = game.getCurrentState().copyAttributes();
+            attributes.put(new StringAttribute("{random 1, 13}", "10"));
+            game.getCurrentState().setAttributes(attributes.getAttributes());
+
+            // enter quest
+            GameStation station = sut.getNextStation(game, 0);
+
+            // go north card
+            station = sut.getNextStation(game, 1);
+
+            assertEquals("Dynamic choice stationId is incorrect.", "go south", station.getChoices().get(1).getStationId());
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
     @Test
     public void testGoNorth() {
 
@@ -22,9 +46,9 @@ public class ChanceQuestTest {
             Quest sut = getQuest();
             Game game = sut.newGameInstance();
 
-            Map<String, String> attributes = game.getCurrentState().copyAttributes();
-            attributes.put("{random 1, 13}", "2");
-            game.getCurrentState().setAttributes(attributes);
+            QuestState attributes = game.getCurrentState().copyAttributes();
+            attributes.put(new StringAttribute("{random 1, 13}", "2"));
+            game.getCurrentState().setAttributes(attributes.getAttributes());
 
             // enter quest
             GameStation station = sut.getNextStation(game, 0);
@@ -34,8 +58,6 @@ public class ChanceQuestTest {
 
             // go north station
             station = sut.getNextStation(game, 1);
-
-            System.out.println(station.getChoices().get(0).getText());
 
             assertTrue("Movement card 2 doesn't go north.", station.getChoices().get(0).getText().trim().equals("You follow the path north."));
 
@@ -51,9 +73,9 @@ public class ChanceQuestTest {
             Quest sut = getQuest();
             Game game = sut.newGameInstance();
 
-            Map<String, String> attributes = game.getCurrentState().copyAttributes();
-            attributes.put("{random 1, 13}", "7");
-            game.getCurrentState().setAttributes(attributes);
+            QuestState attributes = game.getCurrentState().copyAttributes();
+            attributes.put(new StringAttribute("{random 1, 13}", "7"));
+            game.getCurrentState().setAttributes(attributes.getAttributes());
 
             // enter quest
             GameStation station = sut.getNextStation(game, 0);

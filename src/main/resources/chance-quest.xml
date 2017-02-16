@@ -367,7 +367,7 @@
             <choice station="check fight status"/>
         </if>
 
-        <if check="[cardNumber] = 2 or [cardNumber] = 10">
+        <if check="[cardNumber] = 2">
             <text>You are hit; a nasty gash opens up on your skin.</text>
             <number name="hitpoints" value="[hitpoints] - 2"/>
             <string name="was hit" value="player"/>
@@ -388,7 +388,7 @@
             <choice station="check fight status"/>
         </if>
 
-        <if check="[cardNumber] = 5">
+        <if check="[cardNumber] = 5 or [cardNumber] = 10">
             <text>You blow to the monster causes it to stagger.</text>
             <number name="monster hitpoints" value="[monster hitpoints] - 2"/>
             <string name="was hit" value="monster"/>

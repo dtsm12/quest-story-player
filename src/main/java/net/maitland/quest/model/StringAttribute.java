@@ -13,7 +13,12 @@ public class StringAttribute extends Attribute {
     }
 
     public StringAttribute(String name, String value) {
-        super(name, "'"+value+"'");
+        super(name, value);
+    }
+
+    @Override
+    public Attribute updateValue(String newValue) {
+        return new StringAttribute(this.getName(), newValue);
     }
 
     @Override
@@ -23,6 +28,18 @@ public class StringAttribute extends Attribute {
 
     @Override
     public void setValue(String value) {
-        super.setValue("'"+value+"'");
+        super.setValue(value);
+    }
+
+    @Override
+    public String getExpressionValue() {
+        return surround(super.getValue());
+    }
+
+    protected static String surround(String value){
+
+        String prefix = value != null && value.startsWith("'") ? "" : "'";
+        String suffix = value != null && value.endsWith("'") ? "" : "'";
+        return prefix+value+suffix;
     }
 }

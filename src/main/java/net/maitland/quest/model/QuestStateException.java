@@ -3,7 +3,7 @@ package net.maitland.quest.model;
 /**
  * Created by David on 19/12/2016.
  */
-public class QuestStateException extends Exception {
+public class QuestStateException extends RuntimeException {
 
     public QuestStateException(String s) {
         super(s);

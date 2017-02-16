@@ -27,10 +27,10 @@ public class QuestTest {
         two.setText(new Text("two"));
 
         Choice choiceOne = new Choice();
-        choiceOne.setStation(one);
+        choiceOne.setStationId(one.getId());
 
         Choice choiceTwo = new Choice();
-        choiceTwo.setStation(two);
+        choiceTwo.setStationId(two.getId());
 
         start.addChoice(choiceOne);
         start.addChoice(choiceTwo);
@@ -70,10 +70,10 @@ public class QuestTest {
         third.setText(new Text("third text"));
 
         Choice secondChoice = new Choice();
-        secondChoice.setStation(second);
+        secondChoice.setStationId(second.getId());
 
         Choice thirdChoice = new Choice();
-        thirdChoice.setStation(third);
+        thirdChoice.setStationId(third.getId());
 
         List<Choice> firstChoices = new ArrayList<>();
         firstChoices.add(secondChoice);
@@ -81,16 +81,13 @@ public class QuestTest {
         first.setChoices(firstChoices);
 
         Choice backChoice = new Choice();
-        backChoice.setStation(QuestStation.getBackStation());
+        backChoice.setStationId(QuestStation.BACK_STATION_ID);
         List<Choice> secondChoices = new ArrayList<>();
         secondChoices.add(backChoice);
         second.setChoices(secondChoices);
 
-        List<QuestStation> stations = new ArrayList<>();
-        stations.add(first);
-        stations.add(second);
-
-        sut.setStations(stations);
+        sut.addStation(first);
+        sut.addStation(second);
 
         Game game = sut.newGameInstance();
 
@@ -122,7 +119,7 @@ public class QuestTest {
         is.setText(new Text("If text"));
 
         Choice choice1 = new Choice();
-        choice1.setStation(station3);
+        choice1.setStationId(station3.getId());
         is.addChoice(choice1);
 
         StateAttribute sa = new StateAttribute("testBoolean", "true");
@@ -135,22 +132,21 @@ public class QuestTest {
         station2.setElseCondition(es);
 
         Choice choice2 = new Choice();
-        choice2.setStation(station4);
+        choice2.setStationId(station4.getId());
         es.addChoice(choice2);
 
         QuestStation station1 = new QuestStation();
         station1.setId("start");
         station1.setText(new Text("start"));
         Choice startChoice = new Choice();
-        startChoice.setStation(station2);
+        startChoice.setStationId(station2.getId());
         station1.addChoice(startChoice);
 
-        List<QuestStation> stations = new ArrayList<>();
-        stations.add(station1);
-        stations.add(station2);
-        stations.add(station3);
         Quest sut = new Quest();
-        sut.setStations(stations);
+
+        sut.addStation(station1);
+        sut.addStation(station2);
+        sut.addStation(station3);
 
         Game game = sut.newGameInstance();
 

@@ -20,9 +20,8 @@ public class QuestStationTest {
         QuestStation sut = new QuestStation();
 
         sut.setText(new Text("Test [test] text."));
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put("[test]", "this");
-        QuestState questState =  new QuestState(attributes);
+        QuestState questState = new QuestState();
+        questState.put(new StringAttribute("[test]", "this"));
 
         String text = sut.getText(questState).getValue();
         assertEquals("Text containing attribute not substituted correctly", "Test this text.", text);
@@ -41,9 +40,8 @@ public class QuestStationTest {
         conditions.add(is);
         sut.setConditions(conditions);
 
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put("[testValue]", "1");
-        QuestState questState =  new QuestState(attributes);
+        QuestState questState =  new QuestState();
+        questState.put(new NumberAttribute("[testValue]", "1"));
 
         String text = sut.getText(questState).getValue();
         assertEquals("Text from if condition not returned", "Correct text", text);
@@ -70,10 +68,8 @@ public class QuestStationTest {
         attributes.add(na);
         sut.setNumberAttributes(attributes);
 
-        List<QuestStation> stations = new ArrayList<>();
-        stations.add(sut);
         Quest quest = new Quest();
-        quest.setStations(stations);
+        quest.addStation(sut);
 
         Game game = quest.newGameInstance();
 
@@ -113,10 +109,8 @@ public class QuestStationTest {
         elseAttributes.add(na);
         es.setNumberAttributes(elseAttributes);
 
-        List<QuestStation> stations = new ArrayList<>();
-        stations.add(sut);
         Quest quest = new Quest();
-        quest.setStations(stations);
+        quest.addStation(sut);
 
         Game game = quest.newGameInstance();
 

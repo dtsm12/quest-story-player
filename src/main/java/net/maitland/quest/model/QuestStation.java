@@ -13,16 +13,15 @@ import java.util.List;
  * Created by David on 18/12/2016.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-                    property = "id",
-                    resolver = BackStationAwareObjectIdResolver.class)
-public class QuestStation extends QuestSection  {
+        property = "id",
+        resolver = BackStationAwareObjectIdResolver.class)
+public class QuestStation extends QuestSection {
 
     public static final String START_STATION_ID = "start";
     public static final String BACK_STATION_ID = "back";
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
     private static QuestStation backStation;
     private String id;
 
@@ -46,18 +45,15 @@ public class QuestStation extends QuestSection  {
         return backStation;
     }
 
-    public void preVisit(Game game) throws QuestStateException
-    {
+    public void preVisit(Game game) throws QuestStateException {
         this.visit(game, false);
     }
 
-    public void postVisit(Game game) throws QuestStateException
-    {
+    public void postVisit(Game game) throws QuestStateException {
         this.visit(game, true);
     }
 
-    protected void visit(Game game, boolean postVisit) throws QuestStateException
-    {
+    protected void visit(Game game, boolean postVisit) throws QuestStateException {
         // Get this Station's attributes
         List<Attribute> questAttributes = new ArrayList(postVisit ? this.getPostVisitAttributes() : this.getPreVisitAttributes());
 
@@ -72,16 +68,8 @@ public class QuestStation extends QuestSection  {
 
     public Text getText(QuestState questState) throws QuestStateException {
 
-
         String text = getApplicableQuestSection(questState).getText().getValue();
-
-        List<String> attributeNames = this.expressionEvaluator.extractAttributeNames(text);
-
-        for (String a : attributeNames) {
-            text = text.replace(a, questState.getAttributeValue(a));
-        }
-
-        return new Text(text);
+        return new Text(questState.toStateText(text));
     }
 
     public List<Choice> getChoices(QuestState questState) throws QuestStateException {
@@ -90,7 +78,7 @@ public class QuestStation extends QuestSection  {
         List<Choice> filteredChoices = new ArrayList<>();
 
         for (Choice c : questSection.getChoices()) {
-            if (expressionEvaluator.check(c, questState.copyAttributes())) {
+            if (questState.check(c)) {
                 filteredChoices.add(c);
             }
         }
@@ -98,14 +86,11 @@ public class QuestStation extends QuestSection  {
         return filteredChoices;
     }
 
-    public Choice getChoice(QuestState questState, String choiceId) throws QuestStateException
-    {
+    public Choice getChoice(QuestState questState, String choiceId) throws QuestStateException {
         Choice choice = null;
 
-        for(Choice c: getChoices(questState))
-        {
-            if(c.getStation().getId().equals(choiceId))
-            {
+        for (Choice c : getChoices(questState)) {
+            if (c.getStationId().equals(choiceId)) {
                 choice = c;
                 break;
             }
@@ -114,8 +99,7 @@ public class QuestStation extends QuestSection  {
         return choice;
     }
 
-    public Choice getChoice(QuestState questState, int choiceIndex) throws QuestStateException
-    {
+    public Choice getChoice(QuestState questState, int choiceIndex) throws QuestStateException {
         Choice choice = null;
 
         List<Choice> choices = getChoices(questState);
@@ -130,7 +114,7 @@ public class QuestStation extends QuestSection  {
         if (this.getConditions().size() > 0) {
 
             for (IfSection i : this.getConditions()) {
-                if (expressionEvaluator.check(i, questState.copyAttributes())) {
+                if (questState.check(i)) {
                     questSection = i;
                     break;
                 }

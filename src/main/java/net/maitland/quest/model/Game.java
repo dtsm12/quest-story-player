@@ -1,13 +1,9 @@
 package net.maitland.quest.model;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by David on 23/01/2017.
@@ -21,8 +17,8 @@ public class Game {
         if (gameData != null) {
 
             List<String> questPath = (List<String>) gameData.get("questPath");
-            Map<String, Map<String, String>> currentState = (Map<String, Map<String, String>>) gameData.get("currentState");
-            Map<String, Map<String, String>> previousState = (Map<String, Map<String, String>>) gameData.get("previousState");
+            Map<String, Map<String, Map<String, String>>> currentState = (Map<String, Map<String, Map<String, String>>>) gameData.get("currentState");
+            Map<String, Map<String, Map<String, String>>> previousState = (Map<String, Map<String, Map<String, String>>>) gameData.get("previousState");
             Map<String, String> about = (Map<String, String>) gameData.get("gameQuest");
 
             game = new Game(new About(about.get("title"), about.get("author")));
@@ -30,12 +26,30 @@ public class Game {
             game.setChoiceIndex((Integer)gameData.get("choiceIndex"));
             game.setChoiceId((String)gameData.get("choiceId"));
             game.setQuestPath(new ArrayDeque<String>(questPath));
-            game.setQuestState(new QuestState(currentState.get("attributes")));
-            game.setPreviousQuestState(new QuestState((previousState).get("attributes")));
+            game.setQuestState(new QuestState(getAttributes(currentState.get("attributes"))));
+            game.setPreviousQuestState(new QuestState(getAttributes((previousState).get("attributes"))));
 
         }
 
         return game;
+    }
+
+    public static Map<String, Attribute> getAttributes(Map<String, Map<String, String>> rawAttributes) throws Exception{
+
+        Map<String, Attribute> attributes = new HashMap();
+
+        for (String name : rawAttributes.keySet())
+        {
+            Map<String, String> rawAttr = rawAttributes.get(name);
+
+            Attribute attr = (Attribute) Class.forName(rawAttr.get("type")).newInstance();
+            attr.setName(name);
+            attr.setValue(rawAttr.get("value"));
+
+            attributes.put(name, attr);
+        }
+
+        return attributes;
     }
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -83,8 +97,8 @@ public class Game {
         return this.previousQuestState;
     }
 
-    public void updateState(List<Attribute> attributes) throws QuestStateException {
-        Map<String, String> newState = this.questState.copyAttributes();
+    public void updateState(Collection<Attribute> attributes) throws QuestStateException {
+        QuestState newState = this.questState.copyAttributes();
 
         for (Attribute a : attributes) {
             //evaluate the attributes value
@@ -98,11 +112,11 @@ public class Game {
             log.debug("Setting attribute '{}' to value '{}'", a.getName(), attrValue);
 
             // update the Quest's state
-            newState.put(a.getName(), attrValue);
+            newState.put(a.updateValue(attrValue));
         }
 
         this.previousQuestState = this.questState;
-        this.questState = new QuestState(newState);
+        this.questState = newState;
     }
 
     public Deque<String> getQuestPath() {

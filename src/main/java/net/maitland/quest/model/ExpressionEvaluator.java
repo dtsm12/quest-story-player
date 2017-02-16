@@ -17,19 +17,19 @@ public class ExpressionEvaluator {
     ScriptEngineManager mgr = new ScriptEngineManager();
     ScriptEngine expressionEngine = mgr.getEngineByName("JavaScript");
 
-    public boolean check(IfSection ifSection, Map<String, String> attributes) throws QuestStateException {
+    public boolean check(IfSection ifSection, QuestState attributes) throws QuestStateException {
 
         String expression = ifSection.getCheck();
         return check(expression, attributes);
     }
 
-    public boolean check(Choice choice, Map<String, String> attributes) throws QuestStateException {
+    public boolean check(Choice choice, QuestState attributes) throws QuestStateException {
 
         String expression = choice.getCheck();
         return check(expression == null ? "true" : expression, attributes);
     }
 
-    public boolean check(String expression, Map<String, String> attributes) throws QuestStateException {
+    public boolean check(String expression, QuestState attributes) throws QuestStateException {
 
         boolean check = false;
 
@@ -39,25 +39,19 @@ public class ExpressionEvaluator {
         return check;
     }
 
-    public String evaluateExpression(Attribute attribute, Map<String, String> attributes) throws QuestStateException {
-        String expression = attribute.getValue();
-
-        if (attribute instanceof StringAttribute) {
-            expression = "\"" + expression + "\"";
-        }
+    public String evaluateExpression(Attribute attribute, QuestState attributes) throws QuestStateException {
+        String expression = attribute.getExpressionValue();
 
         return evaluateExpression(expression, attributes);
     }
 
-    public String evaluateExpression(String expression, Map<String, String> attributes) throws QuestStateException {
+    public String evaluateExpression(String expression, QuestState attributes) throws QuestStateException {
         String result = expression;
-        for (String s : attributes.keySet()) {
-            String value = attributes.getOrDefault(s, s);
-            expression = expression.replace(s, value);
-        }
+        expression = attributes.replace(expression);
 
         try {
-            result = expressionEngine.eval(expression).toString();
+            Object obj = expressionEngine.eval(expression);
+            result = obj == null ? "" : obj.toString();
         } catch (ScriptException e) {
             throw new QuestStateException(String.format("Error evaluating expression '%s'", expression), e);
         }
@@ -67,11 +61,14 @@ public class ExpressionEvaluator {
     public List<String> extractAttributeNames(String value) {
         Pattern attrPattern = Pattern.compile("(\\[[a-zA-z0-9\\s]+?\\])");
         List<String> attributeNames = new ArrayList<>();
-        Matcher matcher = attrPattern.matcher(value);
 
-        while (matcher.find()) {
-            String name = matcher.group();
-            attributeNames.add(name);
+        if (value != null) {
+            Matcher matcher = attrPattern.matcher(value);
+
+            while (matcher.find()) {
+                String name = matcher.group();
+                attributeNames.add(name);
+            }
         }
         return attributeNames;
     }

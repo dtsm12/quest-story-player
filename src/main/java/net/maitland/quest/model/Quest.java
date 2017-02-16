@@ -23,6 +23,10 @@ public class Quest {
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<QuestStation> stations = new ArrayList<>();
 
+    public Quest() {
+        this.stations.add(QuestStation.getBackStation());
+    }
+
     public Game newGameInstance() throws QuestStateException {
         Game game = new Game(this.about);
         game.updateState(this.collectAllAttributes());
@@ -39,10 +43,6 @@ public class Quest {
 
     public List<QuestStation> getStations() {
         return Collections.unmodifiableList(stations);
-    }
-
-    public void setStations(List<QuestStation> stations) {
-        this.stations = stations;
     }
 
     public void addStation(QuestStation questStation) {
@@ -68,7 +68,7 @@ public class Quest {
         return gameStation;
     }
 
-    protected void collectAllAttributes(QuestSection questSection, List<Attribute> attributes) {
+    protected void collectAllAttributes(QuestSection questSection, Set<Attribute> attributes) {
 
         if (questSection != null) {
             /* create attributes with default values */
@@ -78,7 +78,7 @@ public class Quest {
         }
     }
 
-    protected void collectAllAttributes(QuestStation s, List<Attribute> attributes) {
+    protected void collectAllAttributes(QuestStation s, Set<Attribute> attributes) {
 
         // collect station's attributes
         collectAllAttributes((QuestSection) s, attributes);
@@ -90,9 +90,9 @@ public class Quest {
         collectAllAttributes(s.getElseCondition(), attributes);
     }
 
-    protected List<Attribute> collectAllAttributes() {
+    protected Set<Attribute> collectAllAttributes() {
 
-        List<Attribute> attributes = new ArrayList<>();
+        Set<Attribute> attributes = new HashSet<>();
         this.stations.stream().forEach(qs -> collectAllAttributes(qs, attributes));
         return attributes;
     }
@@ -126,7 +126,8 @@ public class Quest {
                 throw new ChoiceNotPossibleException(String.format("The choice %s is not possible.", choiceId));
             }
 
-            questStation = choice.getStation();
+            String stationId = game.getPreviousState().toStateText(choice.getStationId());
+            questStation = getStation(stationId);
         }
 
 
@@ -156,7 +157,7 @@ public class Quest {
                 throw new ChoiceNotPossibleException(String.format("The choice number %s is not possible.", choiceNumber));
             }
 
-            questStation = choice.getStation();
+            questStation = getStation(choice.getStationId());
 
             if (questStation == null) {
                 throw new QuestStateException(String.format("Choice number %s is not found in station '%s'.", choiceNumber, currentStation.getId()));
@@ -196,7 +197,7 @@ public class Quest {
         GameStation retStation = new GameStation();
         retStation.setId(nextStation.getId());
         retStation.setText(nextStation.getText(game.getCurrentState()).getValue());
-        retStation.setChoices(getQuestStateChoice(nextStation.getChoices(game.getCurrentState())));
+        retStation.setChoices(getQuestStateChoices(nextStation.getChoices(game.getCurrentState()), game.getCurrentState()));
 
         // update quest state after visit
         log.debug("Post-visit '{}'", nextStation.getId());
@@ -209,16 +210,16 @@ public class Quest {
         return retStation;
     }
 
-    protected List<GameChoice> getQuestStateChoice(List<Choice> choices) {
+    protected List<GameChoice> getQuestStateChoices(List<Choice> choices, QuestState questState) throws QuestStateException {
 
-        List<GameChoice> gameChoices = choices.stream().map(choice -> newQuestStateChoice(choice)).collect(Collectors.toList());
+        List<GameChoice> gameChoices = choices.stream().map(choice -> newQuestStateChoice(choice, questState)).collect(Collectors.toList());
         return gameChoices;
     }
 
-    protected GameChoice newQuestStateChoice(Choice c) {
+    protected GameChoice newQuestStateChoice(Choice c, QuestState questState) throws QuestStateException {
         GameChoice stateChoice = new GameChoice();
-        stateChoice.setStationId(c.getStation().getId());
-        stateChoice.setText(c.getText());
+        stateChoice.setStationId(questState.toStateText(c.getStationId()));
+        stateChoice.setText(questState.toStateText(c.getText()));
         return stateChoice;
     }
 }

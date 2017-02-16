@@ -3,7 +3,6 @@ package net.maitland.quest.parser.sax;
 import net.maitland.quest.model.*;
 import net.maitland.quest.parser.AbstractQuestParser;
 import net.maitland.quest.parser.QuestParseException;
-import net.maitland.quest.parser.sax.ClasspathSystemEntityResolver;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -64,40 +63,6 @@ public class SaxQuestParser extends AbstractQuestParser {
 
         @Override
         public void endDocument() throws SAXException {
-
-            // index stations
-            Map<String, QuestStation> stations = new HashMap<>();
-            stations.put(QuestStation.BACK_STATION_ID, QuestStation.getBackStation());
-            for (QuestStation qs : this.quest.getStations()) {
-                stations.put(qs.getId(), qs);
-            }
-
-            // update choice stations
-            for (QuestStation qs : this.quest.getStations()) {
-                updateChoiceStations(qs, stations);
-
-                for (IfSection is : qs.getConditions()) {
-                    updateChoiceStations(is, stations);
-                }
-
-                if (qs.getElseCondition() != null) {
-                    updateChoiceStations(qs.getElseCondition(), stations);
-                }
-            }
-        }
-
-        protected void updateChoiceStations(QuestSection qs, Map<String, QuestStation> stations) {
-            int i = 0;
-            for (Choice c : qs.getChoices()) {
-                i++;
-                QuestStation s = stations.get(c.getStationAlias());
-
-                if (s == null) {
-                    throw new QuestParseException(String.format("StationId '%s' not found for choice %s in QuestSection with text '%s'", c.getStationAlias(), i, qs.getText().getValue()));
-                }
-
-                c.setStation(s);
-            }
         }
 
         @Override
@@ -271,7 +236,7 @@ public class SaxQuestParser extends AbstractQuestParser {
             String stationId = attributes.getValue("station");
             String check = attributes.getValue("check");
             this.choice = new Choice();
-            this.choice.setStationAlias(stationId);
+            this.choice.setStationId(stationId);
             this.choice.setCheck(check);
         }
 
