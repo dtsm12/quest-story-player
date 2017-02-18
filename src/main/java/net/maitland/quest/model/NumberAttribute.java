@@ -18,7 +18,7 @@ public class NumberAttribute extends Attribute {
 
     @Override
     public Attribute updateValue(String newValue) {
-        return new NumberAttribute(this.getName(), newValue);
+        return new NumberAttribute(this.getName(), toInt(newValue));
     }
 
     @Override
@@ -30,6 +30,23 @@ public class NumberAttribute extends Attribute {
         } catch (NumberFormatException nfe) {
         }
         return isValidValue;
+    }
+
+    protected String toInt(String value)
+    {
+        String ret = value;
+
+        if(isValidValue(value))
+        {
+            int decimal = value.indexOf(".");
+            if(decimal > -1)
+            {
+                ret = value.substring(0, decimal);
+                ret = ret.length() > 0 ? ret : "0";
+            }
+        }
+
+        return ret;
     }
 
 }
