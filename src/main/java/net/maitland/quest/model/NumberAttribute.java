@@ -25,7 +25,7 @@ public class NumberAttribute extends Attribute {
     public boolean isValidValue(String value) {
         boolean isValidValue = false;
         try {
-            Integer.parseInt(value);
+            Float.parseFloat(value);
             isValidValue = true;
         } catch (NumberFormatException nfe) {
         }
