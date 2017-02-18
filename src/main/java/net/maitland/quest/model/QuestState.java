@@ -26,10 +26,7 @@ public class QuestState {
         this.put(new OperatorAttribute(" or ", " || "));
         this.put(new OperatorAttribute("not ", "! "));
         this.put(new OperatorAttribute(" = ", " == "));
-        this.put(new OperatorAttribute("{random 1, 6}", MATH_FLOOR_MATH_RANDOM_6_1_TO_STRING));
-        this.put(new OperatorAttribute("{random 0, 100}", MATH_FLOOR_MATH_RANDOM_100_1_TO_STRING));
-        this.put(new OperatorAttribute("{random 1, 1000}", MATH_FLOOR_MATH_RANDOM_1000_1_TO_STRING));
-        this.put(new OperatorAttribute("{random 1, 13}", MATH_FLOOR_MATH_RANDOM_13_1_TO_STRING));
+        this.put(new TemplateAttribute("{random (\\d+), (\\d+)}", "(Math.floor(Math.random() * %2$s) + %1$s).toString()"));
     }
 
     public QuestState(Map<String, Attribute> attributes) {
