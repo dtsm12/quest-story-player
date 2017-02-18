@@ -106,7 +106,7 @@ public class Game {
 
             // check it's the right type of value
             if (a.isValidValue(attrValue) == false) {
-                throw new QuestStateException(String.format("Attribute '%s' expression '%s' evaluates to incorrect type", a.getName(), a.getValue()));
+                throw new QuestStateException(String.format("Attribute '%s' expression '%s' evaluates to incorrect type", a.getName(), attrValue));
             }
 
             log.debug("Setting attribute '{}' to value '{}'", a.getName(), attrValue);
