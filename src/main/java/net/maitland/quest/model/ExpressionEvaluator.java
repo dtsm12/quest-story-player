@@ -48,7 +48,12 @@ public class ExpressionEvaluator {
     public String evaluateExpression(String expression, QuestState attributes) throws QuestStateException {
         String result = expression;
         expression = attributes.replace(expression);
+        result = evaluateExpression(expression);
+        return result;
+    }
 
+    public String evaluateExpression(String expression) {
+        String result;
         try {
             Object obj = expressionEngine.eval(expression);
             result = obj == null ? "" : obj.toString();

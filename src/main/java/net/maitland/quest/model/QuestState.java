@@ -7,11 +7,6 @@ import java.util.*;
  */
 public class QuestState {
 
-    public static final String MATH_FLOOR_MATH_RANDOM_6_1_TO_STRING = "(Math.floor(Math.random() * 6) + 1).toString()";
-    public static final String MATH_FLOOR_MATH_RANDOM_100_1_TO_STRING = "(Math.floor(Math.random() * 100) + 1).toString()";
-    public static final String MATH_FLOOR_MATH_RANDOM_1000_1_TO_STRING = "(Math.floor(Math.random() * 1000) + 1).toString()";
-    public static final String MATH_FLOOR_MATH_RANDOM_13_1_TO_STRING = "(Math.floor(Math.random() * 13) + 1).toString()";
-
     private ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
 
     private Map<String, Attribute> attributes = new HashMap<>();
@@ -27,6 +22,7 @@ public class QuestState {
         this.put(new OperatorAttribute("not ", "! "));
         this.put(new OperatorAttribute(" = ", " == "));
         this.put(new TemplateAttribute("{random (\\d+), (\\d+)}", "(Math.floor(Math.random() * %2$s) + %1$s).toString()"));
+        this.put(new TemplateAttribute("{contains ('[\\s\\w]+'), ('[\\s\\w]+')}", "(%1$s.indexOf(%2$s) > -1)"));
     }
 
     public QuestState(Map<String, Attribute> attributes) {
