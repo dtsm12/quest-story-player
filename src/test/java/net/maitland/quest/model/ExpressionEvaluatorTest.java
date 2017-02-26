@@ -33,7 +33,7 @@ public class ExpressionEvaluatorTest {
 
         expressionEngine.eval("function addOne(arg) {return arg+1;}");
 
-        assertEquals("Global function returned incorrect value", 2L, expressionEngine.eval("addOne(1)"));
+        assertEquals("Global function returned incorrect value", "2", expressionEngine.eval("addOne(1).toString()"));
     }
 
     @Test
