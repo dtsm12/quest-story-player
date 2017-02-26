@@ -1,4 +1,4 @@
-package net.maitland.quest.model;
+package net.maitland.quest.model.attribute;
 
 /**
  * Created by David on 18/12/2016.

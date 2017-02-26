@@ -1,4 +1,4 @@
-package net.maitland.quest.model;
+package net.maitland.quest.model.attribute;
 
 /**
  * Created by David on 18/12/2016.
@@ -19,11 +19,6 @@ public class OperatorAttribute extends Attribute {
     @Override
     public Attribute updateValue(String newValue) {
         return new OperatorAttribute(this.getName(), newValue);
-    }
-
-    @Override
-    public String replace(String value) {
-        return value.replace(getName(), getExpressionValue());
     }
 
     @Override

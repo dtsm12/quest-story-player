@@ -1,5 +1,7 @@
 package net.maitland.quest.model;
 
+import net.maitland.quest.model.attribute.Attribute;
+
 /**
  * Created by David on 18/12/2016.
  */
@@ -36,6 +38,11 @@ public class StateAttribute extends Attribute {
 
         return ("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value));
 
+    }
+
+    public boolean isTrue()
+    {
+        return "true".equalsIgnoreCase(getValue());
     }
 
 }

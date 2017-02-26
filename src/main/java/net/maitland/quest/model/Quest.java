@@ -6,6 +6,9 @@ package net.maitland.quest.model;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import net.maitland.quest.model.attribute.Attribute;
+import net.maitland.quest.model.attribute.NumberAttribute;
+import net.maitland.quest.model.attribute.StringAttribute;
 import net.maitland.quest.player.ChoiceNotPossibleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

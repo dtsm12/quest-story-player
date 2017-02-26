@@ -1,11 +1,11 @@
 package net.maitland.quest.model;
 
+import net.maitland.quest.model.attribute.StringAttribute;
 import net.maitland.quest.parser.sax.SaxQuestParser;
 import net.maitland.quest.player.ConsolePlayer;
 import org.junit.Test;
 
 import java.io.InputStream;
-import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;

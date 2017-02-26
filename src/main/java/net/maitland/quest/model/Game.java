@@ -1,5 +1,6 @@
 package net.maitland.quest.model;
 
+import net.maitland.quest.model.attribute.Attribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

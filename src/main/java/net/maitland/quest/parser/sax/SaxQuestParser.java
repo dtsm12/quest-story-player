@@ -1,8 +1,9 @@
 package net.maitland.quest.parser.sax;
 
 import net.maitland.quest.model.*;
+import net.maitland.quest.model.attribute.NumberAttribute;
+import net.maitland.quest.model.attribute.StringAttribute;
 import net.maitland.quest.parser.AbstractQuestParser;
-import net.maitland.quest.parser.QuestParseException;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -14,8 +15,6 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by David on 06/01/2017.

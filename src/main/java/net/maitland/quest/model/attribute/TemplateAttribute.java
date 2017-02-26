@@ -1,5 +1,8 @@
-package net.maitland.quest.model;
+package net.maitland.quest.model.attribute;
 
+import net.maitland.quest.model.QuestState;
+
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +17,7 @@ public class TemplateAttribute extends Attribute {
     }
 
     public TemplateAttribute(String nameRegEx, String valueFormat) {
-        super(".*" + nameRegEx.replace("{", "\\{").replace("}", "\\}") + ".*", valueFormat);
+        super("(.*)" + nameRegEx.replace("{", "\\{").replace("}", "\\}") + "(.*)", valueFormat);
         this.namePattern = Pattern.compile(this.getName());
     }
 
@@ -25,7 +28,7 @@ public class TemplateAttribute extends Attribute {
     }
 
     @Override
-    public String replace(String value) {
+    public String replace(String value, QuestState questState) {
         String ret = value;
         Matcher m = namePattern.matcher(value);
 
@@ -35,10 +38,15 @@ public class TemplateAttribute extends Attribute {
             for (int i = 1; i < groupCount; i++) {
                 groups[i-1] = m.group(i);
             }
-            ret = String.format(this.getValue(), groups);
+            Object[] r = Arrays.copyOfRange(groups, 1, groups.length-2);
+            ret = groups[0] + processTemplateValues(r, questState) + groups[groups.length-2];
         }
 
         return ret;
+    }
+
+    protected String processTemplateValues(Object[] r, QuestState questState) {
+        return String.format(this.getValue(), r);
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.maitland.quest.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import net.maitland.quest.model.attribute.Attribute;
 import net.maitland.quest.parser.jackson.BackStationAwareObjectIdResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

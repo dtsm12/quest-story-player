@@ -1,12 +1,12 @@
 package net.maitland.quest.player;
 
 import net.maitland.quest.model.*;
+import net.maitland.quest.model.attribute.NumberAttribute;
+import net.maitland.quest.model.attribute.StringAttribute;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 

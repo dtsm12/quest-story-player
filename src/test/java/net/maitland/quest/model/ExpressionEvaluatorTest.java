@@ -1,10 +1,11 @@
-package net.maitland.quest.player;
+package net.maitland.quest.model;
 
-import net.maitland.quest.model.*;
+import net.maitland.quest.model.attribute.NumberAttribute;
+import net.maitland.quest.model.attribute.OperatorAttribute;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 
 import static org.junit.Assert.*;
 
@@ -14,12 +15,34 @@ import static org.junit.Assert.*;
 public class ExpressionEvaluatorTest {
 
     @Test
+    public void prototypeFunction() throws Exception {
+
+        ScriptEngineManager mgr = new ScriptEngineManager();
+        ScriptEngine expressionEngine = mgr.getEngineByName("JavaScript");
+
+        expressionEngine.eval("String.prototype.addDot = function() {return this.toString()+'.';}");
+
+        assertEquals("Prototype function returned incorrect value", "X.", expressionEngine.eval("'X'.addDot();"));
+    }
+
+    @Test
+    public void globalFunction() throws Exception {
+
+        ScriptEngineManager mgr = new ScriptEngineManager();
+        ScriptEngine expressionEngine = mgr.getEngineByName("JavaScript");
+
+        expressionEngine.eval("function addOne(arg) {return arg+1;}");
+
+        assertEquals("Global function returned incorrect value", 2L, expressionEngine.eval("addOne(1)"));
+    }
+
+    @Test
     public void evaluateRandomNumberExpression() throws Exception {
 
         ExpressionEvaluator sut = new ExpressionEvaluator();
         NumberAttribute number = new NumberAttribute();
 
-        String result = sut.evaluateExpression(QuestState.MATH_FLOOR_MATH_RANDOM_6_1_TO_STRING, new QuestState());
+        String result = sut.evaluateExpression("(Math.floor(Math.random() * 6) + 1).toString()", new QuestState());
 
         assertTrue(String.format("Random number '%s' is not accepted as NumberAttribute", result), number.isValidValue(result));
 

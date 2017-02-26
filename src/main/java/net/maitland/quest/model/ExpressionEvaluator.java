@@ -1,11 +1,11 @@
 package net.maitland.quest.model;
 
+import net.maitland.quest.model.attribute.Attribute;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +15,50 @@ import java.util.regex.Pattern;
 public class ExpressionEvaluator {
 
     ScriptEngineManager mgr = new ScriptEngineManager();
-    ScriptEngine expressionEngine = mgr.getEngineByName("JavaScript");
+    ScriptEngine expressionEngine;
+
+    protected ScriptEngine getExpressionEngine() throws ScriptException {
+        if (this.expressionEngine == null) {
+            this.expressionEngine = mgr.getEngineByName("JavaScript");
+
+            for (String fn : getGlobalFunctions())
+            {
+                this.expressionEngine.eval(fn);
+            }
+        }
+
+        return this.expressionEngine;
+    }
+
+    protected Collection<String> getGlobalFunctions()
+    {
+        List<String> functions = new ArrayList<>();
+        functions.add(getOrdinalFunction());
+        functions.add(getRepeatFunction());
+
+        return functions;
+    }
+
+    protected String getRepeatFunction() {
+
+        return "String.prototype.repeat = function(n) {\n" +
+                "    var s = this.toString(); \n" +
+                "    var r = '';\n" +
+                "    for(var i=0; i < n;i++)\n" +
+                "      r += s;\n" +
+                "    return r;\n" +
+                "}";
+    }
+
+    protected String getOrdinalFunction()
+    {
+        return "String.prototype.getOrdinal = function() {\n" +
+                "    var n = this.toString(); \n" +
+                "    var s=[\"th\",\"st\",\"nd\",\"rd\"],\n" +
+                "    v=n%100;\n" +
+                "    return n+(s[(v-20)%10]||s[v]||s[0]);\n" +
+                "}";
+    }
 
     public boolean check(IfSection ifSection, QuestState attributes) throws QuestStateException {
 
@@ -55,7 +98,7 @@ public class ExpressionEvaluator {
     public String evaluateExpression(String expression) {
         String result;
         try {
-            Object obj = expressionEngine.eval(expression);
+            Object obj = getExpressionEngine().eval(expression);
             result = obj == null ? "" : obj.toString();
         } catch (ScriptException e) {
             throw new QuestStateException(String.format("Error evaluating expression '%s'", expression), e);

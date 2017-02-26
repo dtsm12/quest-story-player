@@ -1,4 +1,7 @@
-package net.maitland.quest.model;
+package net.maitland.quest.model.attribute;
+
+import net.maitland.quest.model.QuestState;
+import net.maitland.quest.model.QuestStateException;
 
 /**
  * Created by David on 23/12/2016.
@@ -15,16 +18,30 @@ public abstract class Attribute {
         this.value = value;
     }
 
-    public abstract Attribute updateValue(String newValue);
+    public Attribute updateValue(String newValue) {
 
-    public abstract boolean isValidValue(String value);
+        try {
+            Attribute a = (Attribute) Class.forName(this.getType()).newInstance();
 
-    public String getType(){
+            a.setName(this.getName());
+            a.setValue(this.getValue());
+
+            return a;
+
+        } catch (Exception e) {
+           throw new QuestStateException("Error updating attribute. Value:'" + this.getValue() + "', Type:'" + this.getType() + "'", e);
+        }
+    }
+
+    public boolean isValidValue(String value) {
+        return true;
+    }
+
+    public String getType() {
         return this.getClass().getCanonicalName();
     }
 
-    public void setType(String newType)
-    {
+    public void setType(String newType) {
         throw new UnsupportedOperationException("Type cannot be set");
     }
 
@@ -48,8 +65,7 @@ public abstract class Attribute {
         this.value = value;
     }
 
-    public String replace(String value)
-    {
+    public String replace(String value, QuestState questState) {
         return value.replace(getName(), getExpressionValue());
     }
 

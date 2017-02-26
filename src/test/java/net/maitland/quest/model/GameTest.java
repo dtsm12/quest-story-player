@@ -1,10 +1,12 @@
 package net.maitland.quest.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.maitland.quest.model.attribute.Attribute;
+import net.maitland.quest.model.attribute.NumberAttribute;
+import net.maitland.quest.model.attribute.StringAttribute;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

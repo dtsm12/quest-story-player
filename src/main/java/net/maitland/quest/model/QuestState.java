@@ -1,5 +1,10 @@
 package net.maitland.quest.model;
 
+import net.maitland.quest.model.attribute.Attribute;
+import net.maitland.quest.model.attribute.OperatorAttribute;
+import net.maitland.quest.model.attribute.StatesFunctionAttribute;
+import net.maitland.quest.model.attribute.TemplateAttribute;
+
 import java.util.*;
 
 /**
@@ -14,7 +19,7 @@ public class QuestState {
     public QuestState() {
         this(null);
 
-        // add keyword attributes
+        // add built-in attributes
         this.put(new OperatorAttribute(" greater ", " > "));
         this.put(new OperatorAttribute(" lower ", " < "));
         this.put(new OperatorAttribute(" and ", " && "));
@@ -22,7 +27,13 @@ public class QuestState {
         this.put(new OperatorAttribute("not ", "! "));
         this.put(new OperatorAttribute(" = ", " == "));
         this.put(new TemplateAttribute("{random (\\d+), (\\d+)}", "(Math.floor(Math.random() * %2$s) + %1$s).toString()"));
-        this.put(new TemplateAttribute("{contains ('[\\s\\w]+'), ('[\\s\\w]+')}", "(%1$s.indexOf(%2$s) > -1)"));
+        this.put(new StatesFunctionAttribute());
+        this.put(new TemplateAttribute("{contains ([^{}]+), ([^{}]+)}", "(%1$s.indexOf(%2$s) > -1)"));
+        this.put(new TemplateAttribute("{containsWord ([^{}]+), '([\\s\\w]+)'}", "(%1$s.search(/\\b%2$s\\b/) > -1)"));
+        this.put(new TemplateAttribute("{verbose (\\d+)}", "'%1$s'.getOrdinal()"));
+        this.put(new TemplateAttribute("{upper ([^{}]+)}", "%1$s.toUpperCase()"));
+        this.put(new TemplateAttribute("{lower ([^{}]+)}", "%1$s.toLowerCase()"));
+        this.put(new TemplateAttribute("{repeatString ([^{}]+), (\\d)}", "%1$s.repeat(%2$s)"));
     }
 
     public QuestState(Map<String, Attribute> attributes) {
@@ -58,7 +69,7 @@ public class QuestState {
 
         for (Attribute a : this.attributes.values())
         {
-            value = a.replace(value);
+            value = a.replace(value, this);
         }
 
         return value;
