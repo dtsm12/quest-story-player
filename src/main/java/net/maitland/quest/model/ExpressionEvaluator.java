@@ -60,37 +60,37 @@ public class ExpressionEvaluator {
                 "}";
     }
 
-    public boolean check(IfSection ifSection, QuestState attributes) throws QuestStateException {
+    public boolean check(IfSection ifSection, Game game) throws QuestStateException {
 
         String expression = ifSection.getCheck();
-        return check(expression, attributes);
+        return check(expression, game);
     }
 
-    public boolean check(Choice choice, QuestState attributes) throws QuestStateException {
+    public boolean check(Choice choice, Game game) throws QuestStateException {
 
         String expression = choice.getCheck();
-        return check(expression == null ? "true" : expression, attributes);
+        return check(expression == null ? "true" : expression, game);
     }
 
-    public boolean check(String expression, QuestState attributes) throws QuestStateException {
+    public boolean check(String expression, Game game) throws QuestStateException {
 
         boolean check = false;
 
-        String result = evaluateExpression(expression, attributes);
+        String result = evaluateExpression(expression, game);
         check = "true".equalsIgnoreCase(result);
 
         return check;
     }
 
-    public String evaluateExpression(Attribute attribute, QuestState attributes) throws QuestStateException {
+    public String evaluateExpression(Attribute attribute, Game game) throws QuestStateException {
         String expression = attribute.getExpressionValue();
 
-        return evaluateExpression(expression, attributes);
+        return evaluateExpression(expression, game);
     }
 
-    public String evaluateExpression(String expression, QuestState attributes) throws QuestStateException {
+    public String evaluateExpression(String expression, Game game) throws QuestStateException {
         String result = expression;
-        expression = attributes.replace(expression);
+        expression = game.replace(expression);
         result = evaluateExpression(expression);
         return result;
     }

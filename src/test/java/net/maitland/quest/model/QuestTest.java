@@ -54,7 +54,6 @@ public class QuestTest {
     @Test
     public void getNextStationBack() throws Exception {
 
-        QuestState questState = new QuestState();
         Quest sut = new Quest();
 
         QuestStation first = new QuestStation();

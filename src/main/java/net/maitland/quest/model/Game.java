@@ -1,6 +1,9 @@
 package net.maitland.quest.model;
 
 import net.maitland.quest.model.attribute.Attribute;
+import net.maitland.quest.model.attribute.OperatorAttribute;
+import net.maitland.quest.model.attribute.StatesFunctionAttribute;
+import net.maitland.quest.model.attribute.TemplateAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,29 +21,25 @@ public class Game {
         if (gameData != null) {
 
             List<String> questPath = (List<String>) gameData.get("questPath");
-            Map<String, Map<String, Map<String, String>>> currentState = (Map<String, Map<String, Map<String, String>>>) gameData.get("currentState");
-            Map<String, Map<String, Map<String, String>>> previousState = (Map<String, Map<String, Map<String, String>>>) gameData.get("previousState");
+            Map<String, Map<String, String>> attributes = (Map<String, Map<String, String>>) gameData.get("attributes");
             Map<String, String> about = (Map<String, String>) gameData.get("gameQuest");
 
-            game = new Game(new About(about.get("title"), about.get("author")));
+            game = new Game(new About(about.get("title"), about.get("author")), getAttributes(attributes));
             game.getGameQuest().setIntro(about.get("intro"));
-            game.setChoiceIndex((Integer)gameData.get("choiceIndex"));
-            game.setChoiceId((String)gameData.get("choiceId"));
+            game.setChoiceIndex((Integer) gameData.get("choiceIndex"));
+            game.setChoiceId((String) gameData.get("choiceId"));
             game.setQuestPath(new ArrayDeque<String>(questPath));
-            game.setQuestState(new QuestState(getAttributes(currentState.get("attributes"))));
-            game.setPreviousQuestState(new QuestState(getAttributes((previousState).get("attributes"))));
 
         }
 
         return game;
     }
 
-    public static Map<String, Attribute> getAttributes(Map<String, Map<String, String>> rawAttributes) throws Exception{
+    public static Map<String, Attribute> getAttributes(Map<String, Map<String, String>> rawAttributes) throws Exception {
 
         Map<String, Attribute> attributes = new HashMap();
 
-        for (String name : rawAttributes.keySet())
-        {
+        for (String name : rawAttributes.keySet()) {
             Map<String, String> rawAttr = rawAttributes.get(name);
 
             Attribute attr = (Attribute) Class.forName(rawAttr.get("type")).newInstance();
@@ -56,9 +55,9 @@ public class Game {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private About gameQuest;
-    private QuestState questState = new QuestState();
-    private QuestState previousQuestState = new QuestState();
     private Deque<String> questPath = new ArrayDeque<>();
+
+    private Map<String, Attribute> attributes = new HashMap<>();
 
     private Integer choiceIndex;
     private String choiceId;
@@ -66,8 +65,36 @@ public class Game {
     private ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
 
     /* Use default/package access modifier - should be obtained from Quest */
-    Game(About gameQuest) {
+    public Game(About gameQuest) {
+        this(gameQuest, null);
+    }
+
+    /* Use default/package access modifier - should be obtained from Quest */
+    public Game(About gameQuest, Map<String, Attribute> attributes) {
+
         this.gameQuest = gameQuest;
+
+        if (attributes != null) {
+            this.attributes = new HashMap<>(attributes);
+        } else {
+            this.attributes = new HashMap<>();
+        }
+
+        // add/over-write built-in attributes
+        this.put(new OperatorAttribute(" greater ", " > "));
+        this.put(new OperatorAttribute(" lower ", " < "));
+        this.put(new OperatorAttribute(" and ", " && "));
+        this.put(new OperatorAttribute(" or ", " || "));
+        this.put(new OperatorAttribute("not ", "! "));
+        this.put(new OperatorAttribute(" = ", " == "));
+        this.put(new TemplateAttribute("{random (\\d+), (\\d+)}", "(Math.floor(Math.random() * %2$s) + %1$s).toString()"));
+        this.put(new StatesFunctionAttribute());
+        this.put(new TemplateAttribute("{contains ([^{}]+), ([^{}]+)}", "(%1$s.indexOf(%2$s) > -1)"));
+        this.put(new TemplateAttribute("{containsWord ([^{}]+), '([\\s\\w]+)'}", "(%1$s.search(/\\b%2$s\\b/) > -1)"));
+        this.put(new TemplateAttribute("{verbose (\\d+)}", "'%1$s'.getOrdinal()"));
+        this.put(new TemplateAttribute("{upper ([^{}]+)}", "%1$s.toUpperCase()"));
+        this.put(new TemplateAttribute("{lower ([^{}]+)}", "%1$s.toLowerCase()"));
+        this.put(new TemplateAttribute("{repeatString ([^{}]+), (\\d)}", "%1$s.repeat(%2$s)"));
     }
 
     public Integer getChoiceIndex() {
@@ -90,20 +117,57 @@ public class Game {
         return gameQuest;
     }
 
-    public QuestState getCurrentState() {
-        return this.questState;
+    public void put(Attribute attribute) {
+        this.attributes.put(attribute.getName(), attribute);
     }
 
-    public QuestState getPreviousState() {
-        return this.previousQuestState;
+    public Map<String, Attribute> getAttributes() {
+        return Collections.unmodifiableMap(this.attributes);
+    }
+
+    public String getAttributeValue(String name) {
+        return this.attributes.get(name).getValue();
+    }
+
+    public void setAttributes(Map<String, Attribute> attributes) {
+        this.attributes = attributes;
+    }
+
+    public String replace(String value) {
+
+        for (Attribute a : this.attributes.values()) {
+            value = a.replace(value, this);
+        }
+
+        return value;
+    }
+
+    public boolean check(Choice choice) throws QuestStateException {
+
+        return expressionEvaluator.check(choice, this);
+    }
+
+    public boolean check(IfSection ifSection) throws QuestStateException {
+
+        return expressionEvaluator.check(ifSection, this);
+    }
+
+    public String toStateText(String text) throws QuestStateException {
+
+        List<String> attributeNames = this.expressionEvaluator.extractAttributeNames(text);
+
+        for (String a : attributeNames) {
+            text = text.replace(a, this.getAttributeValue(a));
+        }
+
+        return text;
     }
 
     public void updateState(Collection<Attribute> attributes) throws QuestStateException {
-        QuestState newState = this.questState.copyAttributes();
 
         for (Attribute a : attributes) {
             //evaluate the attributes value
-            String attrValue = expressionEvaluator.evaluateExpression(a, newState);
+            String attrValue = expressionEvaluator.evaluateExpression(a, this);
 
             // check it's the right type of value
             if (a.isValidValue(attrValue) == false) {
@@ -113,24 +177,14 @@ public class Game {
             log.debug("Setting attribute '{}' to value '{}'", a.getName(), attrValue);
 
             // update the Quest's state
-            newState.put(a.updateValue(attrValue));
+            this.attributes.put(a.getName(), a.updateValue(attrValue));
         }
-
-        this.previousQuestState = this.questState;
-        this.questState = newState;
     }
 
     public Deque<String> getQuestPath() {
         return questPath;
     }
 
-    protected void setQuestState(QuestState questState) {
-        this.questState = questState;
-    }
-
-    protected void setPreviousQuestState(QuestState previousQuestState) {
-        this.previousQuestState = previousQuestState;
-    }
 
     protected void setQuestPath(Deque<String> questPath) {
         this.questPath = questPath;

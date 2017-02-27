@@ -1,6 +1,6 @@
 package net.maitland.quest.model.attribute;
 
-import net.maitland.quest.model.QuestState;
+import net.maitland.quest.model.Game;
 import net.maitland.quest.model.QuestStateException;
 
 /**
@@ -65,7 +65,7 @@ public abstract class Attribute {
         this.value = value;
     }
 
-    public String replace(String value, QuestState questState) {
+    public String replace(String value, Game game) {
         return value.replace(getName(), getExpressionValue());
     }
 

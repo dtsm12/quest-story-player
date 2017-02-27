@@ -59,7 +59,7 @@ public class QuestStation extends QuestSection {
         List<Attribute> questAttributes = new ArrayList(postVisit ? this.getPostVisitAttributes() : this.getPreVisitAttributes());
 
         // if applicable section isn't the station itself add in that section's attributes
-        QuestSection applicableQuestSection = getApplicableQuestSection(game.getCurrentState());
+        QuestSection applicableQuestSection = getApplicableQuestSection(game);
         if (this != applicableQuestSection) {
             questAttributes.addAll(postVisit ? applicableQuestSection.getPostVisitAttributes() : applicableQuestSection.getPreVisitAttributes());
         }
@@ -67,19 +67,19 @@ public class QuestStation extends QuestSection {
         game.updateState(questAttributes);
     }
 
-    public Text getText(QuestState questState) throws QuestStateException {
+    public Text getText(Game game) throws QuestStateException {
 
-        String text = getApplicableQuestSection(questState).getText().getValue();
-        return new Text(questState.toStateText(text));
+        String text = getApplicableQuestSection(game).getText().getValue();
+        return new Text(game.toStateText(text));
     }
 
-    public List<Choice> getChoices(QuestState questState) throws QuestStateException {
+    public List<Choice> getChoices(Game game) throws QuestStateException {
 
-        QuestSection questSection = getApplicableQuestSection(questState);
+        QuestSection questSection = getApplicableQuestSection(game);
         List<Choice> filteredChoices = new ArrayList<>();
 
         for (Choice c : questSection.getChoices()) {
-            if (questState.check(c)) {
+            if (game.check(c)) {
                 filteredChoices.add(c);
             }
         }
@@ -87,10 +87,10 @@ public class QuestStation extends QuestSection {
         return filteredChoices;
     }
 
-    public Choice getChoice(QuestState questState, String choiceId) throws QuestStateException {
+    public Choice getChoice(Game game, String choiceId) throws QuestStateException {
         Choice choice = null;
 
-        for (Choice c : getChoices(questState)) {
+        for (Choice c : getChoices(game)) {
             if (c.getStationId().equals(choiceId)) {
                 choice = c;
                 break;
@@ -100,22 +100,22 @@ public class QuestStation extends QuestSection {
         return choice;
     }
 
-    public Choice getChoice(QuestState questState, int choiceIndex) throws QuestStateException {
+    public Choice getChoice(Game game, int choiceIndex) throws QuestStateException {
         Choice choice = null;
 
-        List<Choice> choices = getChoices(questState);
+        List<Choice> choices = getChoices(game);
 
         return choices.get(choiceIndex);
     }
 
-    protected QuestSection getApplicableQuestSection(QuestState questState) throws QuestStateException {
+    protected QuestSection getApplicableQuestSection(Game game) throws QuestStateException {
 
         QuestSection questSection = null;
 
         if (this.getConditions().size() > 0) {
 
             for (IfSection i : this.getConditions()) {
-                if (questState.check(i)) {
+                if (game.check(i)) {
                     questSection = i;
                     break;
                 }

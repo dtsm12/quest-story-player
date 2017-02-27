@@ -1,6 +1,6 @@
 package net.maitland.quest.model.attribute;
 
-import net.maitland.quest.model.QuestState;
+import net.maitland.quest.model.Game;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -28,7 +28,7 @@ public class TemplateAttribute extends Attribute {
     }
 
     @Override
-    public String replace(String value, QuestState questState) {
+    public String replace(String value, Game game) {
         String ret = value;
         Matcher m = namePattern.matcher(value);
 
@@ -39,13 +39,13 @@ public class TemplateAttribute extends Attribute {
                 groups[i-1] = m.group(i);
             }
             Object[] r = Arrays.copyOfRange(groups, 1, groups.length-2);
-            ret = groups[0] + processTemplateValues(r, questState) + groups[groups.length-2];
+            ret = groups[0] + processTemplateValues(r, game) + groups[groups.length-2];
         }
 
         return ret;
     }
 
-    protected String processTemplateValues(Object[] r, QuestState questState) {
+    protected String processTemplateValues(Object[] r, Game game) {
         return String.format(this.getValue(), r);
     }
 

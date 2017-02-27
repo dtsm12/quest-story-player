@@ -22,9 +22,7 @@ public class ChanceQuestTest {
             Quest sut = getQuest();
             Game game = sut.newGameInstance();
 
-            QuestState attributes = game.getCurrentState().copyAttributes();
-            attributes.put(new StringAttribute("{random 1, 13}", "10"));
-            game.getCurrentState().setAttributes(attributes.getAttributes());
+            game.put(new StringAttribute("{random 1, 13}", "10"));
 
             // enter quest
             GameStation station = sut.getNextStation(game, 0);
@@ -46,9 +44,7 @@ public class ChanceQuestTest {
             Quest sut = getQuest();
             Game game = sut.newGameInstance();
 
-            QuestState attributes = game.getCurrentState().copyAttributes();
-            attributes.put(new StringAttribute("{random 1, 13}", "2"));
-            game.getCurrentState().setAttributes(attributes.getAttributes());
+            game.put(new StringAttribute("{random 1, 13}", "2"));
 
             // enter quest
             GameStation station = sut.getNextStation(game, 0);
@@ -73,9 +69,7 @@ public class ChanceQuestTest {
             Quest sut = getQuest();
             Game game = sut.newGameInstance();
 
-            QuestState attributes = game.getCurrentState().copyAttributes();
-            attributes.put(new StringAttribute("{random 1, 13}", "7"));
-            game.getCurrentState().setAttributes(attributes.getAttributes());
+            game.put(new StringAttribute("{random 1, 13}", "7"));
 
             // enter quest
             GameStation station = sut.getNextStation(game, 0);

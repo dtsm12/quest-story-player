@@ -1,6 +1,7 @@
 package net.maitland.quest.model.attribute;
 
-import net.maitland.quest.model.QuestState;
+import net.maitland.quest.model.About;
+import net.maitland.quest.model.Game;
 import net.maitland.quest.model.StateAttribute;
 import org.junit.Test;
 
@@ -14,15 +15,15 @@ public class StatesFunctionAttributeTest {
     @Test
     public void multipleTrueStates() {
 
-        QuestState state = new QuestState();
-        state.put(new StateAttribute("hasOne", Boolean.TRUE.toString()));
-        state.put(new StateAttribute("hasTwo", Boolean.TRUE.toString()));
+        Game game = new Game(new About("test", "test"));
+        game.put(new StateAttribute("hasOne", Boolean.TRUE.toString()));
+        game.put(new StateAttribute("hasTwo", Boolean.TRUE.toString()));
 
         String value = "{states 'has'}";
 
         StatesFunctionAttribute sut = new StatesFunctionAttribute();
 
-        String replaced = sut.replace(value, state);
+        String replaced = sut.replace(value, game);
 
         assertEquals("States has wrong value", "hasOne, hasTwo", replaced);
 
@@ -31,16 +32,16 @@ public class StatesFunctionAttributeTest {
     @Test
     public void trueAndFalseStates() {
 
-        QuestState state = new QuestState();
-        state.put(new StateAttribute("hasOne", Boolean.TRUE.toString()));
-        state.put(new StateAttribute("hasTwo", Boolean.FALSE.toString()));
-        state.put(new StateAttribute("hasThree", Boolean.TRUE.toString()));
+        Game game = new Game(new About("test", "test"));
+        game.put(new StateAttribute("hasOne", Boolean.TRUE.toString()));
+        game.put(new StateAttribute("hasTwo", Boolean.FALSE.toString()));
+        game.put(new StateAttribute("hasThree", Boolean.TRUE.toString()));
 
         String value = "{states 'has'}";
 
         StatesFunctionAttribute sut = new StatesFunctionAttribute();
 
-        String replaced = sut.replace(value, state);
+        String replaced = sut.replace(value, game);
 
         assertEquals("States has wrong value", "hasOne, hasThree", replaced);
 
@@ -49,14 +50,14 @@ public class StatesFunctionAttributeTest {
     @Test
     public void oneTrueStates() {
 
-        QuestState state = new QuestState();
-        state.put(new StateAttribute("hasOne", Boolean.TRUE.toString()));
+        Game game = new Game(new About("test", "test"));
+        game.put(new StateAttribute("hasOne", Boolean.TRUE.toString()));
 
         String value = "{states 'has'}";
 
         StatesFunctionAttribute sut = new StatesFunctionAttribute();
 
-        String replaced = sut.replace(value, state);
+        String replaced = sut.replace(value, game);
 
         assertEquals("States has wrong value", "hasOne", replaced);
 
@@ -65,14 +66,14 @@ public class StatesFunctionAttributeTest {
     @Test
     public void oneFalseStates() {
 
-        QuestState state = new QuestState();
-        state.put(new StateAttribute("hasOne", Boolean.FALSE.toString()));
+        Game game = new Game(new About("test", "test"));
+        game.put(new StateAttribute("hasOne", Boolean.FALSE.toString()));
 
         String value = "{states 'has'}";
 
         StatesFunctionAttribute sut = new StatesFunctionAttribute();
 
-        String replaced = sut.replace(value, state);
+        String replaced = sut.replace(value, game);
 
         assertEquals("States has wrong value", "", replaced);
 

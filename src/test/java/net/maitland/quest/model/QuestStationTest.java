@@ -1,4 +1,4 @@
-package net.maitland.quest.player;
+package net.maitland.quest.model;
 
 import net.maitland.quest.model.*;
 import net.maitland.quest.model.attribute.NumberAttribute;
@@ -20,10 +20,10 @@ public class QuestStationTest {
         QuestStation sut = new QuestStation();
 
         sut.setText(new Text("Test [test] text."));
-        QuestState questState = new QuestState();
-        questState.put(new StringAttribute("[test]", "this"));
+        Game game = new Game(new About("test", "test"));
+        game.put(new StringAttribute("[test]", "this"));
 
-        String text = sut.getText(questState).getValue();
+        String text = sut.getText(game).getValue();
         assertEquals("Text containing attribute not substituted correctly", "Test this text.", text);
     }
 
@@ -40,10 +40,10 @@ public class QuestStationTest {
         conditions.add(is);
         sut.setConditions(conditions);
 
-        QuestState questState =  new QuestState();
-        questState.put(new NumberAttribute("[testValue]", "1"));
+        Game game = new Game(new About("test", "test"));
+        game.put(new NumberAttribute("[testValue]", "1"));
 
-        String text = sut.getText(questState).getValue();
+        String text = sut.getText(game).getValue();
         assertEquals("Text from if condition not returned", "Correct text", text);
     }
 
@@ -73,7 +73,7 @@ public class QuestStationTest {
 
         Game game = quest.newGameInstance();
 
-        String text = sut.getText(game.getCurrentState()).getValue();
+        String text = sut.getText(game).getValue();
         assertEquals("Text from else condition not returned", "Else text", text);
 
     }
@@ -114,7 +114,7 @@ public class QuestStationTest {
 
         Game game = quest.newGameInstance();
 
-        List<Choice> choices = sut.getChoices(game.getCurrentState());
+        List<Choice> choices = sut.getChoices(game);
         Choice choice = choices.get(0);
         assertEquals("Text from else choice not returned", "elseChoice", choice.getText());
 

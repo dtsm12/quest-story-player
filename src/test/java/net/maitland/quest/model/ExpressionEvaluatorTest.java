@@ -3,6 +3,7 @@ package net.maitland.quest.model;
 import net.maitland.quest.model.attribute.NumberAttribute;
 import net.maitland.quest.model.attribute.OperatorAttribute;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -42,7 +43,7 @@ public class ExpressionEvaluatorTest {
         ExpressionEvaluator sut = new ExpressionEvaluator();
         NumberAttribute number = new NumberAttribute();
 
-        String result = sut.evaluateExpression("(Math.floor(Math.random() * 6) + 1).toString()", new QuestState());
+        String result = sut.evaluateExpression("(Math.floor(Math.random() * 6) + 1).toString()", new Game(new About("test", "test")));
 
         assertTrue(String.format("Random number '%s' is not accepted as NumberAttribute", result), number.isValidValue(result));
 
@@ -53,7 +54,7 @@ public class ExpressionEvaluatorTest {
 
         ExpressionEvaluator sut = new ExpressionEvaluator();
 
-        String result = sut.evaluateExpression("'0' > '6' && '4' > '0'", new QuestState());
+        String result = sut.evaluateExpression("'0' > '6' && '4' > '0'", new Game(new About("test", "test")));
 
         assertEquals("Result not evaluated", "false", result);
 
@@ -63,14 +64,14 @@ public class ExpressionEvaluatorTest {
     public void evaluateNegativeStringEqualityExpression() throws Exception {
 
         ExpressionEvaluator sut = new ExpressionEvaluator();
-        QuestState attributes = new QuestState();
-        attributes.put(new NumberAttribute("[cardNumber]", "2"));
-        attributes.put(new OperatorAttribute(" = ", " == "));
-        attributes.put(new OperatorAttribute(" not ", " ! "));
-        attributes.put(new OperatorAttribute(" and ", " && "));
-        attributes.put(new OperatorAttribute("[came from]", "'south'"));
+        Game game = new Game(new About("test", "test"));
+        game.put(new NumberAttribute("[cardNumber]", "2"));
+        game.put(new OperatorAttribute(" = ", " == "));
+        game.put(new OperatorAttribute(" not ", " ! "));
+        game.put(new OperatorAttribute(" and ", " && "));
+        game.put(new OperatorAttribute("[came from]", "'south'"));
 
-        String result = sut.evaluateExpression("[cardNumber] = 2 and [came from] != 'north'", attributes);
+        String result = sut.evaluateExpression("[cardNumber] = 2 and [came from] != 'north'", game);
 
         assertTrue("Expression not true", Boolean.parseBoolean(result));
 

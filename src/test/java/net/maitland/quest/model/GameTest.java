@@ -57,9 +57,9 @@ public class GameTest {
         assertEquals("Incorrect last station in quest path after deserialization", "station2", deserGame.getQuestPath().pop());
         assertEquals("Incorrect second station in quest path after deserialization", "station1", deserGame.getQuestPath().pop());
         assertEquals("Incorrect first station in quest path after deserialization", "start", deserGame.getQuestPath().pop());
-        assertEquals("Incorrect NumberAttribute after deserialization", "0", deserGame.getCurrentState().getAttributeValue("attribute1"));
-        assertEquals("Incorrect StringAttribute after deserialization", "abc", deserGame.getCurrentState().getAttributeValue("attribute2"));
-        assertEquals("Incorrect StateAttribute after deserialization", "true", deserGame.getCurrentState().getAttributeValue("attribute3"));
+        assertEquals("Incorrect NumberAttribute after deserialization", "0", deserGame.getAttributeValue("attribute1"));
+        assertEquals("Incorrect StringAttribute after deserialization", "abc", deserGame.getAttributeValue("attribute2"));
+        assertEquals("Incorrect StateAttribute after deserialization", "true", deserGame.getAttributeValue("attribute3"));
 
     }
 

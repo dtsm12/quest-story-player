@@ -108,6 +108,7 @@ public class Quest {
 
     protected GameStation getNextStation(Game game, String choiceId) throws QuestStateException, ChoiceNotPossibleException {
 
+        QuestStation currentStation = null;
         QuestStation questStation = null;
 
         if (choiceId == null) {
@@ -121,15 +122,15 @@ public class Quest {
         } else {
             // Get choice
             String currentStationId = game.getQuestPath().peek();
-            QuestStation currentStation = this.getStation(currentStationId);
-            Choice choice = currentStation.getChoice(game.getPreviousState(), choiceId);
+            currentStation = this.getStation(currentStationId);
+            Choice choice = currentStation.getChoice(game, choiceId);
 
             // check it was possible
             if (choice == null) {
                 throw new ChoiceNotPossibleException(String.format("The choice %s is not possible.", choiceId));
             }
 
-            String stationId = game.getPreviousState().toStateText(choice.getStationId());
+            String stationId = game.toStateText(choice.getStationId());
             questStation = getStation(stationId);
         }
 
@@ -138,12 +139,13 @@ public class Quest {
             throw new QuestStateException(String.format("Station %s is not found.", choiceId));
         }
 
-        return processNextStation(game, questStation);
+        return moveToNextStation(game, currentStation, questStation);
     }
 
     protected GameStation getNextStation(Game game, int choiceNumber) throws QuestStateException, ChoiceNotPossibleException {
 
         GameStation questStateStation = null;
+        QuestStation currentStation = null;
         QuestStation questStation = null;
         String choiceId;
 
@@ -152,8 +154,8 @@ public class Quest {
         } else {
             // Get choice
             String currentStationId = game.getQuestPath().peek();
-            QuestStation currentStation = this.getStation(currentStationId);
-            Choice choice = currentStation.getChoice(game.getPreviousState(), choiceNumber - 1);
+            currentStation = this.getStation(currentStationId);
+            Choice choice = currentStation.getChoice(game, choiceNumber - 1);
 
             // check it was possible
             if (choice == null) {
@@ -166,20 +168,26 @@ public class Quest {
                 throw new QuestStateException(String.format("Choice number %s is not found in station '%s'.", choiceNumber, currentStation.getId()));
             }
 
-            questStateStation = processNextStation(game, questStation);
+            questStateStation = moveToNextStation(game, currentStation, questStation);
         }
 
         return questStateStation;
     }
 
-    protected GameStation processNextStation(Game game, QuestStation questStation) throws QuestStateException, ChoiceNotPossibleException {
+    protected GameStation moveToNextStation(Game game, QuestStation currentStation, QuestStation targetStation) throws QuestStateException, ChoiceNotPossibleException {
+
+        // update state after current station visit
+        if(currentStation != null) {
+            log.debug("Post-visit '{}'", currentStation.getId());
+            currentStation.postVisit(game);
+        }
 
         // resolve back references
         QuestStation nextStation = null;
         Deque<String> questPath = game.getQuestPath();
         List<Choice> choices = null;
 
-        if (questStation.getId().equals(QuestStation.BACK_STATION_ID)) {
+        if (targetStation.getId().equals(QuestStation.BACK_STATION_ID)) {
 
             //remove last station
             questPath.pop();
@@ -188,7 +196,7 @@ public class Quest {
             nextStation = this.getStation(nextStationId);
 
         } else {
-            nextStation = questStation;
+            nextStation = targetStation;
         }
 
         // update quest state before visit
@@ -199,12 +207,8 @@ public class Quest {
         log.debug("Visit '{}'", nextStation.getId());
         GameStation retStation = new GameStation();
         retStation.setId(nextStation.getId());
-        retStation.setText(nextStation.getText(game.getCurrentState()).getValue());
-        retStation.setChoices(getQuestStateChoices(nextStation.getChoices(game.getCurrentState()), game.getCurrentState()));
-
-        // update quest state after visit
-        log.debug("Post-visit '{}'", nextStation.getId());
-        nextStation.postVisit(game);
+        retStation.setText(nextStation.getText(game).getValue());
+        retStation.setChoices(getQuestStateChoices(nextStation.getChoices(game), game));
 
         // add to quest path
         questPath.push(nextStation.getId());
@@ -213,16 +217,16 @@ public class Quest {
         return retStation;
     }
 
-    protected List<GameChoice> getQuestStateChoices(List<Choice> choices, QuestState questState) throws QuestStateException {
+    protected List<GameChoice> getQuestStateChoices(List<Choice> choices, Game game) throws QuestStateException {
 
-        List<GameChoice> gameChoices = choices.stream().map(choice -> newQuestStateChoice(choice, questState)).collect(Collectors.toList());
+        List<GameChoice> gameChoices = choices.stream().map(choice -> newQuestStateChoice(choice, game)).collect(Collectors.toList());
         return gameChoices;
     }
 
-    protected GameChoice newQuestStateChoice(Choice c, QuestState questState) throws QuestStateException {
+    protected GameChoice newQuestStateChoice(Choice c, Game game) throws QuestStateException {
         GameChoice stateChoice = new GameChoice();
-        stateChoice.setStationId(questState.toStateText(c.getStationId()));
-        stateChoice.setText(questState.toStateText(c.getText()));
+        stateChoice.setStationId(game.toStateText(c.getStationId()));
+        stateChoice.setText(game.toStateText(c.getText()));
         return stateChoice;
     }
 }
