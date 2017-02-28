@@ -1,9 +1,6 @@
 package net.maitland.quest.model;
 
-import net.maitland.quest.model.attribute.Attribute;
-import net.maitland.quest.model.attribute.OperatorAttribute;
-import net.maitland.quest.model.attribute.StatesFunctionAttribute;
-import net.maitland.quest.model.attribute.TemplateAttribute;
+import net.maitland.quest.model.attribute.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +10,8 @@ import java.util.*;
  * Created by David on 23/01/2017.
  */
 public class Game {
+
+    public static final String QML_START_TIME = "qmlStartTime";
 
 
     public static Game fromCollectionStructure(Map gameData) throws Exception {
@@ -76,6 +75,7 @@ public class Game {
 
         if (attributes != null) {
             this.attributes = new HashMap<>(attributes);
+            this.put(new StringAttribute(QML_START_TIME, String.valueOf((new Date()).getTime())));
         } else {
             this.attributes = new HashMap<>();
         }
@@ -95,6 +95,9 @@ public class Game {
         this.put(new TemplateAttribute("{upper ([^{}]+)}", "%1$s.toUpperCase()"));
         this.put(new TemplateAttribute("{lower ([^{}]+)}", "%1$s.toLowerCase()"));
         this.put(new TemplateAttribute("{repeatString ([^{}]+), (\\d)}", "%1$s.repeat(%2$s)"));
+        this.put(new VisitsFunctionAttribute());
+        this.put(new QmlMinutesAttribute());
+        this.put(new QmlSecondsAttribute());
     }
 
     public Integer getChoiceIndex() {
