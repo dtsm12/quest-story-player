@@ -159,6 +159,7 @@ public class Game {
 
         List<String> attributeNames = this.expressionEvaluator.extractAttributeNames(text);
 
+        // replace with values, not expression value
         for (String a : attributeNames) {
             text = text.replace(a, this.getAttributeValue(a));
         }

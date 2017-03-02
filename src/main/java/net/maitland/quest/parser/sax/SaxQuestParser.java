@@ -62,6 +62,33 @@ public class SaxQuestParser extends AbstractQuestParser {
 
         @Override
         public void endDocument() throws SAXException {
+
+            for(QuestStation s : this.quest.getStations())
+            {
+                setTexts(s);
+
+                for(QuestSection qs : s.getConditions())
+                {
+                    setTexts(qs);
+                }
+
+                setTexts(s.getElseCondition());
+            }
+        }
+
+        protected void setTexts(QuestSection qs)
+        {
+            if(qs != null) {
+                if (qs.getText() == null) {
+                    qs.setText(new Text());
+                }
+
+                for (Choice c : qs.getChoices()) {
+                    if (c.getText() == null) {
+                        c.setText("");
+                    }
+                }
+            }
         }
 
         @Override

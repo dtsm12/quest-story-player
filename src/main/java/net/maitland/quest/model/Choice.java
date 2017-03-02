@@ -12,7 +12,7 @@ public class Choice {
     private QuestStation station;
 
     @JacksonXmlText
-    private String text;
+    private String text = "";
 
     private String check;
 

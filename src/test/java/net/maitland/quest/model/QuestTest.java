@@ -28,9 +28,11 @@ public class QuestTest {
 
         Choice choiceOne = new Choice();
         choiceOne.setStationId(one.getId());
+        choiceOne.setText("choiceOne");
 
         Choice choiceTwo = new Choice();
         choiceTwo.setStationId(two.getId());
+        choiceTwo.setText("choiceTwo");
 
         start.addChoice(choiceOne);
         start.addChoice(choiceTwo);
