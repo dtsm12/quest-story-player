@@ -1,6 +1,5 @@
 package net.maitland.quest.model.attribute;
 
-import net.maitland.quest.model.StateAttribute;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -1,7 +1,6 @@
 package net.maitland.quest.model.attribute;
 
 import net.maitland.quest.model.Game;
-import net.maitland.quest.model.StateAttribute;
 
 import java.util.stream.Collectors;
 
@@ -15,7 +14,7 @@ public class StatesFunctionAttribute extends TemplateAttribute {
     }
 
     @Override
-    protected String processTemplateValues(Object[] values, Game game) {
+    protected String processTemplateValues(Object[] values, Game game, boolean isCheck) {
         String statePrefix = (String) values[0];
 
         String applicableStates = game.getAttributes().values().stream().filter(s -> s instanceof StateAttribute && s.getName().startsWith(statePrefix) && ((StateAttribute) s).isTrue()).map(s -> s.getName()).sorted().collect(Collectors.joining(", "));

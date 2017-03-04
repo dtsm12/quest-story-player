@@ -4,6 +4,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import net.maitland.quest.model.attribute.Attribute;
 import net.maitland.quest.model.attribute.NumberAttribute;
+import net.maitland.quest.model.attribute.StateAttribute;
 import net.maitland.quest.model.attribute.StringAttribute;
 
 import java.util.ArrayList;

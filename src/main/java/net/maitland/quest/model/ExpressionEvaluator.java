@@ -63,34 +63,38 @@ public class ExpressionEvaluator {
     public boolean check(IfSection ifSection, Game game) throws QuestStateException {
 
         String expression = ifSection.getCheck();
-        return check(expression, game);
+        return check(expression, game, true);
     }
 
     public boolean check(Choice choice, Game game) throws QuestStateException {
 
         String expression = choice.getCheck();
-        return check(expression == null ? "true" : expression, game);
+        return check(expression == null ? "true" : expression, game, true);
     }
 
-    public boolean check(String expression, Game game) throws QuestStateException {
+    public boolean check(String expression, Game game, boolean isCheck) throws QuestStateException {
 
         boolean check = false;
 
-        String result = evaluateExpression(expression, game);
+        String result = evaluateExpression(expression, game, isCheck);
         check = "true".equalsIgnoreCase(result);
 
         return check;
     }
 
-    public String evaluateExpression(Attribute attribute, Game game) throws QuestStateException {
+    public String evaluateExpression(Attribute attribute, Game game, boolean isCheck) throws QuestStateException {
         String expression = attribute.getExpressionValue();
 
-        return evaluateExpression(expression, game);
+        return evaluateExpression(expression, game, isCheck);
     }
 
     public String evaluateExpression(String expression, Game game) throws QuestStateException {
+        return evaluateExpression(expression, game, true);
+    }
+
+    public String evaluateExpression(String expression, Game game, boolean isCheck) throws QuestStateException {
         String result = expression;
-        expression = game.replace(expression);
+        expression = game.replace(expression, isCheck);
         result = evaluateExpression(expression);
         return result;
     }

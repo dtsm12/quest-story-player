@@ -3,6 +3,7 @@ package net.maitland.quest.model;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.maitland.quest.model.attribute.Attribute;
 import net.maitland.quest.model.attribute.NumberAttribute;
+import net.maitland.quest.model.attribute.StateAttribute;
 import net.maitland.quest.model.attribute.StringAttribute;
 import org.junit.Test;
 

@@ -24,7 +24,7 @@ public abstract class Attribute {
             Attribute a = (Attribute) Class.forName(this.getType()).newInstance();
 
             a.setName(this.getName());
-            a.setValue(this.getValue());
+            a.setValue(newValue);
 
             return a;
 
@@ -54,7 +54,7 @@ public abstract class Attribute {
     }
 
     public String getExpressionValue() {
-        return value;
+        return getValue();
     }
 
     public String getValue() {
@@ -66,7 +66,15 @@ public abstract class Attribute {
     }
 
     public String replace(String value, Game game) {
-        return value.replace(getName(), getExpressionValue());
+        return replace(value, game, true);
+    }
+
+    public String replace(String value, Game game, boolean isCheck) {
+        return value.replace(getName(), getValue(isCheck));
+    }
+
+    public String getValue(boolean isCheck) {
+        return isCheck ? getExpressionValue() : getValue();
     }
 
     @Override
