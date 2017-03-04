@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * Created by David on 18/02/2017.
  */
-public class TemplateAttribute extends Attribute {
+public class TemplateAttribute extends ReadOnlyAttribute {
 
     private Pattern namePattern;
 
@@ -28,7 +28,7 @@ public class TemplateAttribute extends Attribute {
     }
 
     @Override
-    public String replace(String value, Game game) {
+    public String replace(String value, Game game, boolean isCheck) {
         String ret = value;
         Matcher m = namePattern.matcher(value);
 
@@ -39,19 +39,14 @@ public class TemplateAttribute extends Attribute {
                 groups[i-1] = m.group(i);
             }
             Object[] r = Arrays.copyOfRange(groups, 1, groups.length-2);
-            ret = groups[0] + processTemplateValues(r, game) + groups[groups.length-2];
+            ret = groups[0] + processTemplateValues(r, game, isCheck) + groups[groups.length-2];
         }
 
         return ret;
     }
 
-    protected String processTemplateValues(Object[] r, Game game) {
-        return String.format(this.getValue(), r);
-    }
-
-    @Override
-    public Attribute updateValue(String newValue) {
-        return new TemplateAttribute(this.getName(), newValue);
+    protected String processTemplateValues(Object[] r, Game game, boolean isCheck) {
+        return String.format(this.getValue(isCheck), r);
     }
 
     @Override

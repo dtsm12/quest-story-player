@@ -2,6 +2,7 @@ package net.maitland.quest.parser.sax;
 
 import net.maitland.quest.model.*;
 import net.maitland.quest.model.attribute.NumberAttribute;
+import net.maitland.quest.model.attribute.StateAttribute;
 import net.maitland.quest.model.attribute.StringAttribute;
 import net.maitland.quest.parser.AbstractQuestParser;
 import org.xml.sax.Attributes;

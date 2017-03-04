@@ -1,6 +1,4 @@
-package net.maitland.quest.model;
-
-import net.maitland.quest.model.attribute.Attribute;
+package net.maitland.quest.model.attribute;
 
 /**
  * Created by David on 18/12/2016.
@@ -16,16 +14,6 @@ public class StateAttribute extends Attribute {
 
     public StateAttribute(String name, String value) {
         super(name, value);
-    }
-
-    @Override
-    public Attribute updateValue(String newValue) {
-        return new StateAttribute(this.getName(), newValue);
-    }
-
-    @Override
-    public String getExpressionValue() {
-        return getValue();
     }
 
     @Override

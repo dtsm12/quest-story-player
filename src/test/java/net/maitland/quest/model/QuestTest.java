@@ -1,5 +1,6 @@
 package net.maitland.quest.model;
 
+import net.maitland.quest.model.attribute.StateAttribute;
 import org.junit.Test;
 
 import java.util.ArrayList;

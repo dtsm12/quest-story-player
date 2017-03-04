@@ -24,7 +24,7 @@ public class QmlSecondsAttributeTest {
 
         QmlSecondsAttribute sut = new QmlSecondsAttribute();
 
-        String result = sut.replace("qmlSeconds", game);
+        String result = sut.replace("[qmlSeconds]", game);
 
         long end = new Date().getTime();
 
@@ -42,7 +42,7 @@ public class QmlSecondsAttributeTest {
         Game game = new Game(new About("test", "test"));
         game.put(new StringAttribute(Game.QML_START_TIME, String.valueOf((new Date()).getTime()-((sut.MAX_SECONDS+1)*1000))));
 
-        String result = sut.replace("qmlSeconds", game);
+        String result = sut.replace("[qmlSeconds]", game);
         int resultInt = Integer.parseInt(result);
 
         assertEquals("qmlSeconds not max number", sut.MAX_SECONDS, resultInt);

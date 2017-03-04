@@ -17,21 +17,6 @@ public class StringAttribute extends Attribute {
     }
 
     @Override
-    public Attribute updateValue(String newValue) {
-        return new StringAttribute(this.getName(), newValue);
-    }
-
-    @Override
-    public boolean isValidValue(String value) {
-        return true;
-    }
-
-    @Override
-    public void setValue(String value) {
-        super.setValue(value);
-    }
-
-    @Override
     public String getExpressionValue() {
         return surround(super.getValue());
     }

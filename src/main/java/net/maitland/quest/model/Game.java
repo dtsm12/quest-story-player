@@ -136,10 +136,10 @@ public class Game {
         this.attributes = attributes;
     }
 
-    public String replace(String value) {
+    public String replace(String value, boolean isCheck) {
 
         for (Attribute a : this.attributes.values()) {
-            value = a.replace(value, this);
+            value = a.replace(value, this, isCheck);
         }
 
         return value;
@@ -157,21 +157,14 @@ public class Game {
 
     public String toStateText(String text) throws QuestStateException {
 
-        List<String> attributeNames = this.expressionEvaluator.extractAttributeNames(text);
-
-        // replace with values, not expression value
-        for (String a : attributeNames) {
-            text = text.replace(a, this.getAttributeValue(a));
-        }
-
-        return text;
+        return this.replace(text, false);
     }
 
     public void updateState(Collection<Attribute> attributes) throws QuestStateException {
 
         for (Attribute a : attributes) {
             //evaluate the attributes value
-            String attrValue = expressionEvaluator.evaluateExpression(a, this);
+            String attrValue = expressionEvaluator.evaluateExpression(a, this, true);
 
             // check it's the right type of value
             if (a.isValidValue(attrValue) == false) {

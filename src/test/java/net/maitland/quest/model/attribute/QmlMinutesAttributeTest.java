@@ -24,7 +24,7 @@ public class QmlMinutesAttributeTest {
 
         QmlMinutesAttribute sut = new QmlMinutesAttribute();
 
-        String result = sut.replace("qmlMinutes", game);
+        String result = sut.replace("[qmlMinutes]", game);
 
         long end = new Date().getTime();
 
@@ -44,7 +44,7 @@ public class QmlMinutesAttributeTest {
         Game game = new Game(new About("test", "test"));
         game.put(new StringAttribute(Game.QML_START_TIME, String.valueOf((new Date()).getTime()-(sut.MAX_MINUTES+1)*60*1000)));
 
-        String result = sut.replace("qmlMinutes", game);
+        String result = sut.replace("[qmlMinutes]", game);
 
         long end = new Date().getTime();
 

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import net.maitland.quest.model.attribute.Attribute;
 import net.maitland.quest.model.attribute.NumberAttribute;
+import net.maitland.quest.model.attribute.StateAttribute;
 import net.maitland.quest.model.attribute.StringAttribute;
 import net.maitland.quest.player.ChoiceNotPossibleException;
 import org.slf4j.Logger;
@@ -199,6 +200,9 @@ public class Quest {
             nextStation = targetStation;
         }
 
+        // add to quest path
+        questPath.push(nextStation.getId());
+
         // update quest state before visit
         log.debug("Pre-visit '{}'", nextStation.getId());
         nextStation.preVisit(game);
@@ -209,9 +213,6 @@ public class Quest {
         retStation.setId(nextStation.getId());
         retStation.setText(nextStation.getText(game).getValue());
         retStation.setChoices(getQuestStateChoices(nextStation.getChoices(game), game));
-
-        // add to quest path
-        questPath.push(nextStation.getId());
 
         // return relevant data for choice
         return retStation;

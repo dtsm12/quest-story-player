@@ -17,11 +17,6 @@ public class NumberAttribute extends Attribute {
     }
 
     @Override
-    public Attribute updateValue(String newValue) {
-        return new NumberAttribute(this.getName(), toInt(newValue));
-    }
-
-    @Override
     public boolean isValidValue(String value) {
         boolean isValidValue = false;
         try {
