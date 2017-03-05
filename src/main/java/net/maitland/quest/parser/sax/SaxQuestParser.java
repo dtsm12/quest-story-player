@@ -81,7 +81,7 @@ public class SaxQuestParser extends AbstractQuestParser {
         {
             if(qs != null) {
                 if (qs.getText() == null) {
-                    qs.setText(new Text());
+                    qs.setText(new Text(""));
                 }
 
                 for (Choice c : qs.getChoices()) {

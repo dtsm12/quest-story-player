@@ -3,13 +3,13 @@ package net.maitland.quest.model.attribute;
 /**
  * Created by David on 18/12/2016.
  */
-public class StateAttribute extends Attribute {
+public class StateAttribute extends SimpleAttribute {
 
     public StateAttribute() {
     }
 
     public StateAttribute(String name) {
-        super(name, "false");
+        this(name, "false");
     }
 
     public StateAttribute(String name, String value) {

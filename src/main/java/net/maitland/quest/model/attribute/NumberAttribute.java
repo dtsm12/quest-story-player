@@ -3,13 +3,13 @@ package net.maitland.quest.model.attribute;
 /**
  * Created by David on 18/12/2016.
  */
-public class NumberAttribute extends Attribute {
+public class NumberAttribute extends SimpleAttribute {
 
     public NumberAttribute() {
     }
 
     public NumberAttribute(String name) {
-        super(name, "0");
+        this(name, "0");
     }
 
     public NumberAttribute(String name, String value) {

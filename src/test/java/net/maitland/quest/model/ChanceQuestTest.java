@@ -1,5 +1,6 @@
 package net.maitland.quest.model;
 
+import net.maitland.quest.model.attribute.RandomFunctionAttribute;
 import net.maitland.quest.model.attribute.StringAttribute;
 import net.maitland.quest.parser.sax.SaxQuestParser;
 import net.maitland.quest.player.ConsolePlayer;
@@ -22,7 +23,9 @@ public class ChanceQuestTest {
             Quest sut = getQuest();
             Game game = sut.newGameInstance();
 
-            game.put(new StringAttribute("{random 1, 13}", "10"));
+            RandomFunctionAttribute randomFn = new RandomFunctionAttribute();
+            randomFn.setValue("10");
+            game.put(randomFn);
 
             // enter quest
             GameStation station = sut.getNextStation(game, 0);
@@ -44,7 +47,9 @@ public class ChanceQuestTest {
             Quest sut = getQuest();
             Game game = sut.newGameInstance();
 
-            game.put(new StringAttribute("{random 1, 13}", "2"));
+            RandomFunctionAttribute randomFn = new RandomFunctionAttribute();
+            randomFn.setValue("2");
+            game.put(randomFn);
 
             // enter quest
             GameStation station = sut.getNextStation(game, 0);
@@ -69,7 +74,9 @@ public class ChanceQuestTest {
             Quest sut = getQuest();
             Game game = sut.newGameInstance();
 
-            game.put(new StringAttribute("{random 1, 13}", "7"));
+            RandomFunctionAttribute randomFn = new RandomFunctionAttribute();
+            randomFn.setValue("7");
+            game.put(randomFn);
 
             // enter quest
             GameStation station = sut.getNextStation(game, 0);

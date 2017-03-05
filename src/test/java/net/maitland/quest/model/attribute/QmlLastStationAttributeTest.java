@@ -23,7 +23,7 @@ public class QmlLastStationAttributeTest {
 
         QmlLastStationAttribute sut = new QmlLastStationAttribute();
 
-        String result = sut.replace("[qmlLastStation]", game);
+        String result = sut.replace("[qmlLastStation]", game, false);
 
         assertEquals("QmlStationAttribute returned wrong value", "two", result);
     }

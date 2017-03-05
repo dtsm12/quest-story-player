@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * Created by David on 18/02/2017.
  */
-public class TemplateAttribute extends ReadOnlyAttribute {
+public class TemplateAttribute extends Attribute {
 
     private Pattern namePattern;
 

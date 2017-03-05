@@ -97,7 +97,6 @@ public class QuestSection {
 
     public <A extends Attribute> void addAttribute(A attribute) {
 
-        attribute.setName(String.format("[%s]", attribute.getName()));
         if (this.isPreVisit()) {
             this.preVisitAttributes.add(attribute);
         } else {

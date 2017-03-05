@@ -21,7 +21,7 @@ public class QmlTimeAttributeTest {
     {
         QmlTimeAttribute sut = new QmlTimeAttribute();
 
-        String result = sut.replace("[qmlTime]", new Game(new About("test", "test")));
+        String result = sut.replace("[qmlTime]", new Game(new About("test", "test")), false);
 
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");

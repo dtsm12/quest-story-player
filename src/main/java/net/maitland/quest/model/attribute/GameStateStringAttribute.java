@@ -1,19 +1,12 @@
 package net.maitland.quest.model.attribute;
 
 /**
- * Created by David on 18/12/2016.
+ * Created by David on 05/03/2017.
  */
-public class StringAttribute extends SimpleAttribute {
+public abstract class GameStateStringAttribute extends GameStateAttribute {
 
-    public StringAttribute() {
-    }
-
-    public StringAttribute(String name) {
-        this(name , "' '");
-    }
-
-    public StringAttribute(String name, String value) {
-        super(name, value);
+    public GameStateStringAttribute(String name) {
+        super(name);
     }
 
     @Override

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE quest SYSTEM "/quest.dtd">
+<quest debug="false" language="english">
+
+    <about>
+        <title>Test Quest</title>
+        <author>David Maitland</author>
+        <intro>This is the intro</intro>
+    </about>
+
+    <station id="start">
+        <!-- text should be optional -->
+        <choice station="start"><!-- text should be optional --></choice>
+        <choice station="number"><!-- text should be optional --></choice>
+    </station>
+
+    <station id="number">
+        <number name="number" value="100"/>
+        <text>test [number]</text>
+        <choice station="test[number]" check="[number] = 100">test [number]</choice>
+        <choice station="qmlDay"></choice>
+    </station>
+
+    <station id="qmlDay">
+        <string name="qmlDayTest" value="[qmlDay]"/>
+        <text>test [qmlDay]</text>
+        <choice station="test[qmlDay]" check="[qmlDay] > ' '">test [qmlDay]</choice>
+        <choice station="qmlLastStation"></choice>
+    </station>
+
+    <station id="qmlLastStation">
+        <string name="qmlLastStationTest" value="[qmlLastStation]"/>
+        <text>test [qmlLastStation]</text>
+        <choice station="test[qmlLastStation]" check="[qmlLastStation] = 'qmlDay'">test [qmlLastStation]</choice>
+        <choice station="qmlMinutes"></choice>
+    </station>
+
+    <station id="qmlMinutes">
+        <number name="qmlMinutesTest" value="[qmlMinutes]"/>
+        <text>test [qmlMinutes]</text>
+        <choice station="test[qmlMinutes]" check="[qmlMinutes] >= 0">test [qmlMinutes]</choice>
+        <choice station="qmlSeconds"></choice>
+    </station>
+
+    <station id="qmlSeconds">
+        <number name="qmlSecondsTest" value="[qmlSeconds]"/>
+        <text>test [qmlSeconds]</text>
+        <choice station="test[qmlSeconds]" check="[qmlSeconds] >= 0">test [qmlSeconds]</choice>
+        <choice station="qmlServer"></choice>
+    </station>
+
+    <station id="qmlServer">
+        <string name="qmlServerTest" value="[qmlServer]"/>
+        <text>test [qmlServer]</text>
+        <choice station="test[qmlServer]" check="[qmlServer]">test [qmlServer]</choice>
+        <choice station="qmlStation"></choice>
+    </station>
+
+    <station id="qmlStation">
+        <string name="qmlStationTest" value="[qmlStation]"/>
+        <text>test [qmlStation]</text>
+        <choice station="test[qmlStation]" check="[qmlStation] = 'qmlStation'">test [qmlStation]</choice>
+        <choice station="qmlTime"></choice>
+    </station>
+
+    <station id="qmlTime">
+        <string name="qmlTimeTest" value="[qmlTime]"/>
+        <text>test [qmlTime]</text>
+        <choice station="test[qmlTime]" check="[qmlTime] > ' '">test [qmlTime]</choice>
+        <choice station="qmlVersion"></choice>
+    </station>
+
+    <station id="qmlVersion">
+        <string name="qmlVersionTest" value="[qmlVersion]"/>
+        <text>test [qmlVersion]</text>
+        <choice station="test[qmlVersion]" check="[qmlVersion] = '2'">test [qmlVersion]</choice>
+        <choice station="state"></choice>
+    </station>
+
+    <station id="state">
+        <state name="state" value="true"/>
+        <text>test [state]</text>
+        <choice station="test[state]" check="[state]">test [state]</choice>
+        <choice station="visitsAll"></choice>
+    </station>
+
+    <station id="visitsAll">
+        <number name="visitsAll" value="{visits(*)}"/>
+        <text>test [visitsAll]</text>
+        <choice station="test[visitsAll]" check="[visitsAll] = 12">test [visitsAll]</choice>
+        <choice station="visitsState"></choice>
+    </station>
+
+    <station id="visitsState">
+        <number name="visitsState" value="{visits(state)}"/>
+        <text>test [visitsState]</text>
+        <choice station="test[visitsState]" check="[visitsState] = 1">test [visitsState]</choice>
+        <choice station="end"></choice>
+    </station>
+
+    <station id="end">
+    </station>
+
+</quest>

@@ -21,7 +21,7 @@ public class QuestStationTest {
 
         sut.setText(new Text("Test [test] text."));
         Game game = new Game(new About("test", "test"));
-        game.put(new StringAttribute("[test]", "this"));
+        game.put(new StringAttribute("test", "this"));
 
         String text = sut.getText(game).getValue();
         assertEquals("Text containing attribute not substituted correctly", "Test this text.", text);
@@ -41,7 +41,7 @@ public class QuestStationTest {
         sut.setConditions(conditions);
 
         Game game = new Game(new About("test", "test"));
-        game.put(new NumberAttribute("[testValue]", "1"));
+        game.put(new NumberAttribute("testValue", "1"));
 
         String text = sut.getText(game).getValue();
         assertEquals("Text from if condition not returned", "Correct text", text);

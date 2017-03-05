@@ -102,9 +102,9 @@ public class Quest {
     }
 
     protected QuestStation getStation(String stationId) {
+
         return this.stations.stream().filter(s -> s.getId().equals(stationId))
-                .findFirst()
-                .get();
+                .findFirst().orElseThrow(() -> new QuestStateException("Station '" + stationId + "' does not exist."));
     }
 
     protected GameStation getNextStation(Game game, String choiceId) throws QuestStateException, ChoiceNotPossibleException {

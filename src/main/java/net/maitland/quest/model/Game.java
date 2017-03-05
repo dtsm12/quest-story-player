@@ -13,7 +13,6 @@ public class Game {
 
     public static final String QML_START_TIME = "qmlStartTime";
 
-
     public static Game fromCollectionStructure(Map gameData) throws Exception {
         Game game = null;
 
@@ -75,19 +74,26 @@ public class Game {
 
         if (attributes != null) {
             this.attributes = new HashMap<>(attributes);
-            this.put(new StringAttribute(QML_START_TIME, String.valueOf((new Date()).getTime())));
         } else {
             this.attributes = new HashMap<>();
         }
 
+        // add quest start time if missing
+        if(this.attributes.containsKey(QML_START_TIME) == false) {
+            this.put(new StringAttribute(QML_START_TIME, String.valueOf((new Date()).getTime())));
+        }
+
         // add/over-write built-in attributes
         this.put(new OperatorAttribute(" greater ", " > "));
+        this.put(new OperatorAttribute(" above ", " > "));
         this.put(new OperatorAttribute(" lower ", " < "));
+        this.put(new OperatorAttribute(" below ", " < "));
         this.put(new OperatorAttribute(" and ", " && "));
         this.put(new OperatorAttribute(" or ", " || "));
         this.put(new OperatorAttribute("not ", "! "));
         this.put(new OperatorAttribute(" = ", " == "));
-        this.put(new TemplateAttribute("{random (\\d+), (\\d+)}", "(Math.floor(Math.random() * %2$s) + %1$s).toString()"));
+        this.put(new OperatorAttribute(" equal ", " == "));
+        this.put(new RandomFunctionAttribute());
         this.put(new StatesFunctionAttribute());
         this.put(new TemplateAttribute("{contains ([^{}]+), ([^{}]+)}", "(%1$s.indexOf(%2$s) > -1)"));
         this.put(new TemplateAttribute("{containsWord ([^{}]+), '([\\s\\w]+)'}", "(%1$s.search(/\\b%2$s\\b/) > -1)"));
@@ -98,6 +104,12 @@ public class Game {
         this.put(new VisitsFunctionAttribute());
         this.put(new QmlMinutesAttribute());
         this.put(new QmlSecondsAttribute());
+        this.put(new QmlDayAttribute());
+        this.put(new QmlTimeAttribute());
+        this.put(new QmlServerAttribute());
+        this.put(new QmlVersionAttribute());
+        this.put(new QmlStationAttribute());
+        this.put(new QmlLastStationAttribute());
     }
 
     public Integer getChoiceIndex() {
@@ -164,7 +176,7 @@ public class Game {
 
         for (Attribute a : attributes) {
             //evaluate the attributes value
-            String attrValue = expressionEvaluator.evaluateExpression(a, this, true);
+            String attrValue = expressionEvaluator.evaluateExpression(a, this, false);
 
             // check it's the right type of value
             if (a.isValidValue(attrValue) == false) {

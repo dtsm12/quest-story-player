@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Created by David on 04/03/2017.
  */
-public class QmlTimeAttribute extends GameStateAttribute {
+public class QmlTimeAttribute extends GameStateStringAttribute {
 
     private final static String DAY_FORMAT = "HH:mm:ss";
     private DateFormat dateFormat;

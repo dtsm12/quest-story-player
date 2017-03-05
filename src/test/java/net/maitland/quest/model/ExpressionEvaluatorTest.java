@@ -65,7 +65,7 @@ public class ExpressionEvaluatorTest {
 
         ExpressionEvaluator sut = new ExpressionEvaluator();
         Game game = new Game(new About("test", "test"));
-        game.put(new NumberAttribute("[cardNumber]", "2"));
+        game.put(new NumberAttribute("cardNumber", "2"));
         game.put(new OperatorAttribute(" = ", " == "));
         game.put(new OperatorAttribute(" not ", " ! "));
         game.put(new OperatorAttribute(" and ", " && "));

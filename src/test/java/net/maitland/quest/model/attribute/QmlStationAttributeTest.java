@@ -24,7 +24,7 @@ public class QmlStationAttributeTest {
 
         QmlStationAttribute sut = new QmlStationAttribute();
 
-        String result = sut.replace("[qmlStation]", game);
+        String result = sut.replace("[qmlStation]", game, false);
 
         assertEquals("QmlStationAttribute returned wrong value", "three", result);
     }

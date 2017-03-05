@@ -28,8 +28,8 @@ public class QmlDayAttributeTest {
 
         QmlDayAttribute sut = new QmlDayAttribute();
 
-        String result = sut.replace("[qmlDay]", new Game(new About("test", "test")));
+        String result = sut.replace("[qmlDay]", new Game(new About("test", "test")), false);
 
-        assertTrue("qmlDay didn't resolve to the name of a day", daysOfWeek.contains(result));
+        assertTrue("qmlDay didn't resolve to the name of a day: " + result, daysOfWeek.contains(result));
     }
 }
