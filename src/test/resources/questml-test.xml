@@ -11,90 +11,90 @@
     <station id="start">
         <!-- text should be optional -->
         <choice station="start"><!-- text should be optional --></choice>
-        <choice station="number"><!-- text should be optional --></choice>
+        <choice station="numberTest"><!-- text should be optional --></choice>
     </station>
 
-    <station id="number">
-        <number name="number" value="100"/>
-        <text>test [number]</text>
-        <choice station="test[number]" check="[number] = 100">test [number]</choice>
-        <choice station="qmlDay"></choice>
+    <station id="numberTest">
+        <number name="numberTest" value="100"/>
+        <text>test [numberTest]</text>
+        <choice station="test[numberTest]" check="[numberTest] = 100">test [numberTest]</choice>
+        <choice station="qmlDayTest"></choice>
     </station>
 
-    <station id="qmlDay">
+    <station id="qmlDayTest">
         <string name="qmlDayTest" value="[qmlDay]"/>
         <text>test [qmlDay]</text>
         <choice station="test[qmlDay]" check="[qmlDay] > ' '">test [qmlDay]</choice>
-        <choice station="qmlLastStation"></choice>
+        <choice station="qmlLastStationTest"></choice>
     </station>
 
-    <station id="qmlLastStation">
+    <station id="qmlLastStationTest">
         <string name="qmlLastStationTest" value="[qmlLastStation]"/>
         <text>test [qmlLastStation]</text>
-        <choice station="test[qmlLastStation]" check="[qmlLastStation] = 'qmlDay'">test [qmlLastStation]</choice>
-        <choice station="qmlMinutes"></choice>
+        <choice station="test[qmlLastStation]" check="[qmlLastStation] = 'qmlDayTest'">test [qmlLastStation]</choice>
+        <choice station="qmlMinutesTest"></choice>
     </station>
 
-    <station id="qmlMinutes">
+    <station id="qmlMinutesTest">
         <number name="qmlMinutesTest" value="[qmlMinutes]"/>
         <text>test [qmlMinutes]</text>
         <choice station="test[qmlMinutes]" check="[qmlMinutes] >= 0">test [qmlMinutes]</choice>
-        <choice station="qmlSeconds"></choice>
+        <choice station="qmlSecondsTest"></choice>
     </station>
 
-    <station id="qmlSeconds">
+    <station id="qmlSecondsTest">
         <number name="qmlSecondsTest" value="[qmlSeconds]"/>
         <text>test [qmlSeconds]</text>
         <choice station="test[qmlSeconds]" check="[qmlSeconds] >= 0">test [qmlSeconds]</choice>
-        <choice station="qmlServer"></choice>
+        <choice station="qmlServerTest"></choice>
     </station>
 
-    <station id="qmlServer">
+    <station id="qmlServerTest">
         <string name="qmlServerTest" value="[qmlServer]"/>
         <text>test [qmlServer]</text>
         <choice station="test[qmlServer]" check="[qmlServer]">test [qmlServer]</choice>
-        <choice station="qmlStation"></choice>
+        <choice station="qmlStationTest"></choice>
     </station>
 
-    <station id="qmlStation">
+    <station id="qmlStationTest">
         <string name="qmlStationTest" value="[qmlStation]"/>
         <text>test [qmlStation]</text>
-        <choice station="test[qmlStation]" check="[qmlStation] = 'qmlStation'">test [qmlStation]</choice>
-        <choice station="qmlTime"></choice>
+        <choice station="test[qmlStation]" check="[qmlStation] = 'qmlStationTest'">test [qmlStation]</choice>
+        <choice station="qmlTimeTest"></choice>
     </station>
 
-    <station id="qmlTime">
+    <station id="qmlTimeTest">
         <string name="qmlTimeTest" value="[qmlTime]"/>
         <text>test [qmlTime]</text>
         <choice station="test[qmlTime]" check="[qmlTime] > ' '">test [qmlTime]</choice>
-        <choice station="qmlVersion"></choice>
+        <choice station="qmlVersionTest"></choice>
     </station>
 
-    <station id="qmlVersion">
+    <station id="qmlVersionTest">
         <string name="qmlVersionTest" value="[qmlVersion]"/>
         <text>test [qmlVersion]</text>
         <choice station="test[qmlVersion]" check="[qmlVersion] = '2'">test [qmlVersion]</choice>
-        <choice station="state"></choice>
+        <choice station="stateTest"></choice>
     </station>
 
-    <station id="state">
-        <state name="state" value="true"/>
-        <text>test [state]</text>
-        <choice station="test[state]" check="[state]">test [state]</choice>
-        <choice station="visitsAll"></choice>
+    <station id="stateTest">
+        <state name="stateTest" value="true"/>
+        <text>test [stateTest]</text>
+        <choice station="test[stateTest]" check="[stateTest]">test [stateTest]</choice>
+        <choice station="visitsAllTest"></choice>
     </station>
 
-    <station id="visitsAll">
-        <number name="visitsAll" value="{visits(*)}"/>
-        <text>test [visitsAll]</text>
-        <choice station="test[visitsAll]" check="[visitsAll] = 12">test [visitsAll]</choice>
-        <choice station="visitsState"></choice>
+    <station id="visitsAllTest">
+        <number name="visitsAllTest" value="{visits(*)}"/>
+        <text>test [visitsAllTest]</text>
+        <choice station="test[visitsAllTest]" check="[visitsAllTest] = 12">test [visitsAllTest]</choice>
+        <choice station="visitsStateTest"></choice>
     </station>
 
-    <station id="visitsState">
-        <number name="visitsState" value="{visits(state)}"/>
-        <text>test [visitsState]</text>
-        <choice station="test[visitsState]" check="[visitsState] = 1">test [visitsState]</choice>
+    <station id="visitsStateTest">
+        <number name="visitsStateTest" value="{visits(stateTest)}"/>
+        <text>test [visitsStateTest]</text>
+        <choice station="test[visitsStateTest]" check="[visitsStateTest] = 1">test [visitsStateTest]</choice>
         <choice station="end"></choice>
     </station>
 
