@@ -53,7 +53,12 @@ public class Quest {
         this.stations.add(questStation);
     }
 
-    public QuestStation getCurrentStation(Game game) {
+    public GameStation getCurrentStation(Game game) {
+        QuestStation questStation = getCurrentQuestStation(game);
+        return getGameStation(game, questStation);
+    }
+
+    protected QuestStation getCurrentQuestStation(Game game) {
         String currentStationId = game.getQuestPath().peek();
         return this.getStation(currentStationId);
     }
@@ -127,7 +132,7 @@ public class Quest {
 
         } else {
             // Get choice
-            currentStation = getCurrentStation(game);
+            currentStation = getCurrentQuestStation(game);
             Choice choice = currentStation.getChoice(game, choiceId);
 
             // check it was possible
@@ -158,7 +163,7 @@ public class Quest {
             questStateStation = getNextStation(game, QuestStation.START_STATION_ID);
         } else {
             // Get choice
-            currentStation = getCurrentStation(game);
+            currentStation = getCurrentQuestStation(game);
             Choice choice = currentStation.getChoice(game, choiceNumber - 1);
 
             // check it was possible
@@ -212,12 +217,17 @@ public class Quest {
 
         // visit: prepare next station data before updating state (visiting station)
         log.debug("Visit '{}'", nextStation.getId());
+        GameStation retStation = getGameStation(game, nextStation);
+
+        // return relevant data for choice
+        return retStation;
+    }
+
+    protected GameStation getGameStation(Game game, QuestStation nextStation) {
         GameStation retStation = new GameStation();
         retStation.setId(nextStation.getId());
         retStation.setText(nextStation.getText(game));
         retStation.setChoices(getQuestStateChoices(nextStation.getChoices(game), game));
-
-        // return relevant data for choice
         return retStation;
     }
 
