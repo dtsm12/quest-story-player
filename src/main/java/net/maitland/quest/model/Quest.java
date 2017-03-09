@@ -53,6 +53,11 @@ public class Quest {
         this.stations.add(questStation);
     }
 
+    public QuestStation getCurrentStation(Game game) {
+        String currentStationId = game.getQuestPath().peek();
+        return this.getStation(currentStationId);
+    }
+
     public GameStation getNextStation(Game game) throws QuestStateException, ChoiceNotPossibleException {
         GameStation gameStation = null;
 
@@ -122,8 +127,7 @@ public class Quest {
 
         } else {
             // Get choice
-            String currentStationId = game.getQuestPath().peek();
-            currentStation = this.getStation(currentStationId);
+            currentStation = getCurrentStation(game);
             Choice choice = currentStation.getChoice(game, choiceId);
 
             // check it was possible
@@ -154,8 +158,7 @@ public class Quest {
             questStateStation = getNextStation(game, QuestStation.START_STATION_ID);
         } else {
             // Get choice
-            String currentStationId = game.getQuestPath().peek();
-            currentStation = this.getStation(currentStationId);
+            currentStation = getCurrentStation(game);
             Choice choice = currentStation.getChoice(game, choiceNumber - 1);
 
             // check it was possible

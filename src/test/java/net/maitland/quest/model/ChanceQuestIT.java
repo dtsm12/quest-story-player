@@ -15,7 +15,7 @@ import static junit.framework.TestCase.fail;
 /**
  * Created by David on 03/02/2017.
  */
-public class ChanceQuestTest {
+public class ChanceQuestIT {
 
     public void testFindDoor() {
 

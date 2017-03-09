@@ -13,7 +13,7 @@ import static junit.framework.TestCase.*;
 /**
  * Created by David on 03/02/2017.
  */
-public class QuestMLTest {
+public class QuestmlIT {
 
 
     @Test
