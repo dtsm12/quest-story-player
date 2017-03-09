@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class QuestSection {
 
-    private Text text = null;
+    private List<Text> texts = new ArrayList<>();
 
     @JacksonXmlProperty(localName = "choice")
     @JacksonXmlElementWrapper(useWrapping = false)
@@ -45,15 +45,19 @@ public class QuestSection {
     private ElseSection elseCondition;
 
     protected boolean isPreVisit() {
-        return this.text == null && this.conditions.size() == 0;
+        return this.texts.size() == 0 && this.conditions.size() == 0;
     }
 
-    public Text getText() {
-        return text;
+    public List<Text> getTexts() {
+        return texts;
     }
 
-    public void setText(Text text) {
-        this.text = text;
+    public void addText(Text text) {
+        this.texts.add(text);
+    }
+
+    public void setTexts(List<Text> texts) {
+        this.texts = texts;
     }
 
     public List<Choice> getChoices() {

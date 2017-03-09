@@ -157,19 +157,27 @@ public class Game {
         return value;
     }
 
-    public boolean check(Choice choice) throws QuestStateException {
+    public boolean check(Conditional conditional) throws QuestStateException {
 
-        return expressionEvaluator.check(choice, this);
-    }
-
-    public boolean check(IfSection ifSection) throws QuestStateException {
-
-        return expressionEvaluator.check(ifSection, this);
+        return expressionEvaluator.check(conditional, this);
     }
 
     public String toStateText(String text) throws QuestStateException {
-
         return this.replace(text, false);
+    }
+
+    public String toStateText(List<Text> texts) throws QuestStateException {
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Text t : texts)
+        {
+            if(check(t)) {
+                sb.append(toStateText(t.getValue()));
+            }
+        }
+
+        return sb.toString();
     }
 
     public void updateState(Collection<Attribute> attributes) throws QuestStateException {

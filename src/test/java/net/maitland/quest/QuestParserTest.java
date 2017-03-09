@@ -34,7 +34,7 @@ public class QuestParserTest {
 
             assertEquals("Quest title is incorrect", q.getAbout().getTitle(), "Bargames");
             assertEquals("Incorrect number of stations", q.getStations().size(), 29+1); /* 29 + back station */
-            assertNotNull("1st station doesn't have text", q.getStations().get(1).getText().getValue());
+            assertNotNull("1st station doesn't have text", q.getStations().get(1).getTexts().get(0).getValue());
             assertEquals("1st station doesn't have choice", q.getStations().get(1).getChoices().size(), 1);
             assertNotNull("1st station's choice doesn't have text", q.getStations().get(1).getChoices().get(0).getText());
             assertEquals("4th station doesn't have a number attribute", q.getStations().get(4).getNumberAttributes().size(), 1);

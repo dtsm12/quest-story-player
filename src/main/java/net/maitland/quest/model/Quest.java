@@ -211,7 +211,7 @@ public class Quest {
         log.debug("Visit '{}'", nextStation.getId());
         GameStation retStation = new GameStation();
         retStation.setId(nextStation.getId());
-        retStation.setText(nextStation.getText(game).getValue());
+        retStation.setText(nextStation.getText(game));
         retStation.setChoices(getQuestStateChoices(nextStation.getChoices(game), game));
 
         // return relevant data for choice

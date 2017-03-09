@@ -34,10 +34,6 @@ public class QuestStation extends QuestSection {
         this.id = id;
     }
 
-    public Text visit() throws QuestStateException {
-        return getText();
-    }
-
     public static QuestStation getBackStation() {
         if (backStation == null) {
             backStation = new QuestStation();
@@ -67,10 +63,10 @@ public class QuestStation extends QuestSection {
         game.updateState(questAttributes);
     }
 
-    public Text getText(Game game) throws QuestStateException {
+    public String getText(Game game) throws QuestStateException {
 
-        String text = getApplicableQuestSection(game).getText().getValue();
-        return new Text(game.toStateText(text));
+        List<Text> texts = getApplicableQuestSection(game).getTexts();
+        return game.toStateText(texts);
     }
 
     public List<Choice> getChoices(Game game) throws QuestStateException {

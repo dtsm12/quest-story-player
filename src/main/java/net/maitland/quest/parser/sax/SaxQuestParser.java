@@ -16,6 +16,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.Collections;
 
 /**
  * Created by David on 06/01/2017.
@@ -80,8 +81,8 @@ public class SaxQuestParser extends AbstractQuestParser {
         protected void setTexts(QuestSection qs)
         {
             if(qs != null) {
-                if (qs.getText() == null) {
-                    qs.setText(new Text(""));
+                if (qs.getTexts().size() == 0) {
+                    qs.addText(new Text(""));
                 }
 
                 for (Choice c : qs.getChoices()) {
@@ -250,12 +251,14 @@ public class SaxQuestParser extends AbstractQuestParser {
         }
 
         protected void startText(Attributes attributes) throws SAXException {
+            String check = attributes.getValue("check");
             this.text = new Text();
+            this.text.setCheck(check);
         }
 
         protected void endText() throws SAXException {
             this.text.setValue(getCharacters());
-            this.questSection.setText(this.text);
+            this.questSection.addText(this.text);
             this.text = null;
         }
 

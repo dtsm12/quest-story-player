@@ -5,7 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 /**
  * Created by David on 18/12/2016.
  */
-public class Choice {
+public class Choice implements Conditional {
 
     private String stationId;
 

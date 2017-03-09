@@ -3,7 +3,7 @@ package net.maitland.quest.model;
 /**
  * Created by David on 18/12/2016.
  */
-public class IfSection extends QuestSection {
+public class IfSection extends QuestSection implements Conditional {
 
     private String check;
 

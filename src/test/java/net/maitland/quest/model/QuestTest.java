@@ -17,15 +17,15 @@ public class QuestTest {
 
         QuestStation start = new QuestStation();
         start.setId("start");
-        start.setText(new Text("start"));
+        start.addText(new Text("start"));
 
         QuestStation one = new QuestStation();
         one.setId("one");
-        one.setText(new Text("one"));
+        one.addText(new Text("one"));
 
         QuestStation two = new QuestStation();
         two.setId("two");
-        two.setText(new Text("two"));
+        two.addText(new Text("two"));
 
         Choice choiceOne = new Choice();
         choiceOne.setStationId(one.getId());
@@ -61,15 +61,15 @@ public class QuestTest {
 
         QuestStation first = new QuestStation();
         first.setId("first");
-        first.setText(new Text("first text"));
+        first.addText(new Text("first text"));
 
         QuestStation second = new QuestStation();
         second.setId("second");
-        second.setText(new Text("second text"));
+        second.addText(new Text("second text"));
 
         QuestStation third = new QuestStation();
         third.setId("third");
-        third.setText(new Text("third text"));
+        third.addText(new Text("third text"));
 
         Choice secondChoice = new Choice();
         secondChoice.setStationId(second.getId());
@@ -106,19 +106,19 @@ public class QuestTest {
     {
         QuestStation station2 = new QuestStation();
         station2.setId("station2");
-        station2.setText(new Text("station2"));
+        station2.addText(new Text("station2"));
 
         QuestStation station3 = new QuestStation();
         station3.setId("station3");
-        station3.setText(new Text("station3"));
+        station3.addText(new Text("station3"));
 
         QuestStation station4 = new QuestStation();
         station4.setId("station4");
-        station4.setText(new Text("station4"));
+        station4.addText(new Text("station4"));
 
         IfSection is = new IfSection();
         is.setCheck("not [testBoolean] ");
-        is.setText(new Text("If text"));
+        is.addText(new Text("If text"));
 
         Choice choice1 = new Choice();
         choice1.setStationId(station3.getId());
@@ -130,7 +130,7 @@ public class QuestTest {
         station2.addCondition(is);
 
         ElseSection es = new ElseSection();
-        es.setText(new Text("Else text"));
+        es.addText(new Text("Else text"));
         station2.setElseCondition(es);
 
         Choice choice2 = new Choice();
@@ -139,7 +139,7 @@ public class QuestTest {
 
         QuestStation station1 = new QuestStation();
         station1.setId("start");
-        station1.setText(new Text("start"));
+        station1.addText(new Text("start"));
         Choice startChoice = new Choice();
         startChoice.setStationId(station2.getId());
         station1.addChoice(startChoice);

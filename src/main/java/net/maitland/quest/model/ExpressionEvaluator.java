@@ -60,15 +60,9 @@ public class ExpressionEvaluator {
                 "}";
     }
 
-    public boolean check(IfSection ifSection, Game game) throws QuestStateException {
+    public boolean check(Conditional conditional, Game game) throws QuestStateException {
 
-        String expression = ifSection.getCheck();
-        return check(expression, game, true);
-    }
-
-    public boolean check(Choice choice, Game game) throws QuestStateException {
-
-        String expression = choice.getCheck();
+        String expression = conditional.getCheck();
         return check(expression == null ? "true" : expression, game, true);
     }
 
