@@ -12,7 +12,7 @@ import java.util.Date;
 public class QmlTimeAttribute extends GameStateStringAttribute {
 
     private final static String DAY_FORMAT = "HH:mm:ss";
-    private DateFormat dateFormat;
+    private transient DateFormat dateFormat;
 
     public QmlTimeAttribute() {
         super("qmlTime");
@@ -23,7 +23,10 @@ public class QmlTimeAttribute extends GameStateStringAttribute {
         return getDateFormat().format(new Date());
     }
 
-    public DateFormat getDateFormat() {
+    /*
+     * Make this non-public so its not serialised
+     */
+    protected DateFormat getDateFormat() {
         if (dateFormat == null) {
             dateFormat = new SimpleDateFormat(DAY_FORMAT);
         }

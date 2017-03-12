@@ -23,7 +23,10 @@ public class QmlDayAttribute extends GameStateStringAttribute {
         return getDateFormat().format(new Date());
     }
 
-    public DateFormat getDateFormat() {
+    /*
+     * Make this non-public so its not serialised
+     */
+    protected DateFormat getDateFormat() {
         if (dateFormat == null) {
             dateFormat = new SimpleDateFormat(DAY_FORMAT);
         }

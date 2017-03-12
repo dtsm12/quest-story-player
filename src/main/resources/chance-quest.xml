@@ -36,10 +36,10 @@
         <text></text>
 
         <if check="[hunger cards counter] greater [hunger threshold] and [meals] greater 0">
-            <number name="meals" value="[meals]-1"/>
-            <number name="hunger cards counter" value="0"/>
             <text>You feel hungry so stop and eat a meal.
             You have [meals] meals left.</text>
+            <number name="meals" value="[meals]-1"/>
+            <number name="hunger cards counter" value="0"/>
             <choice station="take movement card"></choice>
         </if>
 
@@ -50,18 +50,18 @@
         </if>
 
         <if check="[light cards left counter] lower 1 and [has lantern] and [has oil] and [has tinderbox]">
-            <state name="has oil" value="false"/>
-            <number name="light cards left counter" value="[lantern duration]"/>
             <text>Your light burns out. Filling the lantern with oil you re-light your way.
             You also have [torches] torches left.</text>
+            <state name="has oil" value="false"/>
+            <number name="light cards left counter" value="[lantern duration]"/>
             <choice station="take movement card"></choice>
         </if>
 
         <if check="[light cards left counter] lower 1 and [torches] greater 0 and [has tinderbox]">
-            <number name="torches" value="[torches]-1"/>
-            <number name="light cards left counter" value="[torch duration]"/>
             <text>Your light burns out. You light another torch.
                 You have [torches] torches left.</text>
+            <number name="torches" value="[torches]-1"/>
+            <number name="light cards left counter" value="[torch duration]"/>
             <choice station="take movement card"></choice>
         </if>
 
@@ -106,7 +106,7 @@
         </if>
 
         <if check="[cardNumber] = 6">
-            <text>The come to a cross roads.</text>
+            <text>You come to a cross roads.</text>
             <number name="open paths" value="[open paths] + 2"/>
             <choice station="go north" check="[came from] != 'north'">Go north.</choice>
             <choice station="go east" check="[came from] != 'east'">Go east.</choice>
