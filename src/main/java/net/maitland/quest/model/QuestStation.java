@@ -2,7 +2,6 @@ package net.maitland.quest.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import net.maitland.quest.model.attribute.Attribute;
 import net.maitland.quest.parser.jackson.BackStationAwareObjectIdResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,10 @@ public class QuestStation extends QuestSection {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private static QuestStation backStation;
+
     private String id;
+    private IncludedStation stationIncludeRules;
+    private List<IncludedStation> includedStations = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -32,6 +34,23 @@ public class QuestStation extends QuestSection {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public IncludedStation getStationIncludeRules() {
+        return stationIncludeRules;
+    }
+
+    public void setStationIncludeRules(IncludedStation includedStation) {
+        includedStation.setStation(this);
+        this.stationIncludeRules = includedStation;
+    }
+
+    public List<IncludedStation> getIncludedStations() {
+        return includedStations;
+    }
+
+    public void addIncludedStation(IncludedStation includedStation) {
+        this.includedStations.add(includedStation);
     }
 
     public static QuestStation getBackStation() {
@@ -51,16 +70,9 @@ public class QuestStation extends QuestSection {
     }
 
     protected void visit(Game game, boolean postVisit) throws QuestStateException {
-        // Get this Station's attributes
-        List<Attribute> questAttributes = new ArrayList(postVisit ? this.getPostVisitAttributes() : this.getPreVisitAttributes());
 
-        // if applicable section isn't the station itself add in that section's attributes
-        QuestSection applicableQuestSection = getApplicableQuestSection(game);
-        if (this != applicableQuestSection) {
-            questAttributes.addAll(postVisit ? applicableQuestSection.getPostVisitAttributes() : applicableQuestSection.getPreVisitAttributes());
-        }
-
-        game.updateState(questAttributes);
+        VirtualQuestSection applicableQuestSection = getApplicableQuestSection(game);
+        game.updateState((postVisit ? applicableQuestSection.getPostVisitAttributes() : applicableQuestSection.getPreVisitAttributes()));
     }
 
     public String getText(Game game) throws QuestStateException {
@@ -71,7 +83,7 @@ public class QuestStation extends QuestSection {
 
     public List<Choice> getChoices(Game game) throws QuestStateException {
 
-        QuestSection questSection = getApplicableQuestSection(game);
+        VirtualQuestSection questSection = getApplicableQuestSection(game);
         List<Choice> filteredChoices = new ArrayList<>();
 
         for (Choice c : questSection.getChoices()) {
@@ -83,52 +95,53 @@ public class QuestStation extends QuestSection {
         return filteredChoices;
     }
 
-    public Choice getChoice(Game game, String choiceId) throws QuestStateException {
-        Choice choice = null;
+    public boolean includeIn(String stationId) {
 
-        for (Choice c : getChoices(game)) {
-            if (c.getStationId().equals(choiceId)) {
-                choice = c;
-                break;
-            }
-        }
-
-        return choice;
+        boolean include = this.stationIncludeRules != null && this.stationIncludeRules.includeIn(stationId);
+        return include;
     }
 
-    public Choice getChoice(Game game, int choiceIndex) throws QuestStateException {
-        Choice choice = null;
+    protected VirtualQuestSection getApplicableQuestSection(Game game) throws QuestStateException {
 
-        List<Choice> choices = getChoices(game);
+        VirtualQuestSection virtualQuestSection = new VirtualQuestSection();
 
-        return choices.get(choiceIndex);
+        // get station section
+        mergeApplicableQuestSections(game, virtualQuestSection, this, null);
+
+        //add any applicable includes
+        this.includedStations.stream().filter(is -> game.check(is)).forEach(is -> mergeApplicableQuestSections(game, virtualQuestSection, is.getStation(), is.getProcess()));
+
+        return virtualQuestSection;
     }
 
-    protected QuestSection getApplicableQuestSection(Game game) throws QuestStateException {
+    protected void mergeApplicableQuestSections(Game game, VirtualQuestSection virtualQuestSection, QuestSection questSection, IncludeProcess insertPosition) throws QuestStateException {
 
-        QuestSection questSection = null;
+        mergeApplicableQuestSections(virtualQuestSection, questSection, insertPosition);
 
+        QuestSection applicableQuestSection = null;
         if (this.getConditions().size() > 0) {
 
             for (IfSection i : this.getConditions()) {
                 if (game.check(i)) {
-                    questSection = i;
+                    applicableQuestSection = i;
                     break;
                 }
             }
 
-            if (questSection == null) {
-                questSection = this.getElseCondition();
+            if (applicableQuestSection == null) {
+                applicableQuestSection = this.getElseCondition();
             }
         }
 
-        if (questSection == null) {
-            questSection = this;
+        if (applicableQuestSection != null) {
+            mergeApplicableQuestSections(virtualQuestSection, applicableQuestSection, insertPosition);
         }
 
         this.log.debug("Applicable section for stationId '{}' is {}", this.getId(), questSection.getClass().getName());
+    }
 
-        return questSection;
+    protected void mergeApplicableQuestSections(VirtualQuestSection virtualQuestSection, QuestSection questSection, IncludeProcess insertPosition) {
+        virtualQuestSection.add(questSection, insertPosition);
     }
 }
 

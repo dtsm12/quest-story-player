@@ -16,7 +16,6 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Collections;
 
 /**
  * Created by David on 06/01/2017.
@@ -65,22 +64,25 @@ public class SaxQuestParser extends AbstractQuestParser {
         @Override
         public void endDocument() throws SAXException {
 
-            for(QuestStation s : this.quest.getStations())
-            {
-                setTexts(s);
+            for (QuestStation s : this.quest.getStations()) {
+                // provide empty Text where parsed as null
+                setStationTexts(s);
 
-                for(QuestSection qs : s.getConditions())
-                {
-                    setTexts(qs);
-                }
-
-                setTexts(s.getElseCondition());
+                // set applicable includes for each station
+                this.quest.getStations().stream().filter(is -> is.includeIn(s.getId())).forEach(is -> s.addIncludedStation(is.getStationIncludeRules()));
             }
         }
 
-        protected void setTexts(QuestSection qs)
-        {
-            if(qs != null) {
+        protected void setStationTexts(QuestStation s) {
+            setTexts(s);
+            for (QuestSection qs : s.getConditions()) {
+                setTexts(qs);
+            }
+            setTexts(s.getElseCondition());
+        }
+
+        protected void setTexts(QuestSection qs) {
+            if (qs != null) {
                 if (qs.getTexts().size() == 0) {
                     qs.addText(new Text(""));
                 }
@@ -128,6 +130,14 @@ public class SaxQuestParser extends AbstractQuestParser {
 
             if (qName.equals("text")) {
                 startText(attributes);
+            }
+
+            if (qName.equals("include")) {
+                startInclude(attributes);
+            }
+
+            if (qName.equals("in")) {
+                startIncludeRule(attributes);
             }
 
             if (qName.equals("choice")) {
@@ -180,6 +190,14 @@ public class SaxQuestParser extends AbstractQuestParser {
 
             if (qName.equals("text")) {
                 endText();
+            }
+
+            if (qName.equals("include")) {
+                endInclude();
+            }
+
+            if (qName.equals("in")) {
+                endIncludeRule();
             }
 
             if (qName.equals("choice")) {
@@ -260,6 +278,28 @@ public class SaxQuestParser extends AbstractQuestParser {
             this.text.setValue(getCharacters());
             this.questSection.addText(this.text);
             this.text = null;
+        }
+
+        protected void startInclude(Attributes attributes) throws SAXException {
+            String check = attributes.getValue("check");
+            String process = attributes.getValue("process");
+            IncludedStation include = new IncludedStation();
+            include.setCheck(check);
+            if (process != null) {
+                include.setProcess(IncludeProcess.valueOf(process));
+            }
+            this.station.setStationIncludeRules(include);
+        }
+
+        protected void endInclude() throws SAXException {
+        }
+
+        protected void startIncludeRule(Attributes attributes) throws SAXException {
+            String station = attributes.getValue("station");
+            this.station.getStationIncludeRules().addStationPatterns(station);
+        }
+
+        protected void endIncludeRule() throws SAXException {
         }
 
         protected void startChoice(Attributes attributes) throws SAXException {

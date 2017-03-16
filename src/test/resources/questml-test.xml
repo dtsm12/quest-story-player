@@ -95,6 +95,60 @@
         <number name="visitsStateTest" value="{visits(stateTest)}"/>
         <text>test [visitsStateTest]</text>
         <choice station="test[visitsStateTest]" check="[visitsStateTest] = 1">test [visitsStateTest]</choice>
+        <choice station="startIncludeTests"></choice>
+    </station>
+
+    <station id="startIncludeTests">
+        <choice station="includeAfterTest"></choice>
+    </station>
+
+    <station id="includeAfterTest">
+        <number name="numberOne" value="1"/>
+        <text>includeAfterTest</text>
+        <state name="includeAfterTestState" value="[numberTwo] equal 11"/>
+        <choice station="includeAfterTest"></choice>
+    </station>
+
+    <station id="includeAfterStation">
+        <include process="after">
+            <in station="includeAfter*"/>
+        </include>
+        <number name="numberTwo" value="[numberOne] + 10"/>
+        <text>includeAfterTestText</text>
+        <choice station="includeBeforeTest"></choice>
+    </station>
+
+    <station id="includeBeforeTest">
+        <string name="stringTwo" value="[stringOne]1"/>
+        <text>includeBeforeTestText</text>
+        <state name="includeBeforeTestState" value="[numberTwo] equal '11'"/>
+        <choice station="includeReplaceTest"></choice>
+    </station>
+
+    <station id="includeBeforeStation">
+        <include process="before">
+            <in station="includeBefore*"/>
+        </include>
+        <string name="stringOne" value="1"/>
+        <text>includeBeforeTest</text>
+        <choice station="includeBeforeTest"></choice>
+    </station>
+
+    <station id="includeReplaceTest">
+        <state name="stateOne" value="false"/>
+        <text>wrong text</text>
+        <choice station="wrongStation"></choice>
+    </station>
+
+    <station id="includeReplaceStation">
+        <include process="exclusive">
+            <in station="includeReplace*"/>
+        </include>
+        <state name="stateOne" value="true"/>
+        <text>includeReplaceTest</text>
+        <text>includeReplaceTestText</text>
+        <state name="includeReplaceTestState" value="[stateOne]"/>
+        <choice station="includeReplaceTest"></choice>
         <choice station="end"></choice>
     </station>
 

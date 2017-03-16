@@ -132,8 +132,9 @@ public class Quest {
 
         } else {
             // Get choice
+            final String filteredChoice = choiceId;
             currentStation = getCurrentQuestStation(game);
-            Choice choice = currentStation.getChoice(game, choiceId);
+            GameChoice choice = getChoices(currentStation, game).stream().filter(gc -> gc.getStationId().equals(filteredChoice)).findFirst().get();
 
             // check it was possible
             if (choice == null) {
@@ -164,7 +165,7 @@ public class Quest {
         } else {
             // Get choice
             currentStation = getCurrentQuestStation(game);
-            Choice choice = currentStation.getChoice(game, choiceNumber - 1);
+            GameChoice choice = getChoices(currentStation, game).get(choiceNumber - 1);
 
             // check it was possible
             if (choice == null) {
@@ -186,7 +187,7 @@ public class Quest {
     protected GameStation moveToNextStation(Game game, QuestStation currentStation, QuestStation targetStation) throws QuestStateException, ChoiceNotPossibleException {
 
         // update state after current station visit
-        if(currentStation != null) {
+        if (currentStation != null) {
             log.debug("Post-visit '{}'", currentStation.getId());
             currentStation.postVisit(game);
         }
@@ -224,11 +225,22 @@ public class Quest {
     }
 
     protected GameStation getGameStation(Game game, QuestStation nextStation) {
+
         GameStation retStation = new GameStation();
         retStation.setId(nextStation.getId());
-        retStation.setText(nextStation.getText(game));
-        retStation.setChoices(getQuestStateChoices(nextStation.getChoices(game), game));
+        retStation.setText(getText(nextStation, game));
+        retStation.setChoices(getChoices(nextStation, game));
         return retStation;
+    }
+
+    protected String getText(QuestStation nextStation, Game game) {
+
+        return nextStation.getText(game);
+    }
+
+    protected List<GameChoice> getChoices(QuestStation nextStation, Game game) {
+
+        return getQuestStateChoices(nextStation.getChoices(game), game);
     }
 
     protected List<GameChoice> getQuestStateChoices(List<Choice> choices, Game game) throws QuestStateException {

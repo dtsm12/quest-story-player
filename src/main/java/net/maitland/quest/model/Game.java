@@ -183,8 +183,8 @@ public class Game {
     public void updateState(Collection<Attribute> attributes) throws QuestStateException {
 
         for (Attribute a : attributes) {
-            //evaluate the attributes value
-            String attrValue = expressionEvaluator.evaluateExpression(a, this, false);
+            //evaluate the attributes value - only treat as check for StateAttribute
+            String attrValue = expressionEvaluator.evaluateExpression(a, this, a instanceof StateAttribute);
 
             // check it's the right type of value
             if (a.isValidValue(attrValue) == false) {

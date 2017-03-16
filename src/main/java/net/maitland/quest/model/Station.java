@@ -7,11 +7,6 @@ import java.util.List;
  */
 public interface Station {
 
-    public String getId();
 
-    public Text visit() throws QuestStateException;
 
-    public List<Choice> getChoices() throws QuestStateException;
-
-    public Choice getChoice(String choiceId) throws QuestStateException;
 }

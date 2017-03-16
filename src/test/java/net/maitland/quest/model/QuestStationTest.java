@@ -33,10 +33,10 @@ public class QuestStationTest {
 
         QuestStation sut = new QuestStation();
 
-        sut.addText(new Text("Wrong text"));
+        sut.addText(new Text("First text."));
         IfSection is = new IfSection();
         is.setCheck("[testValue] == 1");
-        is.addText(new Text("Correct text"));
+        is.addText(new Text("Correct text."));
         List<IfSection> conditions = new ArrayList<>();
         conditions.add(is);
         sut.setConditions(conditions);
@@ -45,13 +45,18 @@ public class QuestStationTest {
         game.put(new NumberAttribute("testValue", "1"));
 
         String text = sut.getText(game);
-        assertEquals("Text from if condition not returned", "Correct text", text);
+        assertEquals("Text from if condition not returned", "First text.Correct text.", text);
     }
 
     @Test
     public void visitWithIfConditionWithMatchingAttribute() throws Exception {
 
         QuestStation sut = new QuestStation();
+
+        NumberAttribute na = new NumberAttribute("testCondition", "1");
+        List<NumberAttribute> attributes = new ArrayList<>();
+        attributes.add(na);
+        sut.setNumberAttributes(attributes);
 
         IfSection is = new IfSection();
         is.setCheck("[testCondition] == 3");
@@ -63,11 +68,6 @@ public class QuestStationTest {
         ElseSection es = new ElseSection();
         es.addText(new Text("Else text"));
         sut.setElseCondition(es);
-
-        NumberAttribute na = new NumberAttribute("testCondition", "3");
-        List<NumberAttribute> attributes = new ArrayList<>();
-        attributes.add(na);
-        sut.setNumberAttributes(attributes);
 
         Quest quest = new Quest();
         quest.addStation(sut);
@@ -105,7 +105,7 @@ public class QuestStationTest {
         es.setChoices(elseChoices);
         sut.setElseCondition(es);
 
-        NumberAttribute na = new NumberAttribute("testCondition", "3");
+        NumberAttribute na = new NumberAttribute("testCondition", "2");
         List<NumberAttribute> elseAttributes = new ArrayList<>();
         elseAttributes.add(na);
         es.setNumberAttributes(elseAttributes);
