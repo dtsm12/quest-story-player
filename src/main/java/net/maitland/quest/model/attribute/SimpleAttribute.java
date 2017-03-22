@@ -15,14 +15,6 @@ public class SimpleAttribute extends Attribute {
         super(name, value);
     }
 
-
-    /*
-    @Override
-    public void setName(String name) {
-        super.setName(surroundWithBrackets(name));
-    }
-    */
-
     @Override
     public String replace(String value, Game game, boolean isCheck) {
         return value.replace("[" + getName() +"]", getValue(isCheck));

@@ -18,21 +18,6 @@ public abstract class Attribute {
         this.value = value;
     }
 
-    public Attribute updateValue(String newValue) {
-
-        try {
-            Attribute a = (Attribute) Class.forName(this.getType()).newInstance();
-
-            a.setName(this.getName());
-            a.setValue(newValue);
-
-            return a;
-
-        } catch (Exception e) {
-           throw new QuestStateException("Error updating attribute. Value:'" + this.getValue() + "', Type:'" + this.getType() + "'", e);
-        }
-    }
-
     public boolean isValidValue(String value) {
         return true;
     }
@@ -53,12 +38,27 @@ public abstract class Attribute {
         this.name = name;
     }
 
-    public String getExpressionValue() {
+    protected String getExpressionValue() {
         return getValue();
     }
 
     public String getValue() {
         return value;
+    }
+
+    public Attribute updateValue(String newValue) {
+
+        try {
+            Attribute a = (Attribute) Class.forName(this.getType()).newInstance();
+
+            a.setName(this.getName());
+            a.setValue(newValue);
+
+            return a;
+
+        } catch (Exception e) {
+            throw new QuestStateException("Error updating attribute. Value:'" + this.getValue() + "', Type:'" + this.getType() + "'", e);
+        }
     }
 
     public void setValue(String value) {

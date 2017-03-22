@@ -1,6 +1,7 @@
 package net.maitland.quest.model;
 
 import net.maitland.quest.model.attribute.*;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +42,11 @@ public class Game {
             Map<String, String> rawAttr = rawAttributes.get(name);
 
             Attribute attr = (Attribute) Class.forName(rawAttr.get("type")).newInstance();
-            attr.setName(name);
-            attr.setValue(rawAttr.get("value"));
+            for (String propertyName : rawAttr.keySet()) {
+                if (propertyName.equals("type") == false) {
+                    PropertyUtils.setSimpleProperty(attr, propertyName, rawAttr.get(propertyName));
+                }
+            }
 
             attributes.put(name, attr);
         }
@@ -79,7 +83,7 @@ public class Game {
         }
 
         // add quest start time if missing
-        if(this.attributes.containsKey(QML_START_TIME) == false) {
+        if (this.attributes.containsKey(QML_START_TIME) == false) {
             this.put(new StringAttribute(QML_START_TIME, String.valueOf((new Date()).getTime())));
         }
 
@@ -170,9 +174,8 @@ public class Game {
 
         StringBuilder sb = new StringBuilder();
 
-        for (Text t : texts)
-        {
-            if(check(t)) {
+        for (Text t : texts) {
+            if (check(t)) {
                 sb.append(toStateText(t.getValue()));
             }
         }

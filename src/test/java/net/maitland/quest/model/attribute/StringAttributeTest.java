@@ -13,8 +13,8 @@ public class StringAttributeTest {
     public void updateState() {
 
         StringAttribute sut = new StringAttribute("test", "value1");
-        Attribute result = sut.updateValue("value2");
+        sut.setValue("value2");
 
-        assertEquals("New value after update state is incorrect", "value2", result.getValue());
+        assertEquals("New value after update state is incorrect", "value2", sut.getValue());
     }
 }

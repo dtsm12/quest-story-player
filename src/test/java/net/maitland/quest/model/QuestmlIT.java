@@ -68,8 +68,6 @@ public class QuestmlIT {
                 attr.equals(Boolean.TRUE.toString());
             }
 
-
-
         } catch (Exception e) {
             e.printStackTrace();
             fail(e.getMessage());

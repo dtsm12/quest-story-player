@@ -10,7 +10,7 @@ public abstract class GameStateStringAttribute extends GameStateAttribute {
     }
 
     @Override
-    public String getExpressionValue() {
+    protected String getExpressionValue() {
         return surround(super.getValue());
     }
 

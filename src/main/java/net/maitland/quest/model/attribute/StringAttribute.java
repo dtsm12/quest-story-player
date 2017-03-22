@@ -17,7 +17,7 @@ public class StringAttribute extends SimpleAttribute {
     }
 
     @Override
-    public String getExpressionValue() {
+    protected String getExpressionValue() {
         return surround(super.getValue());
     }
 

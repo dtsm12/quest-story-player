@@ -1,10 +1,12 @@
 package net.maitland.quest.parser.sax;
 
 import net.maitland.quest.model.*;
+import net.maitland.quest.model.attribute.Attribute;
 import net.maitland.quest.model.attribute.NumberAttribute;
 import net.maitland.quest.model.attribute.StateAttribute;
 import net.maitland.quest.model.attribute.StringAttribute;
 import net.maitland.quest.parser.AbstractQuestParser;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -13,9 +15,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.beans.Statement;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by David on 06/01/2017.
@@ -316,11 +320,22 @@ public class SaxQuestParser extends AbstractQuestParser {
             this.choice = null;
         }
 
-        protected void startNumber(Attributes attributes) throws SAXException {
-            String name = attributes.getValue("name");
-            String value = attributes.getValue("value");
-            NumberAttribute attribute = new NumberAttribute(name, value);
+        protected void startNumber(Attributes properties) throws SAXException {
+            NumberAttribute attribute = new NumberAttribute();
+            setAttributes(attribute, properties);
             this.questSection.addAttribute(attribute);
+        }
+
+        protected void setAttributes(Attribute target, Attributes properties) throws SAXException
+        {
+            for (int i=0; i< properties.getLength();i++)
+            {
+                try {
+                    PropertyUtils.setSimpleProperty(target, properties.getLocalName(i), properties.getValue(i));
+                } catch (Exception e) {
+                    throw new SAXException(e);
+                }
+            }
         }
 
         protected void endNumber() throws SAXException {

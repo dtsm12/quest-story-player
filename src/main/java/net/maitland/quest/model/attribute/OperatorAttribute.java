@@ -29,11 +29,6 @@ public class OperatorAttribute extends Attribute {
     }
 
     @Override
-    public Attribute updateValue(String newValue) {
-        return new OperatorAttribute(this.getName(), newValue);
-    }
-
-    @Override
     public boolean isValidValue(String value) {
         return true;
     }

@@ -28,7 +28,7 @@ public class StateAttribute extends SimpleAttribute {
 
     }
 
-    public boolean isTrue()
+    protected boolean isTrue()
     {
         return "true".equalsIgnoreCase(getValue());
     }

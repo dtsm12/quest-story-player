@@ -77,7 +77,7 @@ public class ExpressionEvaluator {
     }
 
     public String evaluateExpression(Attribute attribute, Game game, boolean isCheck) throws QuestStateException {
-        String expression = attribute.getExpressionValue();
+        String expression = attribute.getValue(true);
 
         return evaluateExpression(expression, game, isCheck);
     }

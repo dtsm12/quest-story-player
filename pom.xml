@@ -4,7 +4,7 @@
     <groupId>net.maitland</groupId>
     <artifactId>quest-story-player</artifactId>
     <packaging>jar</packaging>
-    <version>1.8.0</version>
+    <version>1.8.1</version>
     <name>Quest Story Player</name>
 
     <scm>
@@ -33,6 +33,12 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>2.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.3</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>

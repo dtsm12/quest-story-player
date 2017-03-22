@@ -34,7 +34,7 @@ public class GameTest {
             game.getQuestPath().push("station2");
 
             List<Attribute> attributes = new ArrayList();
-            attributes.add(new NumberAttribute("attribute1", "0"));
+            attributes.add(new NumberAttribute("attribute1", "0", "-1", "100"));
             attributes.add(new StringAttribute("attribute2", "abc"));
             attributes.add(new StateAttribute("attribute3", "true"));
             game.updateState(attributes);
@@ -58,7 +58,10 @@ public class GameTest {
         assertEquals("Incorrect last station in quest path after deserialization", "station2", deserGame.getQuestPath().pop());
         assertEquals("Incorrect second station in quest path after deserialization", "station1", deserGame.getQuestPath().pop());
         assertEquals("Incorrect first station in quest path after deserialization", "start", deserGame.getQuestPath().pop());
-        assertEquals("Incorrect NumberAttribute after deserialization", "0", deserGame.getAttributeValue("attribute1"));
+        NumberAttribute attribute1 = (NumberAttribute) deserGame.getAttributes().get("attribute1");
+        assertEquals("Incorrect NumberAttribute after deserialization", "0", attribute1.getValue());
+        assertEquals("Incorrect NumberAttribute after deserialization", "-1", attribute1.getMin());
+        assertEquals("Incorrect NumberAttribute after deserialization", "100", attribute1.getMax());
         assertEquals("Incorrect StringAttribute after deserialization", "abc", deserGame.getAttributeValue("attribute2"));
         assertEquals("Incorrect StateAttribute after deserialization", "true", deserGame.getAttributeValue("attribute3"));
 
