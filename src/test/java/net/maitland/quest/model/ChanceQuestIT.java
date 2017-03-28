@@ -106,6 +106,59 @@ public class ChanceQuestIT {
     }
 
     @Test
+    public void testPoleOnPortcullis() {
+
+        try {
+            Quest sut = getQuest();
+            Game game = sut.newGameInstance();
+
+            RandomFunctionAttribute randomFn = new RandomFunctionAttribute();
+            randomFn.setValue("7");
+            game.put(randomFn);
+
+            // enter quest
+            GameStation station = sut.getNextStation(game, 0);
+
+            // hear growl
+            station = sut.getNextStation(game, 1);
+
+            // monster chosen
+            station = sut.getNextStation(game, 1);
+
+            // start fight
+            station = sut.getNextStation(game, 1);
+
+            // make killing blow
+            randomFn.setValue("6");
+            station = sut.getNextStation(game, 1);
+
+            // check they're dead
+            station = sut.getNextStation(game, 1);
+
+            // pick up pole
+            randomFn.setValue("6");
+            station = sut.getNextStation(game, 1);
+
+            // encounter trap
+            randomFn.setValue("1");
+            station = sut.getNextStation(game, 1);
+
+            // face the portcullis
+            randomFn.setValue("5");
+            station = sut.getNextStation(game, 1);
+
+            // jam portcullis with pole
+            station = sut.getNextStation(game, 1);
+
+            // check we're not blocked
+            assertTrue("Player blocked by portcullis even though they had the pole.", !station.getText().contains("The portcullis completely blocks your path"));
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
     public void testUseLantern() {
 
         try {
