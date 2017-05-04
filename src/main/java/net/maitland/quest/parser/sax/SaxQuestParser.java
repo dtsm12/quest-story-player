@@ -103,7 +103,11 @@ public class SaxQuestParser extends AbstractQuestParser {
         public void characters(char[] ch, int start, int length) throws SAXException {
 
             for (int i = start; i < start + length; i++) {
-                currentCharacters.append(ch[i]);
+                if(Character.isISOControl(ch[i]) == false) {
+                    currentCharacters.append(ch[i]);
+                } else {
+                    currentCharacters.append(" ");
+                }
             }
         }
 

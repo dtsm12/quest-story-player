@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE quest SYSTEM "/quest.dtd">
+<quest debug="false" language="english">
+
+    <about>
+        <title>Simple Quest</title>
+        <author>David Maitland</author>
+        <intro>This is the intro.with full stops.and stuff.</intro>
+    </about>
+
+    <station id="start">
+        <text>some text</text>
+        <choice station="start">start</choice>
+    </station>
+
+</quest>

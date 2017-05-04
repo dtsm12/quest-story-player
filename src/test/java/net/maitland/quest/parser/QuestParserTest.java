@@ -1,4 +1,4 @@
-package net.maitland.quest;
+package net.maitland.quest.parser;
 
 import net.maitland.quest.model.Quest;
 import net.maitland.quest.parser.jackson.JacksonQuestParser;

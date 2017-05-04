@@ -66,12 +66,14 @@ public class Game {
 
     private ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
 
-    /* Use default/package access modifier - should be obtained from Quest */
+    public Game() {
+        this(null, null);
+    }
+
     public Game(About gameQuest) {
         this(gameQuest, null);
     }
 
-    /* Use default/package access modifier - should be obtained from Quest */
     public Game(About gameQuest, Map<String, Attribute> attributes) {
 
         this.gameQuest = gameQuest;
