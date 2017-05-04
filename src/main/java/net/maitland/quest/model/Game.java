@@ -1,11 +1,13 @@
 package net.maitland.quest.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.maitland.quest.model.attribute.*;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by David on 23/01/2017.
@@ -144,6 +146,13 @@ public class Game {
 
     public Map<String, Attribute> getAttributes() {
         return Collections.unmodifiableMap(this.attributes);
+    }
+
+    @JsonProperty("attributes")
+    public Map<String, Attribute> getQuestAttributes() {
+
+        return this.attributes.entrySet().stream().filter(es -> ! (es.getValue() instanceof InternalAttribute))
+                .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
     }
 
     public String getAttributeValue(String name) {

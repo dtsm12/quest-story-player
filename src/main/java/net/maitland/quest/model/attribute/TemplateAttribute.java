@@ -1,5 +1,6 @@
 package net.maitland.quest.model.attribute;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import net.maitland.quest.model.Game;
 
 import java.util.Arrays;
@@ -9,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * Created by David on 18/02/2017.
  */
-public class TemplateAttribute extends Attribute {
+public class TemplateAttribute extends Attribute implements InternalAttribute {
 
     private Pattern namePattern;
 

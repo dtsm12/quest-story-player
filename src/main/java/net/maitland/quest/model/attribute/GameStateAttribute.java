@@ -1,11 +1,12 @@
 package net.maitland.quest.model.attribute;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import net.maitland.quest.model.Game;
 
 /**
  * Created by David on 02/03/2017.
  */
-public abstract class GameStateAttribute extends SimpleAttribute {
+public abstract class GameStateAttribute extends SimpleAttribute implements InternalAttribute{
 
     public GameStateAttribute(String name) {
         super(name, name);

@@ -1,11 +1,12 @@
 package net.maitland.quest.model.attribute;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import net.maitland.quest.model.Game;
 
 /**
  * Created by David on 18/12/2016.
  */
-public class OperatorAttribute extends Attribute {
+public class OperatorAttribute extends Attribute implements InternalAttribute {
 
     public OperatorAttribute() {
     }

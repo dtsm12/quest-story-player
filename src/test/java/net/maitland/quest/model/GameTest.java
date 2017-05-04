@@ -12,12 +12,46 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.fail;
 
 /**
  * Created by David on 07/02/2017.
  */
 public class GameTest {
+
+    @Test
+    public void testBuiltInAttributesNotSerialised() {
+
+        Game deserGame = null;
+
+        try {
+            Game game = new Game(new About("title1", "author1"));
+            game.getGameQuest().setIntro("intro1");
+            game.setChoiceIndex(1);
+            game.setChoiceId("choice1");
+            game.getQuestPath().push("start");
+            game.getQuestPath().push("station1");
+            game.getQuestPath().push("station2");
+
+            List<Attribute> attributes = new ArrayList();
+            attributes.add(new NumberAttribute("attribute1", "0", "-1", "100"));
+            attributes.add(new StringAttribute("attribute2", "abc"));
+            attributes.add(new StateAttribute("attribute3", "true"));
+            game.updateState(attributes);
+
+            ObjectMapper mapper = new ObjectMapper();
+            String gameData = mapper.writeValueAsString(game);
+
+            assertFalse("TemplateAttribute has been serialised when it should not", gameData.contains("TemplateAttribute"));
+            assertFalse("RandomFunctionAttribute has been serialised when it should not", gameData.contains("RandomFunctionAttribute"));
+            assertFalse("StatesFunctionAttribute has been serialised when it should not", gameData.contains("StatesFunctionAttribute"));
+            assertFalse("VisitsFunctionAttribute has been serialised when it should not", gameData.contains("VisitsFunctionAttribute"));
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
 
     @Test
     public void testFromCollectionStructure() {
