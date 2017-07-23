@@ -5,7 +5,9 @@ package net.maitland.quest.model.attribute;
  */
 public class RandomFunctionAttribute extends TemplateAttribute {
 
+    public static String value = "(Math.floor(Math.random() * %2$s) + %1$s).toString()";
+
     public RandomFunctionAttribute() {
-        super("{random (\\d+), (\\d+)}", "(Math.floor(Math.random() * %2$s) + %1$s).toString()");
+        super("{random (\\d+), (\\d+)}", RandomFunctionAttribute.value);
     }
 }

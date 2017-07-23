@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE quest SYSTEM "/quest.dtd">
+<quest debug="false" language="english">
+
+    <about>
+        <title>Alien Adventure</title>
+        <author>David Maitland</author>
+        <intro>Wake well astronaut, this is the spaceship's computer speaking.
+            You have been awoken before our final deep space destination due to a malfunction in the guidance system.
+            As the designated engineer it is your responsibility to fix this system.
+            I will assist you on your route to make repairs and then re-activate your cryo-sleep.
+        </intro>
+    </about>
+
+    <station id="start">
+        <string name="target bay" value="guidance bay"/>
+        <number name="target deck" value="1"/>
+        <state name="story has alien" value="true"/>
+        <string name="alien location" value="communications bay"/>
+        <number name="alien hitpoints" value="5"/>
+        <choice station="cryo-sleep bay">You can exit your cryo-sleep pod.</choice>
+    </station>
+
+    <station id="central corridor">
+        <text>
+            The central corridor has no gravity so you can float straight to any deck.
+            You are on deck [deck].
+        </text>
+        <choice station="central corridor upper">Float to one of decks 1 to 3.</choice>
+        <choice station="central corridor middle">Float to one of decks 4 to 6.</choice>
+        <choice station="central corridor lower">Float to one of decks 7 to 9.</choice>
+    </station>
+
+    <station id="central corridor upper">
+        <choice check="[deck] != 1" station="deck 1">Deck 1</choice>
+        <choice check="[deck] != 2" station="deck 2">Deck 2</choice>
+        <choice check="[deck] != 3" station="deck 3">Deck 3</choice>
+    </station>
+
+    <station id="central corridor middle">
+        <choice check="[deck] != 4" station="deck 4">Deck 4</choice>
+        <choice check="[deck] != 5" station="deck 5">Deck 5</choice>
+        <choice check="[deck] != 6" station="deck 6">Deck 6</choice>
+    </station>
+
+    <station id="central corridor lower">
+        <choice check="[deck] != 7" station="deck 7">Deck 7</choice>
+        <choice check="[deck] != 8" station="deck 8">Deck 8</choice>
+        <choice check="[deck] != 9" station="deck 9">Deck 9</choice>
+    </station>
+
+    <station id="deck 1">
+        <choice station="navigation bay">Enter the navigation bay</choice>
+        <choice station="command bay">Enter the command bay</choice>
+    </station>
+
+    <station id="deck 2">
+        <choice station="communications bay">Enter the communications bay</choice>
+        <choice station="exercise bay">Enter the exercise bay</choice>
+    </station>
+
+    <station id="deck 3">
+        <choice station="galley bay">Enter the galley bay</choice>
+        <choice station="recreation bay">Enter the recreation bay</choice>
+    </station>
+
+    <station id="deck 4">
+        <choice station="sleeping bay">Enter the sleeping bay</choice>
+        <choice station="escape pods bay">Enter the escape pods bay</choice>
+    </station>
+
+    <station id="deck 5">
+        <choice station="cryo-sleep bay">Enter the cryo-sleep bay</choice>
+        <choice station="cleansing bay">Enter the cleansing bay</choice>
+    </station>
+
+    <station id="deck 6">
+        <choice station="cargo bay">Enter the cargo bay</choice>
+        <choice station="hydroponics bay">Enter the hydroponics bay</choice>
+    </station>
+
+    <station id="deck 7">
+        <choice station="armory bay">Enter the armory bay</choice>
+        <choice station="science bay">Enter the science bay</choice>
+    </station>
+
+    <station id="deck 8">
+        <choice station="spacesuits bay">Enter the spacesuits bay</choice>
+        <choice station="airlock bay">Enter the airlock bay</choice>
+    </station>
+
+    <station id="deck 9">
+        <choice station="engine bay">Enter the engine bay</choice>
+        <choice station="fuel bay">Enter the fuel bay</choice>
+    </station>
+
+    <station id="bay destination">
+        <include process="after">
+            <in station="* bay"/>
+        </include>
+        <number name="target distance below" value="[target deck] - [deck]"/>
+        <number name="target distance above" value="[deck] - [target deck]"/>
+        <if check="[deck] greater [target deck]">
+            <text>
+                The [target bay] is [target distance above] decks above you.
+            </text>
+        </if>
+        <if check="[deck] lower [target deck]">
+            <text>
+                The [target bay] is [target distance below] decks below you.
+            </text>
+        </if>
+    </station>
+
+    <station id="bay location">
+        <include process="before">
+            <in station="* bay"/>
+        </include>
+        <text>
+            You are in the [qmlStation].
+            The [alt bay] is also on this deck.
+        </text>
+        <choice station="describe [qmlStation]">Examine the [qmlStation]</choice>
+        <choice station="[alt bay]">Enter the [alt bay]</choice>
+        <choice station="central corridor">Enter the central corridor</choice>
+        <choice station="[above bay]" check="[above bay] != 'none'">Climb ladder to deck above</choice>
+        <choice station="[below bay]" check="[below bay] != 'none'">Climb ladder to deck below</choice>
+    </station>
+
+    <station id="navigation bay">
+        <number name="deck" value="1"/>
+        <string name="above bay" value="none"/>
+        <string name="alt bay" value="command bay"/>
+        <string name="below bay" value="communications bay"/>
+        <text>
+        </text>
+    </station>
+
+    <station id="command bay">
+        <number name="deck" value="1"/>
+        <string name="above bay" value="none"/>
+        <string name="alt bay" value="navigation bay"/>
+        <string name="below bay" value="exercise bay"/>
+        <text></text>
+    </station>
+
+    <station id="communications bay">
+        <number name="deck" value="2"/>
+        <string name="above bay" value="navigation bay"/>
+        <string name="alt bay" value="exercise bay"/>
+        <string name="below bay" value="galley bay"/>
+        <text></text>
+    </station>
+
+    <station id="exercise bay">
+        <number name="deck" value="2"/>
+        <string name="above bay" value="command bay"/>
+        <string name="alt bay" value="communications bay"/>
+        <string name="below bay" value="recreation bay"/>
+        <text></text>
+    </station>
+
+    <station id="galley bay">
+        <number name="deck" value="3"/>
+        <string name="above bay" value="communications bay"/>
+        <string name="alt bay" value="recreation bay"/>
+        <string name="below bay" value="sleeping bay"/>
+        <text></text>
+    </station>
+
+    <station id="recreation bay">
+        <number name="deck" value="3"/>
+        <string name="above bay" value="exercise bay"/>
+        <string name="alt bay" value="galley bay"/>
+        <string name="below bay" value="escape pods bay"/>
+        <text></text>
+    </station>
+
+    <station id="sleeping bay">
+        <number name="deck" value="4"/>
+        <string name="above bay" value="galley bay"/>
+        <string name="alt bay" value="escape pods bay"/>
+        <string name="below bay" value="cryo-sleep bay"/>
+        <text></text>
+    </station>
+
+    <station id="escape pods bay">
+        <number name="deck" value="4"/>
+        <string name="above bay" value="recreation bay"/>
+        <string name="alt bay" value="sleeping bay"/>
+        <string name="below bay" value="cleansing bay"/>
+        <text></text>
+    </station>
+
+    <station id="cryo-sleep bay">
+        <number name="deck" value="5"/>
+        <string name="above bay" value="sleeping bay"/>
+        <string name="alt bay" value="cleansing bay"/>
+        <string name="below bay" value="cargo bay"/>
+        <text></text>
+    </station>
+
+    <station id="cleansing bay">
+        <number name="deck" value="5"/>
+        <string name="above bay" value="escape pods bay"/>
+        <string name="alt bay" value="cryo-sleep bay"/>
+        <string name="below bay" value="hydroponics bay"/>
+        <text></text>
+    </station>
+
+    <station id="cargo bay">
+        <number name="deck" value="6"/>
+        <string name="above bay" value="cryo-sleep bay"/>
+        <string name="alt bay" value="hydroponics bay"/>
+        <string name="below bay" value="armory bay"/>
+        <text></text>
+    </station>
+
+    <station id="hydroponics bay">
+        <number name="deck" value="6"/>
+        <string name="above bay" value="cleansing bay"/>
+        <string name="alt bay" value="cargo bay"/>
+        <string name="below bay" value="science bay"/>
+        <text></text>
+    </station>
+
+    <station id="armory bay">
+        <number name="deck" value="7"/>
+        <string name="above bay" value="cargo bay"/>
+        <string name="alt bay" value="science bay"/>
+        <string name="below bay" value="spacesuits bay"/>
+        <text></text>
+        <choice station="take weapon" check="not [has gun]">Take weapon.</choice>
+    </station>
+
+    <station id="take weapon">
+        <state name="has gun" value="true"/>
+        <choice station="armory bay">You pick up the coolest looking gun.</choice>
+    </station>
+
+    <station id="science bay">
+        <number name="deck" value="7"/>
+        <string name="above bay" value="hydroponics bay"/>
+        <string name="alt bay" value="armory bay"/>
+        <string name="below bay" value="airlock bay"/>
+        <text></text>
+    </station>
+
+    <station id="spacesuits bay">
+        <number name="deck" value="8"/>
+        <string name="above bay" value="armory bay"/>
+        <string name="alt bay" value="airlock bay"/>
+        <string name="below bay" value="engine bay"/>
+        <text></text>
+    </station>
+
+    <station id="airlock bay">
+        <number name="deck" value="8"/>
+        <string name="above bay" value="science bay"/>
+        <string name="alt bay" value="spacesuits bay"/>
+        <string name="below bay" value="fuel bay"/>
+        <text></text>
+    </station>
+
+    <station id="engine bay">
+        <number name="deck" value="9"/>
+        <string name="above bay" value="spacesuits bay"/>
+        <string name="alt bay" value="fuel bay"/>
+        <string name="below bay" value="none"/>
+        <text></text>
+    </station>
+
+    <station id="fuel bay">
+        <number name="deck" value="9"/>
+        <string name="above bay" value="airlock bay"/>
+        <string name="alt bay" value="engine bay"/>
+        <string name="below bay" value="none"/>
+        <text></text>
+    </station>
+
+    <!-- "story has alien" -->
+    <station id="alien attack">
+        <include check="[alien location] equal [qmlStation]" process="before">
+            <in station="* bay"/>
+        </include>
+        <if check="[has gun] and [alien hitpoints] greater 1">
+            <text>
+                As you enter the bay you see the alien figure just as it pounces.
+                Your shot from you hastily fire gun blasts through one of its legs.
+                The creature emits a screech and disappears into the central corridor
+            </text>
+            <string name="alien location" value="airlock bay"/>
+        </if>
+        <else>
+            <text>
+                As you enter the bay you see the alien figure just as it pounces.
+                You try to jump out of the way but the creature is too fast.
+                Catching your arm is savagely attacks.
+                Death comes quickly, as it will to the rest of the ships' crew.
+            </text>
+        </else>
+    </station>
+
+    <station id="navigation bay">
+        <include check="[story has alien]" process="after">
+            <in station="navigation bay"/>
+        </include>
+        <if check="not [navigation fixed]">
+            <text>
+                It is clear that there is a problem here.
+                The illuminated displays, normally showing the craft's path through space, sits in darkness.
+                The ambient lighting is also clearly experiencing a fault.
+                Starting your repairs you inspect the bay power unit and quickly find the energy cable from the
+                engine room is no longer attached.
+                You see that it has been cut or torn from the housing but also notice the cable is coated in a sticky liquid.
+                The liquid is slowly dripping onto the floor and a trail of it stretches to the hatch leading
+                to the galley on the deck below.
+                Accessing the repair locker you replace the power cable, bringing the navigation and lighting back to life.
+            </text>
+            <state name="navigation fixed" value="true"/>
+        </if>
+        <else>
+            <text></text>
+        </else>
+    </station>
+
+</quest>

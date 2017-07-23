@@ -68,35 +68,6 @@ public class SaxQuestParser extends AbstractQuestParser {
         @Override
         public void endDocument() throws SAXException {
 
-            for (QuestStation s : this.quest.getStations()) {
-                // provide empty Text where parsed as null
-                setStationTexts(s);
-
-                // set applicable includes for each station
-                this.quest.getStations().stream().filter(is -> is.includeIn(s.getId())).forEach(is -> s.addIncludedStation(is.getStationIncludeRules()));
-            }
-        }
-
-        protected void setStationTexts(QuestStation s) {
-            setTexts(s);
-            for (QuestSection qs : s.getConditions()) {
-                setTexts(qs);
-            }
-            setTexts(s.getElseCondition());
-        }
-
-        protected void setTexts(QuestSection qs) {
-            if (qs != null) {
-                if (qs.getTexts().size() == 0) {
-                    qs.addText(new Text(""));
-                }
-
-                for (Choice c : qs.getChoices()) {
-                    if (c.getText() == null) {
-                        c.setText("");
-                    }
-                }
-            }
         }
 
         @Override
@@ -378,7 +349,7 @@ public class SaxQuestParser extends AbstractQuestParser {
 
         protected void endIf() throws SAXException {
             this.station.addCondition((IfSection) this.questSection);
-            this.questSection = null;
+            this.questSection = this.station;
         }
 
         protected void startElse(Attributes attributes) throws SAXException {
@@ -388,7 +359,7 @@ public class SaxQuestParser extends AbstractQuestParser {
 
         protected void endElse() throws SAXException {
             this.station.setElseCondition((ElseSection) this.questSection);
-            this.questSection = null;
+            this.questSection = this.station;
         }
 
         protected String getCharacters() {

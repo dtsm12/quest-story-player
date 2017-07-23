@@ -2,11 +2,15 @@ package net.maitland.quest.model.attribute;
 
 import net.maitland.quest.model.Game;
 import net.maitland.quest.model.QuestStateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by David on 23/12/2016.
  */
 public abstract class Attribute {
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     private String name;
     private String value;
 
@@ -16,6 +20,11 @@ public abstract class Attribute {
     public Attribute(String name, String value) {
         this.name = name;
         this.value = value;
+        if (name == null) {
+            log.warn("Attribute  declared with null name. Value: " + value);
+        } else if (name.startsWith("[")) {
+            log.warn("Attribute name declared which starts with square bracket: " + name);
+        }
     }
 
     public boolean isValidValue(String value) {

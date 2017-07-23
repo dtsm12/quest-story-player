@@ -1,6 +1,9 @@
 package net.maitland.quest.model;
 
 import net.maitland.quest.model.attribute.Attribute;
+import net.maitland.quest.model.attribute.StateAttribute;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -8,11 +11,14 @@ import javax.script.ScriptException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by David on 23/12/2016.
  */
 public class ExpressionEvaluator {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     ScriptEngineManager mgr = new ScriptEngineManager();
     ScriptEngine expressionEngine;
@@ -60,37 +66,80 @@ public class ExpressionEvaluator {
                 "}";
     }
 
-    public boolean check(Conditional conditional, Game game) throws QuestStateException {
+    public String toStateText(List<Text> texts, Game game, Map<String, Attribute> attributes) throws QuestStateException {
 
-        String expression = conditional.getCheck();
-        return check(expression == null ? "true" : expression, game, true);
+        StringBuilder sb = new StringBuilder();
+
+        for (Text t : texts) {
+            if (check(t, game, attributes)) {
+                sb.append(toStateText(t.getValue(), game, attributes));
+            }
+        }
+
+        return sb.toString();
     }
 
-    public boolean check(String expression, Game game, boolean isCheck) throws QuestStateException {
+    public String toStateText(String text, Game game, Map<String, Attribute> attributes) throws QuestStateException {
+        return this.replace(text, false, game, attributes);
+    }
+
+    public boolean check(Conditional conditional, Game game, Map<String, Attribute> attributes) throws QuestStateException {
+
+        String expression = conditional.getCheck();
+        return check(expression == null ? "true" : expression, game, attributes, true);
+    }
+
+    public boolean check(String expression, Game game, Map<String, Attribute> attributes, boolean isCheck) throws QuestStateException {
 
         boolean check = false;
 
-        String result = evaluateExpression(expression, game, isCheck);
+        String result = evaluateExpression(expression, game, attributes, isCheck);
         check = "true".equalsIgnoreCase(result);
 
         return check;
     }
 
-    public String evaluateExpression(Attribute attribute, Game game, boolean isCheck) throws QuestStateException {
+    public String evaluateExpression(Attribute attribute, Game game, Map<String, Attribute> attributes, boolean isCheck) throws QuestStateException {
         String expression = attribute.getValue(true);
 
-        return evaluateExpression(expression, game, isCheck);
+        return evaluateExpression(expression, game, attributes, isCheck);
     }
 
-    public String evaluateExpression(String expression, Game game) throws QuestStateException {
-        return evaluateExpression(expression, game, true);
+    public String evaluateExpression(String expression, Game game, Map<String, Attribute> attributes) throws QuestStateException {
+        return evaluateExpression(expression, game, attributes, true);
     }
 
-    public String evaluateExpression(String expression, Game game, boolean isCheck) throws QuestStateException {
+    public String evaluateExpression(String expression, Game game, Map<String, Attribute> attributes, boolean isCheck) throws QuestStateException {
         String result = expression;
-        expression = game.replace(expression, isCheck);
+        expression = this.replace(expression, isCheck, game, attributes);
         result = evaluateExpression(expression);
         return result;
+    }
+
+    protected String replace(String value, boolean isCheck, Game game, Map<String, Attribute> attributes) {
+
+        this.log.trace("Replacing '{}'", value);
+
+        for (Attribute a : attributes.values()) {
+            value = a.replace(value, game, isCheck);
+        }
+
+        this.log.trace("Replaced '{}'", value);
+
+        return value;
+    }
+
+    public List<GameChoice> getQuestStateChoices(List<Choice> choices, Game game, Map<String, Attribute> attributes) throws QuestStateException {
+
+        List<GameChoice> gameChoices = choices.stream().filter(choice -> check(choice, game, attributes)).map(choice -> newQuestStateChoice(choice, game, attributes)).collect(Collectors.toList());
+        return gameChoices;
+    }
+
+    protected GameChoice newQuestStateChoice(Choice c, Game game, Map<String, Attribute> attributes) throws QuestStateException {
+        GameChoice stateChoice = new GameChoice();
+        stateChoice.setStationId(this.toStateText(c.getStationId(), game, attributes));
+        stateChoice.setText(this.toStateText(c.getText(),game,  attributes));
+        return stateChoice;
     }
 
     public String evaluateExpression(String expression) {
@@ -102,6 +151,24 @@ public class ExpressionEvaluator {
             throw new QuestStateException(String.format("Error evaluating expression '%s'", expression), e);
         }
         return result;
+    }
+
+    public void updateState(Game game, Map<String, Attribute> attributes, Collection<Attribute> newAttributes) throws QuestStateException {
+
+        for (Attribute a : newAttributes) {
+            //evaluate the attributes value - only treat as check for StateAttribute
+            String attrValue = evaluateExpression(a, game, attributes, a instanceof StateAttribute);
+
+            // check it's the right type of value
+            if (a.isValidValue(attrValue) == false) {
+                throw new QuestStateException(String.format("Attribute '%s' expression '%s' evaluates to incorrect type", a.getName(), attrValue));
+            }
+
+            log.debug("Setting attribute '{}' to value '{}'", a.getName(), attrValue);
+
+            // update the Quest's state
+            attributes.put(a.getName(), a.updateValue(attrValue));
+        }
     }
 
     public List<String> extractAttributeNames(String value) {

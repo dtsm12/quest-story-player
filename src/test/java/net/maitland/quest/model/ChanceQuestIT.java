@@ -1,15 +1,13 @@
 package net.maitland.quest.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.maitland.quest.model.attribute.NumberAttribute;
-import net.maitland.quest.model.attribute.RandomFunctionAttribute;
-import net.maitland.quest.model.attribute.StateAttribute;
-import net.maitland.quest.model.attribute.StringAttribute;
+import net.maitland.quest.model.attribute.*;
 import net.maitland.quest.parser.sax.SaxQuestParser;
 import net.maitland.quest.player.ConsolePlayer;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -22,13 +20,11 @@ public class ChanceQuestIT {
 
     public void testFindDoor() {
 
+        RandomFunctionAttribute.value = "10";
+
         try {
             Quest sut = getQuest();
             Game game = sut.newGameInstance();
-
-            RandomFunctionAttribute randomFn = new RandomFunctionAttribute();
-            randomFn.setValue("10");
-            game.put(randomFn);
 
             // enter quest
             GameStation station = sut.getNextStation(game, 0);
@@ -46,13 +42,11 @@ public class ChanceQuestIT {
     @Test
     public void testGoNorth() {
 
+        RandomFunctionAttribute.value = "2";
+
         try {
             Quest sut = getQuest();
             Game game = sut.newGameInstance();
-
-            RandomFunctionAttribute randomFn = new RandomFunctionAttribute();
-            randomFn.setValue("2");
-            game.put(randomFn);
 
             // enter quest
             GameStation station = sut.getNextStation(game, 0);
@@ -73,13 +67,11 @@ public class ChanceQuestIT {
     @Test
     public void testMonsterFight() {
 
+        RandomFunctionAttribute.value = "7";
+
         try {
             Quest sut = getQuest();
             Game game = sut.newGameInstance();
-
-            RandomFunctionAttribute randomFn = new RandomFunctionAttribute();
-            randomFn.setValue("7");
-            game.put(randomFn);
 
             // enter quest
             GameStation station = sut.getNextStation(game, 0);
@@ -107,6 +99,8 @@ public class ChanceQuestIT {
 
     @Test
     public void testPoleOnPortcullis() {
+
+        RandomFunctionAttribute.value = "7";
 
         try {
             Quest sut = getQuest();
@@ -173,9 +167,11 @@ public class ChanceQuestIT {
             GameStation station = sut.getNextStation(game, 0);
 
             // adjust state
-            game.put(lightCardsLeftCounter);
-            game.put(hasLantern);
-            game.put(hasOil);
+            Map<String, Attribute> attributes = game.copyAttributes();
+            attributes.put(lightCardsLeftCounter.getName(), lightCardsLeftCounter);
+            attributes.put(hasLantern.getName(), hasLantern);
+            attributes.put(hasOil.getName(), hasOil);
+            game.setAttributes(attributes);
 
             // take movement card
             station = sut.getNextStation(game, 1);

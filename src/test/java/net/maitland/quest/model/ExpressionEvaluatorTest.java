@@ -1,5 +1,6 @@
 package net.maitland.quest.model;
 
+import net.maitland.quest.model.attribute.Attribute;
 import net.maitland.quest.model.attribute.NumberAttribute;
 import net.maitland.quest.model.attribute.OperatorAttribute;
 import org.junit.Test;
@@ -7,6 +8,8 @@ import org.mockito.Mockito;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+
+import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
@@ -43,7 +46,7 @@ public class ExpressionEvaluatorTest {
         ExpressionEvaluator sut = new ExpressionEvaluator();
         NumberAttribute number = new NumberAttribute();
 
-        String result = sut.evaluateExpression("(Math.floor(Math.random() * 6) + 1).toString()", new Game(new About("test", "test")));
+        String result = sut.evaluateExpression("(Math.floor(Math.random() * 6) + 1).toString()", new Game(new About("test", "test")), new HashMap<String, Attribute>());
 
         assertTrue(String.format("Random number '%s' is not accepted as NumberAttribute", result), number.isValidValue(result));
 
@@ -54,7 +57,7 @@ public class ExpressionEvaluatorTest {
 
         ExpressionEvaluator sut = new ExpressionEvaluator();
 
-        String result = sut.evaluateExpression("'0' > '6' && '4' > '0'", new Game(new About("test", "test")));
+        String result = sut.evaluateExpression("'0' > '6' && '4' > '0'", new Game(new About("test", "test")), new HashMap<String, Attribute>());
 
         assertEquals("Result not evaluated", "false", result);
 
@@ -71,7 +74,7 @@ public class ExpressionEvaluatorTest {
         game.put(new OperatorAttribute(" and ", " && "));
         game.put(new OperatorAttribute("[came from]", "'south'"));
 
-        String result = sut.evaluateExpression("[cardNumber] = 2 and [came from] != 'north'", game);
+        String result = sut.evaluateExpression("[cardNumber] = 2 and [came from] != 'north'", game, game.getAttributes());
 
         assertTrue("Expression not true", Boolean.parseBoolean(result));
 

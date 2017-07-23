@@ -1,6 +1,7 @@
 package net.maitland.quest.model.attribute;
 
 import net.maitland.quest.model.About;
+import net.maitland.quest.model.ExpressionEvaluator;
 import net.maitland.quest.model.Game;
 import net.maitland.quest.model.Quest;
 import org.junit.Test;
@@ -39,7 +40,9 @@ public class QmlStationAttributeTest {
         game.getQuestPath().push("two");
         game.getQuestPath().push("three");
 
-        String result = game.toStateText("You are at stage [qmlStation]");
+        ExpressionEvaluator ee = new ExpressionEvaluator();
+
+        String result = ee.toStateText("You are at stage [qmlStation]", game, game.getAttributes());
 
         assertEquals("QmlStationAttribute returned wrong value for text", "You are at stage three", result);
     }

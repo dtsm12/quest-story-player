@@ -4,7 +4,7 @@
     <groupId>net.maitland</groupId>
     <artifactId>quest-story-player</artifactId>
     <packaging>jar</packaging>
-    <version>2.3.0</version>
+    <version>3.2.0</version>
     <name>Quest Story Player</name>
 
     <scm>

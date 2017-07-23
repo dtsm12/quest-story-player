@@ -1,6 +1,7 @@
 package net.maitland.quest.model;
 
 import net.maitland.quest.model.attribute.StateAttribute;
+import net.maitland.quest.player.ChoiceNotPossibleException;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import static org.junit.Assert.*;
  */
 public class QuestTest {
     @Test
-    public void getNextStationByChoiceNumber() throws Exception {
+    public void getNextStationByChoice() throws Exception {
 
         QuestStation start = new QuestStation();
         start.setId("start");
@@ -44,14 +45,18 @@ public class QuestTest {
         sut.addStation(two);
 
         Game game = sut.newGameInstance();
+        game.setChoiceId(QuestStation.START_STATION_ID);
 
         // get start
-        GameStation beginning = sut.getNextStation(game, 0);
+        GameStation beginning = sut.getNextStation(game);
         assertEquals("Start station by number incorrect", start.getId(), beginning.getId());
+        assertNull("Game choice id has not been reset", game.getChoiceId());
 
         // get choice
-        GameStation choice = sut.getNextStation(game, 1);
+        game.setChoiceIndex(1);
+        GameStation choice = sut.getNextStation(game);
         assertEquals("Chosen station by number incorrect", one.getId(), choice.getId());
+        assertNull("Game choice index has not been reset", game.getChoiceIndex());
     }
 
     @Test
@@ -163,6 +168,106 @@ public class QuestTest {
 
         assertEquals("Presented choice is no longer available",station3.getId(), station.getId());
 
+    }
+
+    @Test
+    public void testEvaluationOrder()
+    {
+        Quest sut = new Quest();
+
+        // Station with include not applicable after pre-visit attributes
+        // - text=includeStation1
+        QuestStation includeStation1 = new QuestStation();
+        includeStation1.setId("includeStation1");
+        IncludedStation is1 = new IncludedStation();
+        is1.setCheck("[includeStation1]");
+        is1.addStationPatterns("current*");
+        includeStation1.setStationIncludeRules(is1);
+        includeStation1.addAttribute(new StateAttribute("includeStation1", "false"));
+        includeStation1.addText(new Text("includeStation1"));
+        includeStation1.addText(new Text("includeStation1Attribute=[includeStation1]"));
+        includeStation1.addAttribute(new StateAttribute("postIncludeStation1", "true"));
+        sut.addStation(includeStation1);
+
+        // Station with include only applicable after pre-visit attributes
+        // - text=includeStation2
+        QuestStation includeStation2 = new QuestStation();
+        includeStation2.setId("includeStation1");
+        IncludedStation is2 = new IncludedStation();
+        is2.setCheck("[includeStation2]");
+        is2.addStationPatterns("current*");
+        includeStation2.setStationIncludeRules(is2);
+        includeStation2.addAttribute(new StateAttribute("includeStation2", "true"));
+        includeStation2.addText(new Text("includeStation2"));
+        includeStation2.addAttribute(new StateAttribute("postIncludeStation2", "true"));
+        sut.addStation(includeStation2);
+
+        // Target station where:
+        //  - pre-visit attributes affect included stations
+        //  - if section not valid after if section pre-visit attributes
+        //  - if-section, text=ifSection
+        //  - if-section, pre-visit attributes ifSection=false
+
+        QuestStation currentStation =  new QuestStation();
+        currentStation.setId("currentStation");
+        currentStation.addAttribute(new StateAttribute("ifSection", "true"));
+        currentStation.addText(new Text("currentStation"));
+
+        IfSection ifSection = new IfSection();
+        ifSection.setCheck("[ifSection]");
+        ifSection.addAttribute(new StateAttribute("ifSection", "false"));
+        ifSection.addText(new Text("ifSection"));
+        ifSection.addText(new Text("ifSectionAttribute=[ifSection]"));
+        ifSection.addAttribute(new StateAttribute("postIfSection", "true"));
+        currentStation.addCondition(ifSection);
+
+        QuestStation nextStation =  new QuestStation();
+        nextStation.setId("nextStation");
+
+        Choice choice = new Choice();
+        choice.setStationId("nextStation");
+        currentStation.addChoice(choice);
+
+        sut.addStation(currentStation);
+        sut.addStation(nextStation);
+
+
+        // Game State
+        //  - includeStation1=true
+        //  - includeStation2=false
+        //  - ifSection=true
+        Game game = sut.newGameInstance();
+        game.put(new StateAttribute("includeStation1", "true"));
+        game.put(new StateAttribute("includeStation2", "false"));
+        game.put(new StateAttribute("ifSection", "true"));
+        game.setChoiceId("currentStation");
+
+        try {
+            // pre-visit
+            GameStation gameStation = sut.getNextStation(game);
+
+            // check correct includes
+            //  - text does include "includeStation1"
+            //  - text does not include "includeStation2"
+            //  - text does include "ifSection"
+            assertTrue("Station text from valid include not present", gameStation.getText().contains("includeStation1"));
+            assertFalse("Station text from invalid include present", gameStation.getText().contains("includeStation2"));
+            assertTrue("Station text from valid if section not present", gameStation.getText().contains("ifSection"));
+            assertTrue("Pre-visit attribute from valid include not updated", gameStation.getText().contains("includeStation1Attribute=false"));
+            assertFalse("Pre-visit attribute from invalid include updated when it should not be", gameStation.getText().contains("includeStation2"));
+            assertTrue("Pre-visit attribute in applicable if section not updated", gameStation.getText().contains("ifSectionAttribute=false"));
+
+            // cause post-visit
+            game.setChoiceId("nextStation");
+            gameStation = sut.getNextStation(game);
+
+            assertTrue("Post-visit attribute from valid include not updated", new Boolean(game.getAttributeValue("postIncludeStation1")));
+            assertFalse("Post-visit attribute from invalid include updated when it should not be", new Boolean(game.getAttributeValue("postIncludeStation2")));
+            assertTrue("Post-visit attribute in applicable if section not updated", new Boolean(game.getAttributeValue("postIfSection")));
+
+        } catch (ChoiceNotPossibleException e) {
+            fail(e.getMessage());
+        }
     }
 
 }

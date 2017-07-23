@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by David on 18/12/2016.
  */
-public class QuestSection {
+public class QuestSection extends QuestSectionConditionSet {
 
     private List<Text> texts = new ArrayList<>();
 
@@ -36,13 +36,6 @@ public class QuestSection {
 
     private List<Attribute> preVisitAttributes = new ArrayList<>();
     private List<Attribute> postVisitAttributes = new ArrayList<>();
-
-    @JacksonXmlProperty(localName = "if")
-    @JacksonXmlElementWrapper(useWrapping = false)
-    private List<IfSection> conditions = new ArrayList<>();
-
-    @JacksonXmlProperty(localName = "else")
-    private ElseSection elseCondition;
 
     protected boolean isPreVisit() {
         return this.texts.size() == 0 && this.conditions.size() == 0;
@@ -135,23 +128,4 @@ public class QuestSection {
         return Collections.unmodifiableList(this.postVisitAttributes);
     }
 
-    public List<IfSection> getConditions() {
-        return Collections.unmodifiableList(conditions);
-    }
-
-    public void setConditions(List<IfSection> conditions) {
-        this.conditions = conditions;
-    }
-
-    public void addCondition(IfSection ifSection) {
-        this.conditions.add(ifSection);
-    }
-
-    public ElseSection getElseCondition() {
-        return elseCondition;
-    }
-
-    public void setElseCondition(ElseSection elseCondition) {
-        this.elseCondition = elseCondition;
-    }
 }

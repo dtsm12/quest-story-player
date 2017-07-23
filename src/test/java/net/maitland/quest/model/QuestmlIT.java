@@ -1,12 +1,13 @@
 package net.maitland.quest.model;
 
-import net.maitland.quest.model.attribute.StringAttribute;
+import net.maitland.quest.model.attribute.Attribute;
 import net.maitland.quest.parser.sax.SaxQuestParser;
 import net.maitland.quest.player.ConsolePlayer;
 import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.TestCase.*;
 
@@ -29,12 +30,14 @@ public class QuestmlIT {
             // move to next station
             station = sut.getNextStation(game, 2);
             List<GameChoice> choices = station.getChoices();
+            VisitingStation visitingStation = new VisitingStation(sut.getStation(station.getId()), game);
+            Map<String, Attribute> attributes = visitingStation.getConditionalState();
 
             // test attribute types
             while ("startIncludeTests".equals(station.getId()) == false){
 
                 String stationId = station.getId();
-                String attributeValue = game.getAttributeValue(stationId);
+                String attributeValue = attributes.get(stationId).getValue();
 
                 assertEquals(stationId + " does not have 2 choices.", 2, choices.size());
                 assertEquals(stationId + " has the wrong text.", "test "+attributeValue, station.getText());
@@ -45,10 +48,14 @@ public class QuestmlIT {
 
                 station = sut.getNextStation(game, 2);
                 choices = station.getChoices();
+                visitingStation = new VisitingStation(sut.getStation(station.getId()), game);
+                attributes = visitingStation.getConditionalState();
             }
 
             // move onto include tests
             station = sut.getNextStation(game, 1);
+            visitingStation = new VisitingStation(sut.getStation(station.getId()), game);
+            attributes = visitingStation.getConditionalState();
 
             while ("end".equals(station.getId()) == false){
 
@@ -63,8 +70,10 @@ public class QuestmlIT {
                 assertEquals(stationId + " choice 1 has the wrong stationId.", stationId, choice1.getStationId());
 
                 station = sut.getNextStation(game, 2);
+                visitingStation = new VisitingStation(sut.getStation(station.getId()), game);
+                attributes = visitingStation.getConditionalState();
 
-                String attr = game.getAttributeValue(stationId+"State");
+                String attr = attributes.get(stationId+"State").getValue();
                 attr.equals(Boolean.TRUE.toString());
             }
 

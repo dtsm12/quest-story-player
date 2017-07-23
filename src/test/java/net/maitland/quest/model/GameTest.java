@@ -8,6 +8,7 @@ import net.maitland.quest.model.attribute.StringAttribute;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,11 +35,11 @@ public class GameTest {
             game.getQuestPath().push("station1");
             game.getQuestPath().push("station2");
 
-            List<Attribute> attributes = new ArrayList();
-            attributes.add(new NumberAttribute("attribute1", "0", "-1", "100"));
-            attributes.add(new StringAttribute("attribute2", "abc"));
-            attributes.add(new StateAttribute("attribute3", "true"));
-            game.updateState(attributes);
+            Map<String, Attribute> attributes = new HashMap<>();
+            attributes.put("attribute1", new NumberAttribute("attribute1", "0", "-1", "100"));
+            attributes.put("attribute2", new StringAttribute("attribute2", "abc"));
+            attributes.put("attribute3", new StateAttribute("attribute3", "true"));
+            game.setAttributes(attributes);
 
             ObjectMapper mapper = new ObjectMapper();
             String gameData = mapper.writeValueAsString(game);
@@ -67,11 +68,11 @@ public class GameTest {
             game.getQuestPath().push("station1");
             game.getQuestPath().push("station2");
 
-            List<Attribute> attributes = new ArrayList();
-            attributes.add(new NumberAttribute("attribute1", "0", "-1", "100"));
-            attributes.add(new StringAttribute("attribute2", "abc"));
-            attributes.add(new StateAttribute("attribute3", "true"));
-            game.updateState(attributes);
+            Map<String, Attribute> attributes = new HashMap<>();
+            attributes.put("attribute1", new NumberAttribute("attribute1", "0", "-1", "100"));
+            attributes.put("attribute2", new StringAttribute("attribute2", "abc"));
+            attributes.put("attribute3", new StateAttribute("attribute3", "true"));
+            game.setAttributes(attributes);
 
             ObjectMapper mapper = new ObjectMapper();
             String gameData = mapper.writeValueAsString(game);
@@ -99,6 +100,38 @@ public class GameTest {
         assertEquals("Incorrect StringAttribute after deserialization", "abc", deserGame.getAttributeValue("attribute2"));
         assertEquals("Incorrect StateAttribute after deserialization", "true", deserGame.getAttributeValue("attribute3"));
 
+    }
+
+    @Test
+    public void testFromCollectionStructureWithNullChoiceIndex() {
+
+        Game deserGame = null;
+
+        try {
+            Game game = new Game(new About("title1", "author1"));
+            game.getGameQuest().setIntro("intro1");
+            game.setChoiceIndex(null);
+            game.setChoiceId("choice1");
+            game.getQuestPath().push("start");
+            game.getQuestPath().push("station1");
+            game.getQuestPath().push("station2");
+
+            Map<String, Attribute> attributes = new HashMap<>();
+            attributes.put("attribute1", new NumberAttribute("attribute1", "0", "-1", "100"));
+            attributes.put("attribute2", new StringAttribute("attribute2", "abc"));
+            attributes.put("attribute3", new StateAttribute("attribute3", "true"));
+            game.setAttributes(attributes);
+
+            ObjectMapper mapper = new ObjectMapper();
+            String gameData = mapper.writeValueAsString(game);
+
+            Map gameDataMap = mapper.readValue(gameData, Map.class);
+
+            deserGame = Game.fromCollectionStructure(gameDataMap);
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     private static String GAME_DATA = "\"gameQuest\": {\n" +

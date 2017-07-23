@@ -36,9 +36,9 @@
         <text></text>
 
         <if check="[hunger cards counter] greater [hunger threshold] and [meals] greater 0">
+            <number name="meals" value="[meals]-1"/>
             <text>You feel hungry so stop and eat a meal.
             You have [meals] meals left.</text>
-            <number name="meals" value="[meals]-1"/>
             <number name="hunger cards counter" value="0"/>
             <choice station="take movement card"></choice>
         </if>
@@ -58,9 +58,9 @@
         </if>
 
         <if check="[light cards left counter] lower 1 and [torches] greater 0 and [has tinderbox]">
+            <number name="torches" value="[torches]-1"/>
             <text>Your light burns out. You light another torch.
                 You have [torches] torches left.</text>
-            <number name="torches" value="[torches]-1"/>
             <number name="light cards left counter" value="[torch duration]"/>
             <choice station="take movement card"></choice>
         </if>
@@ -80,32 +80,32 @@
             <choice station="end">You wander in the dark for hours but finally discover the way out.</choice>
         </if>
 
-        <if check="[cardNumber] = 1">
+        <if check="[cardNumber] equal 1">
             <text>You get a bad feeling.</text>
             <choice station="trap">It's a trap!</choice>
         </if>
 
-        <if check="[cardNumber] = 2 and [came from] != 'north'">
+        <if check="[cardNumber] equal 2 and [came from] != 'north'">
             <text></text>
             <choice station="go north"></choice>
         </if>
 
-        <if check="[cardNumber] = 3 and [came from] != 'east'">
+        <if check="[cardNumber] equal 3 and [came from] != 'east'">
             <text></text>
             <choice station="go east"></choice>
         </if>
 
-        <if check="[cardNumber] = 4 and [came from] != 'south'">
+        <if check="[cardNumber] equal 4 and [came from] != 'south'">
             <text></text>
             <choice station="go south"></choice>
         </if>
 
-        <if check="[cardNumber] = 5 and [came from] != 'west'">
+        <if check="[cardNumber] equal 5 and [came from] != 'west'">
             <text></text>
             <choice station="go west"></choice>
         </if>
 
-        <if check="[cardNumber] = 6">
+        <if check="[cardNumber] equal 6">
             <text>You come to a cross roads.</text>
             <number name="open paths" value="[open paths] + 2"/>
             <choice station="go north" check="[came from] != 'north'">Go north.</choice>
@@ -115,79 +115,79 @@
             <choice station="take movement card" check="[open paths] greater 3">Go back and continue a different path.</choice>
         </if>
 
-        <if check="[cardNumber] = 7">
+        <if check="[cardNumber] equal 7">
             <text>You hear a soft growl.</text>
             <choice station="fight monster">You draw your sword and continue.</choice>
         </if>
 
-        <if check="[cardNumber] = 8">
+        <if check="[cardNumber] equal 8">
             <text>Its a trap!</text>
             <choice station="trap">You face your fate.</choice>
         </if>
 
-        <if check="[cardNumber] = 9 and [cards] greater 5">
+        <if check="[cardNumber] equal 9 and [cards] greater 5">
             <text>The path reaches a dead end.</text>
             <number name="open paths" value="[open paths] + 1"/>
             <choice station="take movement card" check="[open paths] > 1">You go back and continue a different path.</choice>
             <choice station="end" check="[open paths] lower 2">There's nowhere left to explore.</choice>
         </if>
 
-        <if check="[cardNumber] = 9 and [cards] lower 6 and [came from] != 'east' and [came from] != 'west'">
+        <if check="[cardNumber] equal 9 and [cards] lower 6 and [came from] != 'east' and [came from] != 'west'">
             <text>You see a door in the east wall.</text>
             <number name="open paths" value="[open paths] + 1"/>
             <string name="came from" value="west"/>
             <choice station="go east">You open the door.</choice>
-            <choice station="go north" check="[came from] = 'south'">Continue past the door.</choice>
-            <choice station="go south" check="[came from] = 'north'">Continue past the door.</choice>
+            <choice station="go north" check="[came from] equal 'south'">Continue past the door.</choice>
+            <choice station="go south" check="[came from] equal 'north'">Continue past the door.</choice>
             <choice station="take movement card" check="[open paths] greater 1">Go back and continue a different path.</choice>
         </if>
 
-        <if check="[cardNumber] = 9 and [cards] lower 6 and [came from] != 'north' and [came from] != 'south'">
+        <if check="[cardNumber] equal 9 and [cards] lower 6 and [came from] != 'north' and [came from] != 'south'">
             <text>You see a door in the north wall.</text>
             <number name="open paths" value="[open paths] + 1"/>
             <string name="came from" value="south"/>
             <choice station="go north">You open the door.</choice>
-            <choice station="go east" check="[came from] = 'west'">Continue past the door.</choice>
-            <choice station="go west" check="[came from] = 'east'">Continue past the door.</choice>
+            <choice station="go east" check="[came from] equal 'west'">Continue past the door.</choice>
+            <choice station="go west" check="[came from] equal 'east'">Continue past the door.</choice>
             <choice station="take movement card" check="[open paths] greater 1">Go back and continue a different path.</choice>
         </if>
 
-        <if check="[cardNumber] = 10 and [came from] != 'east' and [came from] != 'west'">
+        <if check="[cardNumber] equal 10 and [came from] != 'east' and [came from] != 'west'">
             <text>You see a door in the west wall.</text>
             <number name="open paths" value="[open paths] + 1"/>
             <string name="came from" value="east"/>
             <choice station="go west">You open the door.</choice>
-            <choice station="go north" check="[came from] = 'south'">Continue past the door.</choice>
-            <choice station="go south" check="[came from] = 'north'">Continue past the door.</choice>
+            <choice station="go north" check="[came from] equal 'south'">Continue past the door.</choice>
+            <choice station="go south" check="[came from] equal 'north'">Continue past the door.</choice>
             <choice station="take movement card" check="[open paths] greater 1">Go back and continue a different path.</choice>
         </if>
 
-        <if check="[cardNumber] = 10 and [came from] != 'north' and [came from] != 'south'">
+        <if check="[cardNumber] equal 10 and [came from] != 'north' and [came from] != 'south'">
             <text>You see a door in the south wall.</text>
             <number name="open paths" value="[open paths] + 1"/>
             <string name="came from" value="north"/>
             <choice station="go south">You open the door.</choice>
-            <choice station="go east" check="[came from] = 'west'">Continue past the door.</choice>
-            <choice station="go west" check="[came from] = 'east'">Continue past the door.</choice>
+            <choice station="go east" check="[came from] equal 'west'">Continue past the door.</choice>
+            <choice station="go west" check="[came from] equal 'east'">Continue past the door.</choice>
             <choice station="take movement card" check="[open paths] greater 1">Go back and continue a different path.</choice>
         </if>
 
         <if check="[cardNumber] lower 12">
             <text>You path reaches a t-junction.</text>
             <number name="open paths" value="[open paths] + 1"/>
-            <choice station="go east" check="[came from] = 'north' or [came from] = 'south'">Go east.</choice>
-            <choice station="go west" check="[came from] = 'north' or [came from] = 'south'">Go west.</choice>
-            <choice station="go north" check="[came from] = 'east' or [came from] = 'west'">Go north.</choice>
-            <choice station="go south" check="[came from] = 'east' or [came from] = 'west'">Go south.</choice>
+            <choice station="go east" check="[came from] equal 'north' or [came from] equal 'south'">Go east.</choice>
+            <choice station="go west" check="[came from] equal 'north' or [came from] equal 'south'">Go west.</choice>
+            <choice station="go north" check="[came from] equal 'east' or [came from] equal 'west'">Go north.</choice>
+            <choice station="go south" check="[came from] equal 'east' or [came from] equal 'west'">Go south.</choice>
             <choice station="take movement card" check="[open paths] greater 2">Go back and continue a different path.</choice>
         </if>
 
-        <if check="[cardNumber] = 12">
+        <if check="[cardNumber] equal 12">
             <text>You see something glittering from a dark corner.</text>
             <choice station="take treasure">You see what you've found.</choice>
         </if>
 
-        <if check="[cardNumber] = 13">
+        <if check="[cardNumber] equal 13">
             <text>A dark figure jumps out to attack you.</text>
             <choice station="fight monster">You draw your sword and defend yourself.</choice>
         </if>
@@ -229,74 +229,74 @@
 
         <text></text>
 
-        <if check="[cardNumber] = 1">
+        <if check="[cardNumber] equal 1">
             <text>You step on a piece of ground which gives way.
             A hole opens up revealing a set of spikes at its base.</text>
             <choice station="spiked pit trap">You let gravity do it's job.</choice>
         </if>
 
-        <if check="[cardNumber] = 2">
+        <if check="[cardNumber] equal 2">
             <text>This part of the path is very wet and you don't like the look of that bulge in the wall.
             As you hurry past the wall collapses and a string flow of water washes you away.</text>
             <choice station="water trap">You check your sodden backpack.</choice>
         </if>
 
-        <if check="[cardNumber] = 3">
+        <if check="[cardNumber] equal 3">
             <text>A strong wind whistles down the path blowing out your flame.
                 Relighting it you realise you have lost a piece of equipment; or was it taken!</text>
             <choice station="wind trap">You check what you have lost.</choice>
         </if>
 
-        <if check="[cardNumber] = 4">
+        <if check="[cardNumber] equal 4">
             <text>Unknowingly you step on a button which releases a dart tipped with a powerful poison.
             The second it entered your blood stream your fate was sealed.
                 Minutes later you fall unconscious and never come round!</text>
             <choice station="end"></choice>
         </if>
 
-        <if check="[cardNumber] = 5">
+        <if check="[cardNumber] equal 5">
             <text>Walking along the path you suddenly hear a grinding sound and a portcullis drops.</text>
             <choice station="portcullis trap">You find out if you're trapped.</choice>
         </if>
 
-        <if check="[cardNumber] = 6">
+        <if check="[cardNumber] equal 6">
             <text>A piece of the roof becomes lose and falls on your head, knocking you unconscious.
             When you come round you discover you have lost some treasure.</text>
             <choice station="lose treasure">You check your pockets.</choice>
         </if>
 
-        <if check="[cardNumber] = 7">
+        <if check="[cardNumber] equal 7">
             <text>Moving cautiously through the dungeon you trip on a piece of twine.
             A large cage comes crashing down around you. You're trapped.
             All you can do is wait for someone to come and help you, or not ?</text>
             <choice station="end"></choice>
         </if>
 
-        <if check="[cardNumber] = 8">
+        <if check="[cardNumber] equal 8">
             <text>Some poor soul has fallen foul of a trap and lays dead before you.
             Looking through his belongings you find a piece of equipment.</text>
             <choice station="take equipment">You pick up the equipment.</choice>
         </if>
 
-        <if check="[cardNumber] = 9">
+        <if check="[cardNumber] equal 9">
             <text>As you turn a corner to the west, you are met by a large fist.
             Falling back you feel another blow to the head. when you regain consciousness you have lost some treasure.</text>
             <choice station="lose treasure">You see what you lost.</choice>
         </if>
 
-        <if check="[cardNumber] = 10">
+        <if check="[cardNumber] equal 10">
             <text>From the blackness you hear a strange noise which gets louder.
             Unexpectedly some coins roll out of the darkness towards you.
                 They fall over and cautiously congratulate yourself on your luck.</text>
             <choice station="take treasure">You count the treasure.</choice>
         </if>
 
-        <if check="[cardNumber] = 11">
+        <if check="[cardNumber] equal 11">
             <text>A deep pit opens up underneath you as you are walking. You fall to the bottom.</text>
             <choice station="pit trap">You try and climb out.</choice>
         </if>
 
-        <if check="[cardNumber] = 12">
+        <if check="[cardNumber] equal 12">
             <text>Walking along you suddenly see the walls spin and get faster and faster.
                 After a few seconds of just a blur they stop. You find yourself in a an unfamiliar room with an exit to the west.
                 You feel slightly disorientated.</text>
@@ -304,7 +304,7 @@
             <choice station="take movement card">You find out what's beyond the door.</choice>
         </if>
 
-        <if check="[cardNumber] = 13">
+        <if check="[cardNumber] equal 13">
             <text>Your exploration has attracted a wandering monster.
             You must fight to the death!</text>
             <choice station="fight monster">You draw your sword and defend yourself.</choice>
@@ -358,56 +358,56 @@
         <number name="cardNumber" value="{random 1, 13}"/>
         <text></text>
 
-        <if check="[cardNumber] = 1">
+        <if check="[cardNumber] equal 1">
             <text>The monster lands a deadly blow knocking you to the floor.
             You feel your life flowing out of you as the monster tears your belongings from your bag.</text>
             <number name="hitpoints" value="0"/>
             <choice station="check fight status"/>
         </if>
 
-        <if check="[cardNumber] = 2">
+        <if check="[cardNumber] equal 2">
             <text>You are hit; a nasty gash opens up on your skin.</text>
             <number name="hitpoints" value="[hitpoints] - 2"/>
             <string name="was hit" value="player"/>
             <choice station="check fight status"/>
         </if>
 
-        <if check="[cardNumber] = 3 or [cardNumber] = 7 or [cardNumber] = 13">
+        <if check="[cardNumber] equal 3 or [cardNumber] equal 7 or [cardNumber] equal 13">
             <text>You are hit.</text>
             <number name="hitpoints" value="[hitpoints] - 1"/>
             <string name="was hit" value="player"/>
             <choice station="check fight status"/>
         </if>
 
-        <if check="[cardNumber] = 4 or [cardNumber] = 8">
+        <if check="[cardNumber] equal 4 or [cardNumber] equal 8">
             <text>You hit the fiend.</text>
             <number name="monster hitpoints" value="[monster hitpoints] - 1"/>
             <string name="was hit" value="monster"/>
             <choice station="check fight status"/>
         </if>
 
-        <if check="[cardNumber] = 5 or [cardNumber] = 10">
+        <if check="[cardNumber] equal 5 or [cardNumber] equal 10">
             <text>You blow to the monster causes it to stagger.</text>
             <number name="monster hitpoints" value="[monster hitpoints] - 2"/>
             <string name="was hit" value="monster"/>
             <choice station="check fight status"/>
         </if>
 
-        <if check="[cardNumber] = 6 or [cardNumber] = 9">
+        <if check="[cardNumber] equal 6 or [cardNumber] equal 9">
             <text>Your sword pierces the beast chest stopping it in its tracks.
             It drops to the floor.</text>
             <number name="monster hitpoints" value="0"/>
             <choice station="check fight status"/>
         </if>
 
-        <if check="[cardNumber] = 11">
+        <if check="[cardNumber] equal 11">
             <text>Swiping your sword you relieve the beast of one of its limbs.</text>
             <number name="monster hitpoints" value="[monster hitpoints] - 3"/>
             <string name="was hit" value="monster"/>
             <choice station="check fight status"/>
         </if>
 
-        <if check="[cardNumber] = 12">
+        <if check="[cardNumber] equal 12">
             <text>A crushing blow brings you to your knees.</text>
             <number name="hitpoints" value="[hitpoints] - 3"/>
             <string name="was hit" value="player"/>
@@ -426,19 +426,19 @@
             <text>You have been defeated. Your corpse will remain here as a warning to others.</text>
             <choice station="end"></choice>
         </if>
-        <if check="[was hit] = 'player' ">
+        <if check="[was hit] equal 'player' ">
             <text>You have [hitpoints] hitpoints left.</text>
             <choice station="hit monster"></choice>
         </if>
-        <if check="[was hit] = 'monster' and [monster hitpoints] greater 4">
+        <if check="[was hit] equal 'monster' and [monster hitpoints] greater 4">
             <text>Your attack has angered the monster he lunges at you.</text>
             <choice station="hit monster"></choice>
         </if>
-        <if check="[was hit] = 'monster' and [monster hitpoints] greater 2">
+        <if check="[was hit] equal 'monster' and [monster hitpoints] greater 2">
             <text>Reeling from your blow the monster counterattacks.</text>
             <choice station="hit monster"></choice>
         </if>
-        <if check="[was hit] = 'monster' and [monster hitpoints] lower 3">
+        <if check="[was hit] equal 'monster' and [monster hitpoints] lower 3">
             <text>The monster looks on his last legs but lashes out.</text>
             <choice station="hit monster"></choice>
         </if>
@@ -475,6 +475,8 @@
             <choice station="take movement card">You keep walking, drying off as you go.</choice>
         </if>
         <else>
+            <number name="torches" value="[torches]-1"/>
+            <number name="meals" value="[meals]-2"/>
             <text>The water has ruined one of your torches and two meals worth of food.</text>
             <choice station="take movement card">You keep walking, drying off as you go.</choice>
         </else>
@@ -545,6 +547,7 @@
         <if check="[has pole]">
             <text>Thinking quickly you jam your 10 foot pole into the gap in the wall jamming the portcullis open.
             You'll have to leave the pole there but the way ahead is clear.</text>
+            <state name="has pole" value="false"/>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
         <if check="not [has pole] and [open paths] greater 1">
@@ -563,81 +566,81 @@
 
         <text></text>
 
-        <if check="[cardNumber] = 1">
+        <if check="[cardNumber] equal 1">
             <number name="meals" value="[meals] + 1"/>
             <text>You found a meal.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
 
-        <if check="[cardNumber] = 2">
+        <if check="[cardNumber] equal 2">
             <state name="has oil" value="true"/>
             <text>You found some lantern oil.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
 
-        <if check="[cardNumber] = 3">
+        <if check="[cardNumber] equal 3">
             <state name="has oil" value="true"/>
             <text>You found some lantern oil.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
 
-        <if check="[cardNumber] = 4">
+        <if check="[cardNumber] equal 4">
             <number name="meals" value="[meals] + 2"/>
             <text>You found two meals.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
 
-        <if check="[cardNumber] = 5">
+        <if check="[cardNumber] equal 5">
             <state name="has rope" value="true"/>
             <text>You found some rope.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
 
-        <if check="[cardNumber] = 6">
+        <if check="[cardNumber] equal 6">
             <state name="has pole" value="true"/>
             <text>You found a 10-foot pole.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
 
-        <if check="[cardNumber] = 7">
+        <if check="[cardNumber] equal 7">
             <number name="torches" value="[torches] + 3"/>
             <text>You found three torches.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
 
-        <if check="[cardNumber] = 8">
+        <if check="[cardNumber] equal 8">
             <number name="meals" value="[meals] + 3"/>
             <text>You found three meals.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
 
-        <if check="[cardNumber] = 9">
+        <if check="[cardNumber] equal 9">
             <state name="has lantern" value="true"/>
             <text>You found a lantern.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
 
-        <if check="[cardNumber] = 10">
+        <if check="[cardNumber] equal 10">
             <state name="has pole" value="true"/>
             <text>You found a 10-foot pole.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
 
-        <if check="[cardNumber] = 11">
+        <if check="[cardNumber] equal 11">
             <number name="meals" value="[meals] + 3"/>
             <number name="torches" value="[torches] + 1"/>
             <text>You found three meals and one torch.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
 
-        <if check="[cardNumber] = 12">
+        <if check="[cardNumber] equal 12">
             <number name="meals" value="[meals] + 3"/>
             <number name="torches" value="[torches] + 2"/>
             <text>You found three meals and two torches.</text>
             <choice station="take movement card">You continue on your way.</choice>
         </if>
 
-        <if check="[cardNumber] = 13">
+        <if check="[cardNumber] equal 13">
             <state name="has tinder box" value="true"/>
             <text>You found a tinder box.</text>
             <choice station="take movement card">You continue on your way.</choice>
@@ -668,19 +671,19 @@
 
         <text></text>
 
-        <if check="[adjustment] = 'found'">
+        <if check="[adjustment] equal 'found'">
             <text>You found [change] gold pieces.</text>
             <number name="gold pieces" value="[gold pieces]+[change]"/>
             <choice station="take movement card"></choice>
         </if>
 
-        <if check="[adjustment] = 'lost' and [gold pieces] greater [change]">
+        <if check="[adjustment] equal 'lost' and [gold pieces] greater [change]">
             <text>You lost [change] gold pieces.</text>
             <number name="gold pieces" value="[gold pieces]-[change]"/>
             <choice station="take movement card"></choice>
         </if>
 
-        <if check="[adjustment] = 'lost' and [gold pieces] = 0">
+        <if check="[adjustment] equal 'lost' and [gold pieces] equal 0">
             <text>Luckily you had no gold pieces to lose.</text>
             <choice station="take movement card"></choice>
         </if>

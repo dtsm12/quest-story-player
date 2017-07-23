@@ -4,10 +4,7 @@ import net.maitland.quest.model.Quest;
 import net.maitland.quest.model.*;
 import net.maitland.quest.parser.sax.SaxQuestParser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -15,9 +12,15 @@ import java.util.List;
  */
 public class ConsolePlayer {
 
+    String questFilePath;
+
     public static void main(String[] args) {
-        ConsolePlayer player = new ConsolePlayer();
+        ConsolePlayer player = new ConsolePlayer(args.length > 0 ? args[0] : "alien-quest.xml");
         player.play();
+    }
+
+    public ConsolePlayer(String questFilePath) {
+        this.questFilePath = questFilePath;
     }
 
     public void play() {
@@ -91,7 +94,13 @@ public class ConsolePlayer {
         InputStream is = null;
 
         try {
-            is = ConsolePlayer.class.getClassLoader().getResourceAsStream("chance-quest.xml");
+            is = ConsolePlayer.class.getClassLoader().getResourceAsStream(this.questFilePath);
+
+            if(is == null)
+            {
+                throw new FileNotFoundException("Unable to find file '" + this.questFilePath + "' on classpath");
+            }
+
             SaxQuestParser qp = new SaxQuestParser();
             q = qp.parseQuest(is);
         } catch (Exception e) {

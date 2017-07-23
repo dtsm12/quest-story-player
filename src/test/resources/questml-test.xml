@@ -17,7 +17,7 @@
     <station id="numberTest">
         <number name="numberTest" value="100" min="1" max="200"/>
         <text>test [numberTest]</text>
-        <choice station="test[numberTest]" check="[numberTest] = 100">test [numberTest]</choice>
+        <choice station="test[numberTest]" check="[numberTest] equal 100">test [numberTest]</choice>
         <choice station="qmlDayTest"></choice>
     </station>
 
